@@ -1,5 +1,5 @@
 function App() {
-  return <h1 className="mx-2 font-bold text-red-400">test</h1>
+  return <div className="flex h-screen items-center justify-center">Just config</div>
 }
 
 export default App
