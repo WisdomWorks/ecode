@@ -30,5 +30,9 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 # ecode
 Step to run project:
-1. Run ```pnpm i```
-2. Run project by ```pnpm start```
+1. Run ```js 
+  pnpm i
+```
+2. Run project by ```js
+pnpm start
+```
