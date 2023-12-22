@@ -12,16 +12,25 @@
     "completed": "echo '\\033[4;32m♡ 'Completed checking ♡' \\033[0m'"
   },
   "dependencies": {
+    "@codemirror/lang-java": "^6.0.1",
+    "@codemirror/lang-javascript": "^6.2.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.18",
+    "@types/uuid": "^9.0.7",
+    "@uiw/react-codemirror": "^4.21.21",
+    "@uiw/react-split": "^5.9.1",
     "classnames": "^2.3.2",
+    "codemirror": "^6.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.49.2",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.20.0",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

@@ -1,5 +1,7 @@
+import CodeEditorContainer from './pages/code-editor-algorithm/CodeEditorContainer'
+
 function App() {
-  return <div className="flex h-screen items-center justify-center">Just config</div>
+  return <CodeEditorContainer />
 }
 
 export default App
