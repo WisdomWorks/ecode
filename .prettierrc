@@ -3,5 +3,5 @@
   "singleQuote": true,
   "bracketSameLine": false,
   "arrowParens": "avoid",
-  "printWidth": 100
+  "printWidth": 80
 }
