@@ -30,7 +30,7 @@ export const OptionSelector = <T extends object>({
     <Autocomplete
       {...props}
       blurOnSelect={blurOnSelect}
-      className={cn('bg-white', className)}
+      className={cn('bg-white rounded-lg', className)}
       onBlur={onBlur}
       onChange={onChange}
       options={options}

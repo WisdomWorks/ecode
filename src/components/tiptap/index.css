@@ -1,0 +1,47 @@
+code {
+  @apply bg-gray-500 text-slate-50 p-1 rounded-sm text-sm;
+}
+
+blockquote {
+  @apply border-l-4 border-gray-500 pl-1;
+}
+
+ul {
+  @apply !px-[1rem] !list-disc;
+}
+
+ol {
+  @apply !px-[1rem] !list-decimal;
+}
+
+pre {
+  @apply !font-sans;
+}
+
+pre code {
+  @apply w-full block p-2;
+}
+
+h1 {
+  @apply !text-3xl !font-bold;
+}
+
+h2 {
+  @apply !text-2xl !font-bold;
+}
+
+h3 {
+  @apply !text-xl !font-bold;
+}
+
+h4 {
+  @apply !text-lg !font-bold;
+}
+
+h5 {
+  @apply !text-base !font-bold;
+}
+
+h6 {
+  @apply !text-sm !font-bold;
+}

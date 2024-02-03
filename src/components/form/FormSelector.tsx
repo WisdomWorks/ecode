@@ -15,6 +15,7 @@ export const FormSelector = <TForm extends object, TData extends object>({
   label = 'Select Option',
   name,
   options = [],
+  renderInput,
 }: Props<TForm, TData>) => {
   return (
     <Controller<TForm>
@@ -30,6 +31,7 @@ export const FormSelector = <TForm extends object, TData extends object>({
             onBlur={onBlur}
             onChange={(_, data) => onChange(data)}
             options={options}
+            renderInput={renderInput}
             value={value}
           />
         )

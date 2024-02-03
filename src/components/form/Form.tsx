@@ -1,7 +1,9 @@
 import { PropsWithChildren } from 'react'
 import { SubmitHandler, UseFormReturn } from 'react-hook-form'
 
-type Props<TForm extends object> = {
+import { GridProps } from '@mui/material'
+
+type Props<TForm extends object> = Omit<GridProps, 'onSubmit'> & {
   className?: string
   form: UseFormReturn<TForm>
   onSubmit: SubmitHandler<TForm>

@@ -3,11 +3,12 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { Form, FormCodeIDE, FormSelector } from '@/components'
 import { languages, TLanguage } from '@/utils'
 
-import { Button } from '@mui/material'
+import { Button, Divider, TextField } from '@mui/material'
 
 type TForm = {
   code: string
   language: TLanguage
+  topic: string
 }
 
 export const CodeConsole = () => {
@@ -17,6 +18,7 @@ export const CodeConsole = () => {
         ID: '',
         label: '',
       },
+      topic: '',
       code: '',
     },
   })
@@ -30,14 +32,18 @@ export const CodeConsole = () => {
       form={form}
       onSubmit={handleSubmitForm}
     >
-      <div>
+      <div className="grid grid-cols-3 p-2">
         <FormSelector
           control={control}
-          label="Select language"
           name="language"
           options={languages}
+          renderInput={params => (
+            <TextField {...params} placeholder="Select language" />
+          )}
         />
       </div>
+      <Divider className="bg-gray-400" />
+
       <FormCodeIDE control={control} name="code" />
 
       <div className="flex justify-end p-2">
