@@ -1,6 +1,6 @@
 import { Controller, UseControllerProps } from 'react-hook-form'
 
-import { CodeIDE } from '..'
+import { CodeIDE } from '../code/CodeIDE'
 
 type Props<TForm extends object> = UseControllerProps<TForm>
 

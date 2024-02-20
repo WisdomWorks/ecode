@@ -92,5 +92,6 @@ module.exports = {
     'react/jsx-sort-props': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
+    'tailwindcss/no-custom-classname': 'off',
   },
 }

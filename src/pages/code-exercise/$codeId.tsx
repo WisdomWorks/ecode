@@ -1,6 +1,6 @@
 import { Panel, PanelGroup } from 'react-resizable-panels'
 
-import { ResizeHandle } from '@/components'
+import { ResizeHandle } from '@/components/ResizeHandle'
 
 import { CodeConsole } from './@components/CodeConsole'
 import { Topic } from './@components/Topic'
