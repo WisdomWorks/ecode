@@ -1,10 +1,10 @@
 import { Panel, PanelGroup } from 'react-resizable-panels'
 
-import { ResizeHandle } from '@/components/ResizeHandle'
+import { ResizeHandle } from '@/components/layout/ResizeHandle'
 
 import { CodeConsole } from './@components/CodeConsole'
 import { Topic } from './@components/Topic'
-import { FileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 const TOPIC =
   'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice. You can return the answer in any order.'
@@ -35,6 +35,6 @@ const CodeEditorContainer = () => {
 
 export default CodeEditorContainer
 
-export const Route = new FileRoute('/code-exercise/$codeId').createRoute({
+export const Route = createFileRoute('/code-exercise/$codeId')({
   component: CodeEditorContainer,
 })
