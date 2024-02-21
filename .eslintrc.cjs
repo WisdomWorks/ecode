@@ -9,7 +9,14 @@ module.exports = {
     'plugin:tailwindcss/recommended',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules', '*.config.ts', '*.config.js'],
+  ignorePatterns: [
+    'dist',
+    '.eslintrc.cjs',
+    'node_modules',
+    '*.config.ts',
+    '*.config.js',
+    'generated',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -26,6 +33,7 @@ module.exports = {
     'react',
     'typescript-sort-keys',
     'sort-destructure-keys',
+    'react-hooks',
     'prettier',
   ],
   settings: {
@@ -35,7 +43,10 @@ module.exports = {
     },
   },
   rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
     'no-dupe-args': 'error',
     'no-dupe-else-if': 'error',
     'no-dupe-keys': 'error',
@@ -79,5 +90,8 @@ module.exports = {
     'react/boolean-prop-naming': 'error',
     'react/hook-use-state': 'error',
     'react/jsx-sort-props': 'error',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error',
+    'tailwindcss/no-custom-classname': 'off',
   },
 }
