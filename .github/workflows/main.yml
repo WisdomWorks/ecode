@@ -42,4 +42,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: wisdomwork/ecode-admin:latest
+          tags: wisdomwork/ecode:latest
