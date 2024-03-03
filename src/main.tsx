@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 import { routeTree } from './generated/routeTree.gen.ts'
-import { Router, RouterProvider } from '@tanstack/react-router'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
 
 import './index.css'
 
 const queryClient = new QueryClient()
 
-const router = new Router({
+const router = createRouter({
   routeTree,
   context: {
     queryClient,

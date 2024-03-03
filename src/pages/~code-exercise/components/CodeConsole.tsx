@@ -1,7 +1,8 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { Form, FormCodeIDE, FormSelector } from '@/components/form'
-import { languages, TLanguage } from '@/utils'
+import { languages } from '@/constants'
+import { TLanguage } from '@/types'
 
 import { Button, Divider, TextField } from '@mui/material'
 

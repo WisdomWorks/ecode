@@ -3,3 +3,8 @@ export interface IFormCardRadioOption {
   label: string
   value: string
 }
+
+export interface IFormRadioOption {
+  label: string
+  value: string
+}

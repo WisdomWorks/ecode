@@ -1,5 +1,5 @@
 import { TipTap } from '../../components/tiptap/TipTap'
-import { FileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const TextEditorContainer = () => {
   return (
@@ -9,6 +9,6 @@ export const TextEditorContainer = () => {
   )
 }
 
-export const Route = new FileRoute('/text-editor/').createRoute({
+export const Route = createFileRoute('/text-editor/')({
   component: TextEditorContainer,
 })
