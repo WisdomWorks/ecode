@@ -5,6 +5,11 @@
 
 
 export interface paths {
+  "/topics": {
+    get: operations["getAllTopicsByCourseId"];
+    put: operations["updateTopic"];
+    post: operations["createTopic"];
+  };
   "/exercises/{exerciseId}/run": {
     put: operations["runCode"];
   };
@@ -20,6 +25,20 @@ export interface paths {
   "/users/import-users": {
     post: operations["importUsersByExcel"];
   };
+  "/topics/view": {
+    get: operations["getPublicGroups"];
+    post: operations["addViewPermission"];
+    delete: operations["removeViewPermission"];
+  };
+  "/materials": {
+    get: operations["getAll"];
+    post: operations["createOne"];
+    patch: operations["updateById_1"];
+  };
+  "/group": {
+    get: operations["getAllGroups"];
+    post: operations["createGroup"];
+  };
   "/exercises/{exerciseId}/submit": {
     post: operations["submitCodeExercise"];
   };
@@ -27,9 +46,16 @@ export interface paths {
     post: operations["checkCodeExerciseKey"];
   };
   "/courses": {
-    get: operations["getAll"];
-    post: operations["createOne"];
-    patch: operations["updateById_1"];
+    get: operations["getAll_1"];
+    post: operations["createOne_1"];
+    patch: operations["updateById_2"];
+  };
+  "/courses/student": {
+    post: operations["addStudentToCourse"];
+    delete: operations["deleteById_3"];
+  };
+  "/courses/import-students": {
+    post: operations["addStudentsToCourse"];
   };
   "/courses/import-courses": {
     post: operations["importCoursesByExcel"];
@@ -38,13 +64,28 @@ export interface paths {
     get: operations["getById"];
     delete: operations["deleteById"];
   };
+  "/topics/{topicId}": {
+    get: operations["getTopic"];
+    delete: operations["deleteTopic"];
+  };
+  "/materials/{materialId}": {
+    get: operations["getById_1"];
+    delete: operations["deleteById_1"];
+  };
+  "/group/{groupId}": {
+    get: operations["getGroupById"];
+    delete: operations["deleteGroup"];
+  };
+  "/group/get-groups-in-course/{courseId}": {
+    get: operations["getGroupsByCourseId"];
+  };
   "/exercises": {
     get: operations["getAllExerciseByCourseId"];
     delete: operations["deleteExerciseById"];
   };
   "/courses/{courseId}": {
-    get: operations["getById_1"];
-    delete: operations["deleteById_1"];
+    get: operations["getById_2"];
+    delete: operations["deleteById_2"];
   };
 }
 
@@ -52,6 +93,11 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    UpdateTopicRequest: {
+      topicId: string;
+      topicName?: string;
+      description?: string;
+    };
     IOTestCase: {
       value: string;
       dataType: string;
@@ -81,16 +127,26 @@ export interface components {
       description: string;
       testcases: string[];
     };
-    User: {
-      userId: string;
+    CreateUserRequest: {
       name: string;
       email: string;
       username: string;
       role: string;
-      /** Format: date-time */
-      createdDate?: string;
-      /** Format: date-time */
-      updatedDate?: string;
+    };
+    CreateTopicRequest: {
+      courseId: string;
+      topicName: string;
+      description?: string;
+    };
+    CreateMaterialRequest: {
+      materialType: string;
+      topicId: string;
+      storageUrl?: string;
+      description?: string;
+    };
+    CreateGroupRequest: {
+      courseId: string;
+      groupName: string;
     };
     SubmitCodeRequest: {
       containerId?: string;
@@ -116,15 +172,19 @@ export interface components {
       inputs: components["schemas"]["IOTestCase"][];
       output: components["schemas"]["IOTestCase"];
     };
-    Course: {
-      courseId: string;
+    CreateCourseRequest: {
       courseName: string;
       semester?: string;
       description?: string;
-      /** Format: date-time */
-      createdDate: string;
-      /** Format: date-time */
-      updatedDate: string;
+    };
+    AddStudentToCourseRequest: {
+      studentId: string;
+      courseId: string;
+    };
+    ImportStudentToCourseRequest: {
+      courseId: string;
+      /** Format: binary */
+      file: string;
     };
     UpdateUserRequest: {
       userId: string;
@@ -135,6 +195,13 @@ export interface components {
       updatedRole?: string;
       /** Format: date-time */
       createdDate?: string;
+    };
+    UpdateMaterialRequest: {
+      materialId: string;
+      materialType?: string;
+      topicId?: string;
+      storageUrl?: string;
+      description?: string;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -171,6 +238,10 @@ export interface components {
       exerciseId: string;
       type: string;
     };
+    RemoveStudentFromCourseRequest: {
+      studentId: string;
+      courseId: string;
+    };
   };
   responses: never;
   parameters: never;
@@ -185,6 +256,69 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  getAllTopicsByCourseId: {
+    parameters: {
+      query: {
+        courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateTopic: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateTopicRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createTopic: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateTopicRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   runCode: {
     parameters: {
       path: {
@@ -277,7 +411,7 @@ export interface operations {
   createUser: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["User"];
+        "application/json": components["schemas"]["CreateUserRequest"];
       };
     };
     responses: {
@@ -323,6 +457,166 @@ export interface operations {
           /** Format: binary */
           file: string;
         };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getPublicGroups: {
+    parameters: {
+      query: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addViewPermission: {
+    parameters: {
+      query: {
+        topicId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  removeViewPermission: {
+    parameters: {
+      query: {
+        topicId: string;
+        groupIds: string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getAll: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createOne: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateMaterialRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateById_1: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateMaterialRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getAllGroups: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createGroup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGroupRequest"];
       };
     };
     responses: {
@@ -387,7 +681,7 @@ export interface operations {
       };
     };
   };
-  getAll: {
+  getAll_1: {
     responses: {
       /** @description OK */
       200: {
@@ -403,10 +697,10 @@ export interface operations {
       };
     };
   };
-  createOne: {
+  createOne_1: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["Course"];
+        "application/json": components["schemas"]["CreateCourseRequest"];
       };
     };
     responses: {
@@ -424,10 +718,73 @@ export interface operations {
       };
     };
   };
-  updateById_1: {
+  updateById_2: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addStudentToCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddStudentToCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteById_3: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["RemoveStudentFromCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  addStudentsToCourse: {
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["ImportStudentToCourseRequest"];
       };
     };
     responses: {
@@ -511,6 +868,153 @@ export interface operations {
       };
     };
   };
+  getTopic: {
+    parameters: {
+      path: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteTopic: {
+    parameters: {
+      path: {
+        topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getById_1: {
+    parameters: {
+      path: {
+        materialId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteById_1: {
+    parameters: {
+      path: {
+        materialId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getGroupById: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteGroup: {
+    parameters: {
+      query: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getGroupsByCourseId: {
+    parameters: {
+      path: {
+        courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getAllExerciseByCourseId: {
     parameters: {
       query: {
@@ -553,7 +1057,7 @@ export interface operations {
       };
     };
   };
-  getById_1: {
+  getById_2: {
     parameters: {
       path: {
         courseId: string;
@@ -574,7 +1078,7 @@ export interface operations {
       };
     };
   };
-  deleteById_1: {
+  deleteById_2: {
     parameters: {
       path: {
         courseId: string;

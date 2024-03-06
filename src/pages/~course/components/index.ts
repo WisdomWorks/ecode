@@ -1,2 +1,1 @@
-export * from './createCodeExercise'
-export * from './createExerciseOptionModal'
+export * from './DetailTopicModal'

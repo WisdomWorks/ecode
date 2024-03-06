@@ -43,9 +43,9 @@ export const NavbarProfile = () => {
         {...bindMenu(popupState)}
       >
         <MenuItem>View Details</MenuItem>
-        <MenuItem>
-          <Logout />
-          <span className="ml-2">Logout</span>
+        <MenuItem className="mt-2 rounded-md bg-danger-500 transition-all hover:bg-danger-600">
+          <Logout className="text-white" />
+          <span className="ml-2 text-white">Logout</span>
         </MenuItem>
       </HoverMenu>
     </>

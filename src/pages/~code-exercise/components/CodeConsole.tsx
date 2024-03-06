@@ -2,29 +2,22 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { Form, FormCodeIDE, FormSelector } from '@/components/form'
 import { languages } from '@/constants'
-import { TLanguage } from '@/types'
+import { Schema } from '@/types'
 
 import { Button, Divider, TextField } from '@mui/material'
 
-type TForm = {
-  code: string
-  language: TLanguage
-  topic: string
-}
-
 export const CodeConsole = () => {
-  const form = useForm<TForm>({
+  const form = useForm<Schema['RunCodeRequest']>({
     defaultValues: {
-      language: {
-        ID: '',
-        label: '',
-      },
-      topic: '',
-      code: '',
+      containerId: '',
+      contentFile: '',
+      fileName: 'test',
+      inputs: [],
     },
   })
 
-  const handleSubmitForm: SubmitHandler<TForm> = data => console.log(data)
+  const handleSubmitForm: SubmitHandler<Schema['RunCodeRequest']> = data =>
+    console.log(data)
 
   return (
     <Form
@@ -34,11 +27,19 @@ export const CodeConsole = () => {
     >
       <div className="grid grid-cols-3 p-2">
         <FormSelector
+          className="text-white"
+          classes={{
+            root: 'bg-white rounded-lg',
+          }}
           label="Select language"
           name="language"
           options={languages}
           renderInput={params => (
-            <TextField {...params} placeholder="Select language" />
+            <TextField
+              {...params}
+              className=" bg-white"
+              placeholder="Select language"
+            />
           )}
         />
       </div>

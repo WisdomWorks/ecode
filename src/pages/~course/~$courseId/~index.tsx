@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { TabPanel, TabsClient } from '@/components/common'
+import { useToggle } from '@/hooks'
 
+import { DetailTopicModal } from '../components/DetailTopicModal'
 import { Exercise } from './exercise/Exercise'
 import { Material } from './material/Material'
 import { Settings } from './settings/Settings'
@@ -10,8 +12,8 @@ import {
   QuizOutlined,
   SettingsOutlined,
 } from '@mui/icons-material'
-import { TabProps } from '@mui/material'
-import { createFileRoute } from '@tanstack/react-router'
+import { Button, TabProps } from '@mui/material'
+import { createFileRoute, useParams } from '@tanstack/react-router'
 
 const tabs: TabProps[] = [
   {
@@ -35,7 +37,14 @@ const tabs: TabProps[] = [
 ]
 
 export const Course = () => {
+  const { courseId } = useParams({ from: '/course/$courseId/' })
   const [tab, setTab] = useState(0)
+
+  const [openTopicModal, toggleTopicModal] = useToggle()
+
+  useEffect(() => {
+    setTab(0)
+  }, [courseId])
 
   return (
     <div className="grid h-full grid-rows-8 gap-4">
@@ -46,12 +55,27 @@ export const Course = () => {
       </div>
 
       <div className="row-span-7 overflow-auto rounded-xl p-4 shadow-xl">
+        <div className="flex w-full justify-end">
+          <Button
+            className=""
+            onClick={toggleTopicModal}
+            size="large"
+            variant="contained"
+          >
+            Create Topic
+          </Button>
+        </div>
         {tabs.map(({ component: Component, value }) => (
           <TabPanel index={value} key={value} value={tab}>
             {Component ? <Component /> : null}
           </TabPanel>
         ))}
       </div>
+
+      <DetailTopicModal
+        isOpen={openTopicModal}
+        toggleModal={toggleTopicModal}
+      />
     </div>
   )
 }

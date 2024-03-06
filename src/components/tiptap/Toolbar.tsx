@@ -17,7 +17,7 @@ export const ToolbarTipTap = ({ editor }: Props) => {
 
   return (
     <ToggleButtonGroup
-      className="mb-2 flex max-w-sm flex-wrap rounded-lg border border-gray-300 px-1"
+      className="mb-2 flex w-fit flex-wrap rounded-lg border border-gray-300 px-1"
       exclusive
       size="small"
     >
@@ -38,9 +38,9 @@ export const ToolbarTipTap = ({ editor }: Props) => {
         </ToggleButton>
       ))}
       <Divider
-      // className="mx-1 my-2 bg-gray-400"
-      // flexItem
-      // orientation="vertical"
+        className="mx-1 my-2 bg-gray-400"
+        flexItem
+        orientation="vertical"
       />
 
       {format.map(({ icon, onClick, value }) => (
@@ -57,11 +57,11 @@ export const ToolbarTipTap = ({ editor }: Props) => {
           {icon}
         </ToggleButton>
       ))}
-      {/* <Divider
+      <Divider
         className="mx-1 my-2 bg-gray-400"
         flexItem
         orientation="vertical"
-      /> */}
+      />
 
       {block.map(({ icon, onClick, value }) => (
         <ToggleButton
@@ -77,11 +77,11 @@ export const ToolbarTipTap = ({ editor }: Props) => {
           {icon}
         </ToggleButton>
       ))}
-      {/* <Divider
+      <Divider
         className="mx-1 my-2 bg-gray-400"
         flexItem
         orientation="vertical"
-      /> */}
+      />
       {order.map(({ icon, onClick, value }) => (
         <ToggleButton
           aria-label={value}

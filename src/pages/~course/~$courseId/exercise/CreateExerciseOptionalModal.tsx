@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction } from 'react'
 
 import { Dialog } from '@/components/common'
 import { ExerciseType } from '@/constants'
+import { optionsCreateExercise } from '@/utils/exercise.utils'
 
-import { optionsCreateExercise } from '../../../utils/exercise.utils'
 import { ArrowForwardRounded } from '@mui/icons-material'
 import { Button } from '@mui/material'
 

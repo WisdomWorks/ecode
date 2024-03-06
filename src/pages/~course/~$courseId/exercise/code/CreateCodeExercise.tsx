@@ -5,17 +5,17 @@ import { FileUpload } from '@/components/common'
 import {
   Form,
   FormButtonGroup,
+  FormCheckbox,
   FormCodeIDE,
+  FormInput,
+  FormRadioGroup,
   FormSelector,
 } from '@/components/form'
-import { FormCheckbox } from '@/components/form/FormCheckbox'
-import { FormInput } from '@/components/form/FormInput'
-import { FormRadioGroup } from '@/components/form/FormRadioGroup'
 import { languages, primitiveType } from '@/constants'
+import { CreateCodeExerciseSchema } from '@/pages/~course/shema/createExercise.schema'
 import { TCreateCodeExerciseForm } from '@/types/exercise.types'
 import { CreateCodeOption } from '@/utils/exercise.utils'
 
-import { CreateCodeExerciseSchema } from '../shema/createExercise.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AddCircleOutline, Delete } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
