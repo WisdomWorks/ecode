@@ -36,4 +36,7 @@ export default defineConfig({
       include: ['src/**/*'],
     },
   },
+  define: {
+    VITE_API_URL: process.env.VITE_API_URL,
+  },
 })

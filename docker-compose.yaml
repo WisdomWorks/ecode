@@ -5,9 +5,7 @@ services:
     ports:
       - '4000:4000'
     restart: always
-    env_file:
-      - .env
-    environment:
-      - VITE_API_URL=http://locahost:8080
+    args:
+      - VITE_API_URL=${VITE_API_URL}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
