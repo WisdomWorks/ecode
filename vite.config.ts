@@ -10,6 +10,7 @@ export default defineConfig({
   plugins: [react(), svgr(), TanStackRouterVite()],
   server: {
     port: 4000,
+    host: true,
   },
   resolve: {
     alias: {
