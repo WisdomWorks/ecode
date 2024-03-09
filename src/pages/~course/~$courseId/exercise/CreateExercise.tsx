@@ -4,6 +4,7 @@ import { ExerciseType } from '@/constants'
 
 import { CreateCodeExercise } from './code/CreateCodeExercise'
 import { CreateEssayExercise } from './essay/CreateEssayExercise'
+import { CreateQuizExercise } from './quiz/CreateQuizExercise'
 import { ArrowBackIos } from '@mui/icons-material'
 import { Button } from '@mui/material'
 
@@ -19,6 +20,8 @@ export const CreateExercise = ({ exerciseType, setExerciseType }: Props) => {
         return <CreateCodeExercise />
       case ExerciseType.ESSAY:
         return <CreateEssayExercise />
+      case ExerciseType.QUIZ:
+        return <CreateQuizExercise />
       default:
         return null
     }

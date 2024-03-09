@@ -1,11 +1,9 @@
+import { Schema } from '@/types'
+
 import { callAPI } from './axios'
 import { useQuery } from '@tanstack/react-query'
 
-type TCourse = {
-  courseName: string
-  description: string
-  semester: string
-}
+type TCourse = Schema['CreateCourseRequest']
 
 const fetchCourses = async (): Promise<TCourse> => {
   const response = await callAPI('/courses', 'get')

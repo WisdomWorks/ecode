@@ -13,8 +13,9 @@ interface Props {
 }
 
 export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
-  const { mutate } = useCreateTopic()
+  const { isLoading, mutate } = useCreateTopic()
   const { courseId } = useParams({ from: '/course/$courseId/' })
+  console.log(courseId)
 
   const form = useForm<Schema['CreateTopicRequest']>({
     defaultValues: {
@@ -26,7 +27,7 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
   const handleSubmit: SubmitHandler<Schema['CreateTopicRequest']> = data => {
     mutate({
       ...data,
-      courseId,
+      courseId: 'f4e89aa6-5c60-4981-9eef-8867312ed871',
     })
   }
 
@@ -47,6 +48,7 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
               type: 'submit',
               label: 'Create',
               className: 'submitBtn',
+              disabled: isLoading,
             },
           ]}
           className="justify-end"

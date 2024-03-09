@@ -1,29 +1,38 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { useLogin } from '@/apis/useLogin'
 import { Form } from '@/components/form'
 import { FormInput } from '@/components/form/FormInput'
 import { FormInputPassword } from '@/components/form/FormInputPassword'
+import { useToastMessage } from '@/hooks'
+import { Schema } from '@/types'
 
+import { LoginRequestSchema } from './login.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
-type TLogin = {
-  password: string
-  username: string
-}
+type TLogin = Schema['LoginRequest']
 
 export const Login = () => {
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
+  const { mutate } = useLogin()
   const form = useForm<TLogin>({
     defaultValues: {
-      username: '',
+      userName: '',
       password: '',
     },
+    resolver: zodResolver(LoginRequestSchema),
   })
 
   const { control } = form
 
   const onLogin: SubmitHandler<TLogin> = data => {
-    console.log(data)
+    mutate(data, {
+      onSuccess: () => setSuccessMessage('Login successfully!'),
+      onError: error =>
+        setErrorMessage(error.response?.data.message || 'Login failed!'),
+    })
   }
 
   return (
@@ -78,7 +87,7 @@ export const Login = () => {
           <div className="mt-12 flex flex-col gap-4">
             <FormInput
               label="Username"
-              name="username"
+              name="userName"
               placeholder="Enter your username"
               required
             />
