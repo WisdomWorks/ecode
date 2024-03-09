@@ -7,7 +7,7 @@
     "start": "vite",
     "build": "tsc && vite build",
     "lint": "eslint --ext .tsx,.ts,.js,.jsx src/",
-    "preview": "vite preview",
+    "preview": "vite preview --host",
     "prepare": "husky install",
     "completed": "echo '\\033[4;32m♡ 'Completed checking ♡' \\033[0m'",
     "generate-router": "tsr generate",
