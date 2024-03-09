@@ -26,7 +26,10 @@ export type Pagination = {
 }
 
 export const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    import.meta.env.MODE === 'development'
+      ? 'http://localhost:8080'
+      : 'https://api.example.com',
   timeout: 20000,
   withCredentials: true,
 })
