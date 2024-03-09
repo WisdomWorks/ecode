@@ -1,7 +1,6 @@
 services:
   app:
     image: wisdomwork/ecode:latest
-    platform: linux/amd64
     ports:
       - '4000:4000'
     restart: always

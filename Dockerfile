@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM --platform=amd64 node:18-alpine AS builder
 
 RUN npm install -g pnpm
 
@@ -7,10 +7,7 @@ COPY . .
 RUN pnpm install
 RUN pnpm build
 
-FROM nginx:1.19.0
-WORKDIR /usr/share/nginx/html
-RUN rm -rf ./*
-COPY --from=builder /app/dist .
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+EXPOSE 4001
 
+CMD [ "pnpm", "preview" ]
 
