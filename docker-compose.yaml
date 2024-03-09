@@ -1,7 +1,11 @@
 services:
   app:
     image: wisdomwork/ecode:latest
-    platform: linux/x86_64
+    platform: linux/amd64
     ports:
-      - '4000:80'
-    restart: unless-stopped
+      - '4000:4000'
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
