@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
-import { defineConfig, loadEnv } from 'vite'
+import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
+import { defineConfig } from 'vite'
 import svgr from 'vite-plugin-svgr'
-import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -34,11 +34,6 @@ export default defineConfig({
         'src/main.tsx',
       ],
       include: ['src/**/*'],
-    },
-  },
-  define: {
-    env: {
-      VITE_API_URL: loadEnv('', process.cwd()).VITE_API_URL,
     },
   },
 })
