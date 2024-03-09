@@ -16,6 +16,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  preview: {
+    port: 4000,
+    strictPort: true,
+  },
   test: {
     watch: false,
     exclude: ['**/node_modules/**', '**/dist/**'],
