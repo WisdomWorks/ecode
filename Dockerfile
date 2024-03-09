@@ -7,7 +7,7 @@ COPY . .
 RUN pnpm install
 RUN pnpm build
 
-EXPOSE 4001
+EXPOSE 4000
 
 CMD [ "pnpm", "preview" ]
 
