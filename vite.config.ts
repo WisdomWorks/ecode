@@ -37,6 +37,8 @@ export default defineConfig({
     },
   },
   define: {
-    VITE_API_URL: loadEnv('', process.cwd()).VITE_API_URL,
+    env: {
+      VITE_API_URL: loadEnv('', process.cwd()).VITE_API_URL,
+    },
   },
 })
