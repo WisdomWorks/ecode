@@ -1,8 +1,7 @@
-import { useMutation } from 'react-query'
-
 import { Schema } from '@/types'
 
 import { callAPI } from './axios'
+import { useMutation } from '@tanstack/react-query'
 
 export const useCreateTopic = () => {
   return useMutation({

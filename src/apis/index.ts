@@ -1,4 +1,7 @@
+export * from './useCheckSession'
 export * from './useCreateQuizExercise'
 export * from './useCreateTopic'
 export * from './useCreateTopic'
 export * from './useGetCourses'
+export * from './useLogin'
+export * from './useLogout'

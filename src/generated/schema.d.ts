@@ -40,8 +40,10 @@ export interface paths {
     delete: operations["removeViewPermission_1"];
   };
   "/groups": {
-    get: operations["getAllGroups"];
     post: operations["createGroup"];
+  };
+  "/groups/student": {
+    post: operations["addStudentsToGroup"];
   };
   "/exercises/{exerciseId}/submit": {
     post: operations["submitCodeExercise"];
@@ -51,6 +53,10 @@ export interface paths {
   };
   "/exercises/quiz": {
     post: operations["createQuizExercise"];
+    patch: operations["updateQuizExercise"];
+  };
+  "/exercises/quiz/submit": {
+    post: operations["submitQuizExercise"];
   };
   "/courses": {
     get: operations["getAll"];
@@ -70,8 +76,11 @@ export interface paths {
   "/auth/logout": {
     post: operations["Logout"];
   };
-  "/auth/login": {
-    post: operations["signIn"];
+  "/auth/login/user": {
+    post: operations["signInUser"];
+  };
+  "/auth/login/admin": {
+    post: operations["signInAdmin"];
   };
   "/users/{userId}": {
     get: operations["getById"];
@@ -95,19 +104,31 @@ export interface paths {
     get: operations["getGroupById"];
     delete: operations["deleteGroup"];
   };
-  "/groups/get-groups-in-course/{courseId}": {
+  "/groups/{groupId}/student/not-in-group": {
+    get: operations["getStudentNotInGroup"];
+  };
+  "/groups/{groupId}/student/in-group": {
+    get: operations["getStudentInGroup"];
+  };
+  "/groups/course/{courseId}": {
     get: operations["getGroupsByCourseId"];
   };
   "/exercises": {
     get: operations["getAllExerciseByCourseId"];
     delete: operations["deleteExerciseById"];
   };
-  "/exercises/{exerciseId}": {
+  "/exercises/exercise": {
     get: operations["getExerciseById"];
   };
   "/courses/{courseId}": {
     get: operations["getById_2"];
     delete: operations["deleteById_2"];
+  };
+  "/auth/check-session": {
+    get: operations["checkSession"];
+  };
+  "/groups/{groupId}/student": {
+    delete: operations["deleteStudentInGroup"];
   };
 }
 
@@ -170,6 +191,11 @@ export interface components {
       courseId: string;
       groupName: string;
     };
+    CreateGroupStudentRequest: {
+      studentIds: string[];
+      description?: string;
+      groupId: string;
+    };
     SubmitCodeRequest: {
       containerId?: string;
     };
@@ -199,6 +225,22 @@ export interface components {
       choices: components["schemas"]["QuizChoice"][];
       answers: components["schemas"]["QuizChoice"][];
     };
+    QuizAnswers: {
+      quizAnswerId?: string;
+      questionId: string;
+      answers: components["schemas"]["QuizChoice"][];
+    };
+    QuizSubmission: {
+      submissionId?: string;
+      studentId: string;
+      exerciseId: string;
+      /** Format: float */
+      score?: number;
+      dateSubmit?: string;
+      dateGrade?: string;
+      reviewable: boolean;
+      submission: components["schemas"]["QuizAnswers"][];
+    };
     CreateCodeExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -227,7 +269,7 @@ export interface components {
       teacherId: string;
     };
     AddStudentToCourseRequest: {
-      studentId: string;
+      studentIds?: string[];
       courseId: string;
     };
     ImportStudentToCourseRequest: {
@@ -255,6 +297,17 @@ export interface components {
       topicId?: string;
       url?: string;
       description?: string;
+    };
+    UpdateQuizExerciseRequest: {
+      topicId?: string;
+      exerciseName?: string;
+      key?: string;
+      /** Format: date-time */
+      startTime?: string;
+      /** Format: date-time */
+      endTime?: string;
+      publicGroupIds?: string[];
+      questions?: components["schemas"]["QuizQuestion"][];
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -679,7 +732,12 @@ export interface operations {
       };
     };
   };
-  getAllGroups: {
+  createGroup: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateGroupRequest"];
+      };
+    };
     responses: {
       /** @description OK */
       200: {
@@ -695,10 +753,10 @@ export interface operations {
       };
     };
   };
-  createGroup: {
+  addStudentsToGroup: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateGroupRequest"];
+        "application/json": components["schemas"]["CreateGroupStudentRequest"];
       };
     };
     responses: {
@@ -767,6 +825,53 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["QuizExercise"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateQuizExercise: {
+    parameters: {
+      query: {
+        exerciseId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateQuizExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  submitQuizExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuizSubmission"];
       };
     };
     responses: {
@@ -945,7 +1050,28 @@ export interface operations {
       };
     };
   };
-  signIn: {
+  signInUser: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["LoginRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  signInAdmin: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["LoginRequest"];
@@ -1159,9 +1285,51 @@ export interface operations {
     };
   };
   deleteGroup: {
-    requestBody?: {
-      content: {
-        "application/json": string;
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentNotInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
       };
     };
     responses: {
@@ -1288,6 +1456,48 @@ export interface operations {
     parameters: {
       path: {
         courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  checkSession: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  deleteStudentInGroup: {
+    parameters: {
+      path: {
+        groupId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": string[];
       };
     };
     responses: {

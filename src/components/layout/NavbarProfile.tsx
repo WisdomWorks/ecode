@@ -1,5 +1,7 @@
+import { useLogout } from '@/apis'
+
 import { KeyboardArrowDown, Logout } from '@mui/icons-material'
-import { Avatar, MenuItem } from '@mui/material'
+import { Avatar, Button, MenuItem } from '@mui/material'
 import {
   bindHover,
   bindMenu,
@@ -8,10 +10,16 @@ import {
 import HoverMenu from 'material-ui-popup-state/HoverMenu'
 
 export const NavbarProfile = () => {
+  const { mutate: logout } = useLogout()
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'navbarMenu',
   })
+
+  const handleLogout = () => {
+    logout()
+    window.location.replace('/login')
+  }
 
   return (
     <>
@@ -44,8 +52,10 @@ export const NavbarProfile = () => {
       >
         <MenuItem>View Details</MenuItem>
         <MenuItem className="mt-2 rounded-md bg-danger-500 transition-all hover:bg-danger-600">
-          <Logout className="text-white" />
-          <span className="ml-2 text-white">Logout</span>
+          <Button onClick={handleLogout}>
+            <Logout className="text-white" />
+            <span className="ml-2 text-white">Logout</span>
+          </Button>
         </MenuItem>
       </HoverMenu>
     </>

@@ -1,6 +1,7 @@
 import { paths } from '@/generated/schema'
 
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import Cookies from 'js-cookie'
 
 export type Path = keyof paths
 
@@ -25,6 +26,8 @@ export type Pagination = {
   totalRecord: number
 }
 
+export type AxiosResponseError = { message: string }
+
 export const instance = axios.create({
   baseURL:
     import.meta.env.MODE === 'development'
@@ -33,3 +36,13 @@ export const instance = axios.create({
   timeout: 20000,
   withCredentials: true,
 })
+
+export const configAuthorization = (token?: string) => {
+  const jwtToken = token || Cookies.get('accessToken')
+  instance.interceptors.request.use(config => {
+    if (jwtToken) {
+      config.headers.Authorization = `Bearer ${jwtToken}`
+    }
+    return config
+  })
+}

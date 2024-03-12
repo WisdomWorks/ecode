@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
-  const { isLoading, mutate } = useCreateTopic()
+  const { isPending, mutate } = useCreateTopic()
   const { courseId } = useParams({ from: '/course/$courseId/' })
   console.log(courseId)
 
@@ -48,7 +48,7 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
               type: 'submit',
               label: 'Create',
               className: 'submitBtn',
-              disabled: isLoading,
+              disabled: isPending,
             },
           ]}
           className="justify-end"

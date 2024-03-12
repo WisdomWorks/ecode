@@ -1,5 +1,6 @@
 import { Navbar } from '@/components/layout'
 import { MenuBar } from '@/components/layout/MenuBar'
+import { useAuthStore } from '@/context/useAuthStore'
 import { useRoute } from '@/hooks'
 
 import { createRootRoute, Outlet } from '@tanstack/react-router'
@@ -11,7 +12,12 @@ export const Route = createRootRoute({
 const fullScreenPath = ['/login', '/forget-password']
 
 function RootComponent() {
-  const { location } = useRoute()
+  const { location, navigate } = useRoute()
+  const user = useAuthStore(state => state.user)
+
+  if (!user) {
+    navigate({ to: '/login', replace: true })
+  }
 
   if (fullScreenPath.includes(location.pathname)) {
     return (

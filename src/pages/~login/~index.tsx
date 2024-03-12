@@ -1,20 +1,24 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useLogin } from '@/apis/useLogin'
+import { useLogin } from '@/apis'
+import { configAuthorization } from '@/apis/axios'
 import { Form } from '@/components/form'
 import { FormInput } from '@/components/form/FormInput'
 import { FormInputPassword } from '@/components/form/FormInputPassword'
+import { useAuthStore } from '@/context/useAuthStore'
 import { useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 
 import { LoginRequestSchema } from './login.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 
 type TLogin = Schema['LoginRequest']
 
 export const Login = () => {
+  const navigate = useNavigate()
+  const setUser = useAuthStore(state => state.setUser)
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { mutate } = useLogin()
   const form = useForm<TLogin>({
@@ -29,7 +33,31 @@ export const Login = () => {
 
   const onLogin: SubmitHandler<TLogin> = data => {
     mutate(data, {
-      onSuccess: () => setSuccessMessage('Login successfully!'),
+      onSuccess: data => {
+        setSuccessMessage('Login successfully!')
+        const {
+          createdDate,
+          email,
+          name,
+          role,
+          token,
+          updatedDate,
+          userId,
+          username,
+        } = data.data
+        configAuthorization(token)
+        setUser({
+          name,
+          role,
+          email,
+          userId,
+          username,
+          createdDate,
+          updatedDate,
+        })
+        navigate({ to: '/' })
+      },
+
       onError: error =>
         setErrorMessage(error.response?.data.message || 'Login failed!'),
     })
@@ -74,7 +102,7 @@ export const Login = () => {
           </p>
         </div>
 
-        <div className="z-50 w-[31rem] rounded-xl bg-white p-16 shadow-l">
+        <div className="z-50 h-fit w-[31rem] rounded-xl bg-white p-16 shadow-l">
           <div className="flex flex-col items-center gap-2">
             <h3 className="text-3xl font-semibold text-neutral-900">
               Welcome!
