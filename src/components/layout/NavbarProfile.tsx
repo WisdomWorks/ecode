@@ -1,4 +1,5 @@
 import { useLogout } from '@/apis'
+import { useAppStore } from '@/context/useAppStore'
 
 import { KeyboardArrowDown, Logout } from '@mui/icons-material'
 import { Avatar, Button, MenuItem } from '@mui/material'
@@ -10,16 +11,14 @@ import {
 import HoverMenu from 'material-ui-popup-state/HoverMenu'
 
 export const NavbarProfile = () => {
+  const user = useAppStore(state => state.user)
   const { mutate: logout } = useLogout()
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'navbarMenu',
   })
 
-  const handleLogout = () => {
-    logout()
-    window.location.replace('/login')
-  }
+  const handleLogout = () => logout()
 
   return (
     <>
@@ -28,12 +27,14 @@ export const NavbarProfile = () => {
         {...bindHover(popupState)}
       >
         <Avatar className="bg-orange-400" variant="rounded">
-          A
+          {user?.name.charAt(0)}
         </Avatar>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-white">Nguyen Van A</span>
+          <span className="text-sm font-semibold capitalize text-white">
+            {user?.name} - {user?.username}
+          </span>
           <span className="text-xs font-normal text-neutral-400">
-            email@example.com
+            {user?.email}
           </span>
         </div>
         <KeyboardArrowDown className="text-white" />

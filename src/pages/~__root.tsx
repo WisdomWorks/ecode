@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/layout'
-import { MenuBar } from '@/components/layout/MenuBar'
-import { useAuthStore } from '@/context/useAuthStore'
+import { MenuBar } from '@/components/layout/menu-bar/MenuBar'
+import { useAppStore } from '@/context/useAppStore'
 import { useRoute } from '@/hooks'
 
 import { createRootRoute, Outlet } from '@tanstack/react-router'
@@ -13,7 +13,7 @@ const fullScreenPath = ['/login', '/forget-password']
 
 function RootComponent() {
   const { location, navigate } = useRoute()
-  const user = useAuthStore(state => state.user)
+  const user = useAppStore(state => state.user)
 
   if (!user) {
     navigate({ to: '/login', replace: true })
@@ -35,13 +35,19 @@ function RootComponent() {
         <Navbar />
       </div>
 
-      <div className="col-span-12 row-span-11 grid grid-cols-12 grid-rows-12 gap-4 px-16 py-8">
-        <div className="col-span-2 row-span-9 overflow-hidden rounded-xl shadow-xl">
+      <div className="col-span-12 row-span-11 grid grid-cols-5 grid-rows-12 gap-4 px-16 py-8">
+        <div className="col-span-1 row-span-10 overflow-hidden rounded-xl shadow-xl">
           <MenuBar />
         </div>
 
-        <div className="col-span-10 row-span-12">
-          <Outlet />
+        <div className="col-span-4 row-span-12">
+          {location.pathname.includes('/course') ? (
+            <Outlet />
+          ) : (
+            <div className="h-full rounded-xl p-16 shadow-xl">
+              <Outlet />
+            </div>
+          )}
         </div>
       </div>
     </div>

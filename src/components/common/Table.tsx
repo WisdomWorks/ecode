@@ -14,8 +14,18 @@ interface Props<T extends MRT_RowData> extends MRT_TableOptions<T> {
 export const Table = <T extends MRT_RowData>({
   columns,
   data,
-
+  initialState,
   ...rest
 }: Props<T>) => {
-  return <MaterialReactTable {...rest} columns={columns} data={data} />
+  return (
+    <MaterialReactTable
+      {...rest}
+      columns={columns}
+      data={data}
+      initialState={{
+        showGlobalFilter: true,
+        ...initialState,
+      }}
+    />
+  )
 }

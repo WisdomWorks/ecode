@@ -1,14 +1,19 @@
 import { Dispatch, SetStateAction, SyntheticEvent } from 'react'
 
+import { Role } from '@/constants'
+import { useAppStore } from '@/context/useAppStore'
 import { a11yProps } from '@/utils'
 
 import { Tab, TabProps, Tabs, TabsProps } from '@mui/material'
 
+export type TTabProps = TabProps & {
+  permission?: Role[]
+}
 interface Props extends TabsProps {
   extraOnChange?: () => void
   setTab: Dispatch<SetStateAction<number>>
   tab: number
-  tabs: TabProps[]
+  tabs: TTabProps[]
 }
 
 export const TabsClient = ({
@@ -25,6 +30,8 @@ export const TabsClient = ({
     setTab(newValue)
     extraOnChange?.()
   }
+  const user = useAppStore(state => state.user)
+  const role = user?.role
 
   return (
     <>
@@ -37,15 +44,19 @@ export const TabsClient = ({
         onChange={handleChangeTab}
         value={tab}
       >
-        {tabs.map(({ iconPosition = 'start', value, ...rest }) => (
-          <Tab
-            {...rest}
-            iconPosition={iconPosition}
-            key={value}
-            {...a11yProps(value)}
-            component="div"
-          />
-        ))}
+        {tabs.map(({ iconPosition = 'start', permission, value, ...rest }) => {
+          if (permission && !permission.includes(role as Role)) return null
+
+          return (
+            <Tab
+              {...rest}
+              iconPosition={iconPosition}
+              key={value}
+              {...a11yProps(value)}
+              component="div"
+            />
+          )
+        })}
       </Tabs>
     </>
   )

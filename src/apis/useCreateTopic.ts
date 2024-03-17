@@ -1,12 +1,17 @@
 import { Schema } from '@/types'
 
-import { callAPI } from './axios'
+import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
+import { AxiosError, AxiosResponse } from 'axios'
 
 export const useCreateTopic = () => {
-  return useMutation({
+  return useMutation<
+    AxiosResponse,
+    AxiosError<AxiosResponseError>,
+    Schema['CreateTopicRequest']
+  >({
     mutationFn: async (data: Schema['CreateTopicRequest']) => {
-      return callAPI('/topics', 'post', {
+      return await callAPI('/topics', 'post', {
         data,
       })
     },

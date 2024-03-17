@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import { TabPanel, TabsClient } from '@/components/common'
-import { useToggle } from '@/hooks'
+import { TabPanel, TabsClient, TTabProps } from '@/components/common'
+import { Role } from '@/constants'
+import { withPermissionOnCourse } from '@/HoCs/WithPermissionOnCourse'
+import { useCheckRole, useToggle } from '@/hooks'
 
 import { DetailTopicModal } from '../components/DetailTopicModal'
 import { Exercise } from './exercise/Exercise'
@@ -12,10 +14,10 @@ import {
   QuizOutlined,
   SettingsOutlined,
 } from '@mui/icons-material'
-import { Button, TabProps } from '@mui/material'
+import { Button } from '@mui/material'
 import { createFileRoute, useParams } from '@tanstack/react-router'
 
-const tabs: TabProps[] = [
+const tabs: TTabProps[] = [
   {
     label: 'Material',
     icon: <MenuBookOutlined />,
@@ -33,11 +35,13 @@ const tabs: TabProps[] = [
     icon: <SettingsOutlined />,
     value: 2,
     component: Settings,
+    permission: [Role.TEACHER],
   },
 ]
 
 export const Course = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
+  const { isTeacher } = useCheckRole()
   const [tab, setTab] = useState(0)
 
   const [openTopicModal, toggleTopicModal] = useToggle()
@@ -56,14 +60,16 @@ export const Course = () => {
 
       <div className="row-span-7 overflow-auto rounded-xl p-4 shadow-xl">
         <div className="flex w-full justify-end">
-          <Button
-            className=""
-            onClick={toggleTopicModal}
-            size="large"
-            variant="contained"
-          >
-            Create Topic
-          </Button>
+          {isTeacher && tab !== 2 && (
+            <Button
+              className=""
+              onClick={toggleTopicModal}
+              size="large"
+              variant="contained"
+            >
+              Create Topic
+            </Button>
+          )}
         </div>
         {tabs.map(({ component: Component, value }) => (
           <TabPanel index={value} key={value} value={tab}>
@@ -72,13 +78,15 @@ export const Course = () => {
         ))}
       </div>
 
-      <DetailTopicModal
-        isOpen={openTopicModal}
-        toggleModal={toggleTopicModal}
-      />
+      {openTopicModal && isTeacher && (
+        <DetailTopicModal
+          isOpen={openTopicModal}
+          toggleModal={toggleTopicModal}
+        />
+      )}
     </div>
   )
 }
 export const Route = createFileRoute('/course/$courseId/')({
-  component: Course,
+  component: withPermissionOnCourse(Course),
 })

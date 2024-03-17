@@ -1,19 +1,21 @@
 import { callAPI, configAuthorization } from '@/apis/axios'
-import { TUser } from '@/types'
+import { TCourse, TUser } from '@/types'
 
 import { create } from 'zustand'
 
-interface AuthState {
+interface AppStore {
   checkSession: () => Promise<void>
+  courses?: TCourse[] | []
+  setCourses: (courses: TCourse[]) => void
   setUser: (user: TUser) => void
   user: TUser | null
 }
 
-export const useAuthStore = create<AuthState>()(set => ({
+export const useAppStore = create<AppStore>()(set => ({
   user: null,
   setUser: user => set(() => ({ user })),
   checkSession: async () => {
-    const data = await callAPI('/auth/check-session', 'get')
+    const data = await callAPI('/auth/check-session/user', 'get')
     const {
       createdDate,
       email,
@@ -29,4 +31,6 @@ export const useAuthStore = create<AuthState>()(set => ({
       user: { name, role, email, userId, username, createdDate, updatedDate },
     })
   },
+  courses: [],
+  setCourses: courses => set(() => ({ courses })),
 }))

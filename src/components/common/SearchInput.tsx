@@ -28,6 +28,9 @@ export const SearchInput = ({
         }}
         className={cn('[&_.MuiInputBase-root]:pr-0', className)}
         fullWidth
+        inputProps={{
+          className: 'p-0 px-2',
+        }}
         onChange={onChange}
         type={type}
         value={value}

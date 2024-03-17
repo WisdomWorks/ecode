@@ -17,10 +17,18 @@ export interface paths {
     put: operations["updateCodeExercise"];
     post: operations["createCodeExercise"];
   };
+  "/courses": {
+    get: operations["getAll"];
+    put: operations["updateById"];
+    post: operations["createOne_1"];
+  };
+  "/courses/students": {
+    put: operations["updateStudentsInCourse"];
+  };
   "/users": {
     get: operations["getUsersByRoleOrAll"];
     post: operations["createUser"];
-    patch: operations["updateById"];
+    patch: operations["updateById_1"];
   };
   "/users/import-users": {
     post: operations["importUsersByExcel"];
@@ -58,10 +66,11 @@ export interface paths {
   "/exercises/quiz/submit": {
     post: operations["submitQuizExercise"];
   };
-  "/courses": {
-    get: operations["getAll"];
-    post: operations["createOne_1"];
-    patch: operations["updateById_1"];
+  "/exercises/essay": {
+    post: operations["createEssayExercise"];
+  };
+  "/exercises/essay/submit": {
+    post: operations["submitEssayExercise"];
   };
   "/courses/student": {
     post: operations["addStudentToCourse"];
@@ -73,6 +82,9 @@ export interface paths {
   "/courses/import-courses": {
     post: operations["importCoursesByExcel"];
   };
+  "/courses/enrollment": {
+    post: operations["enrollUserToCourse"];
+  };
   "/auth/logout": {
     post: operations["Logout"];
   };
@@ -81,6 +93,9 @@ export interface paths {
   };
   "/auth/login/admin": {
     post: operations["signInAdmin"];
+  };
+  "/exercises/essay/grade": {
+    patch: operations["gradeEssaySubmission"];
   };
   "/users/{userId}": {
     get: operations["getById"];
@@ -92,6 +107,9 @@ export interface paths {
   "/topics/{topicId}": {
     get: operations["getTopic"];
     delete: operations["deleteTopic"];
+  };
+  "/topics/user/{userId}": {
+    get: operations["getTopicByUserId"];
   };
   "/materials/{topicId}": {
     get: operations["getMaterialsByTopicId"];
@@ -124,8 +142,11 @@ export interface paths {
     get: operations["getById_2"];
     delete: operations["deleteById_2"];
   };
-  "/auth/check-session": {
-    get: operations["checkSession"];
+  "/auth/check-session/user": {
+    get: operations["checkSessionUser"];
+  };
+  "/auth/check-session/admin": {
+    get: operations["checkSessionAdmin"];
   };
   "/groups/{groupId}/student": {
     delete: operations["deleteStudentInGroup"];
@@ -169,6 +190,18 @@ export interface components {
       template: string;
       description: string;
       testcases: string[];
+    };
+    UpdateCourseRequest: {
+      courseId: string;
+      courseName?: string;
+      semester?: string;
+      enrollKey?: string;
+      description?: string;
+      teacherId?: string;
+    };
+    UpdateStudentsToCourseRequest: {
+      courseId: string;
+      studentIds?: string[];
     };
     CreateUserRequest: {
       name: string;
@@ -241,6 +274,28 @@ export interface components {
       reviewable: boolean;
       submission: components["schemas"]["QuizAnswers"][];
     };
+    CreateEssayExerciseRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      publicGroupIds: string[];
+      question: string;
+    };
+    EssaySubmission: {
+      submissionId?: string;
+      studentId: string;
+      exerciseId: string;
+      /** Format: float */
+      score?: number;
+      dateSubmit?: string;
+      dateGrade?: string;
+      reviewable: boolean;
+      submission: string;
+    };
     CreateCodeExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -277,6 +332,11 @@ export interface components {
       /** Format: binary */
       file: string;
     };
+    CourseEnrollmentRequest: {
+      courseId: string;
+      studentId: string;
+      enrollmentKey: string;
+    };
     LoginRequest: {
       userName?: string;
       password?: string;
@@ -308,12 +368,6 @@ export interface components {
       endTime?: string;
       publicGroupIds?: string[];
       questions?: components["schemas"]["QuizQuestion"][];
-    };
-    UpdateCourseRequest: {
-      courseId: string;
-      courseName?: string;
-      semester?: string;
-      description?: string;
     };
     DeleteExerciseRequest: {
       exerciseId: string;
@@ -468,6 +522,85 @@ export interface operations {
       };
     };
   };
+  getAll: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateById: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createOne_1: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateStudentsInCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateStudentsToCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getUsersByRoleOrAll: {
     parameters: {
       query?: {
@@ -510,7 +643,7 @@ export interface operations {
       };
     };
   };
-  updateById: {
+  updateById_1: {
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateUserRequest"];
@@ -889,26 +1022,10 @@ export interface operations {
       };
     };
   };
-  getAll: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  createOne_1: {
+  createEssayExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateCourseRequest"];
+        "application/json": components["schemas"]["CreateEssayExerciseRequest"];
       };
     };
     responses: {
@@ -926,10 +1043,10 @@ export interface operations {
       };
     };
   };
-  updateById_1: {
+  submitEssayExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UpdateCourseRequest"];
+        "application/json": components["schemas"]["EssaySubmission"];
       };
     };
     responses: {
@@ -1034,6 +1151,27 @@ export interface operations {
       };
     };
   };
+  enrollUserToCourse: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CourseEnrollmentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   Logout: {
     responses: {
       /** @description OK */
@@ -1075,6 +1213,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["LoginRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  gradeEssaySubmission: {
+    parameters: {
+      query: {
+        essaySubmissionId: string;
+        score: number;
       };
     };
     responses: {
@@ -1183,6 +1343,30 @@ export interface operations {
     parameters: {
       path: {
         topicId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getTopicByUserId: {
+    parameters: {
+      query: {
+        courseId: string;
+      };
+      path: {
+        userId: string;
       };
     };
     responses: {
@@ -1473,7 +1657,23 @@ export interface operations {
       };
     };
   };
-  checkSession: {
+  checkSessionUser: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  checkSessionAdmin: {
     responses: {
       /** @description OK */
       200: {

@@ -7,5 +7,6 @@ export const useLogout = () => {
     mutationFn: async () => {
       await callAPI('/auth/logout', 'post')
     },
+    onSuccess: () => window.location.replace('/login'),
   })
 }

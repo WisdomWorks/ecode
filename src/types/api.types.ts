@@ -9,5 +9,24 @@ export type TUser = {
   role: string
   updatedDate: string
   userId: string
-  username: string
+  userName?: string
+  username?: string
+}
+
+export type TCourse = {
+  courseId?: string
+  courseName: string
+  description: string
+  semester: string
+  students: TUser[] | [] | null
+  teacher: TUser
+  teacherName?: string
+}
+
+export type TGroup = {
+  courseId: string
+  createDate?: string
+  groupId: string
+  groupName: string
+  updateDate?: string
 }

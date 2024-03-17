@@ -1,13 +1,13 @@
-import { Schema, TUser } from '@/types'
+import { Schema, TCourse, TUser } from '@/types'
 
 import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
 export type TResponseAuth = {
-  [key in keyof TUser]: TUser[key]
-} & {
+  courses: TCourse[]
   token: string
+  user: TUser
 }
 
 export const useLogin = () => {

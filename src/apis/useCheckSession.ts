@@ -8,7 +8,7 @@ export const useCheckSession = () => {
     {
       queryKey: ['login'],
       queryFn: async data => {
-        return await callAPI('/auth/check-session', 'get', {
+        return await callAPI('/auth/check-session/user', 'get', {
           data,
         })
       },

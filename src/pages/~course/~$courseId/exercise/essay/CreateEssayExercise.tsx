@@ -41,7 +41,7 @@ export const CreateEssayExercise = () => {
       <FormInput className="col-span-6" label="Title" name="title" required />
       <div className="col-span-6"></div>
       <div className="col-span-12 flex w-3/5 justify-center gap-2">
-        <FormDateTimePicker label="Start date" name="startDate" required />
+        <FormDateTimePicker label="Start Date" name="startDate" required />
         <div className="flex h-full items-center justify-center">
           <Divider
             className="h-[0.75px] w-3 bg-neutral-900"

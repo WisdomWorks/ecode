@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import { configAuthorization } from './apis/axios.ts'
 import { useCheckSession } from './apis/useCheckSession.ts'
-import { useAuthStore } from './context/useAuthStore.tsx'
+import { BackDropLoading } from './components/common/BackDropLoading.tsx'
+import { useAppStore } from './context/useAppStore.tsx'
 import { routeTree } from './generated/routeTree.gen.ts'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
@@ -32,33 +33,21 @@ declare module '@tanstack/react-router' {
 export const InnerApp = () => {
   const { data, isLoading } = useCheckSession()
 
+  const setUser = useAppStore(state => state.setUser)
+  const setCourses = useAppStore(state => state.setCourses)
+
   useEffect(() => {
     if (data) {
-      const {
-        createdDate,
-        email,
-        name,
-        role,
-        token,
-        updatedDate,
-        userId,
-        username,
-      } = data.data
+      const { courses, token, user } = data.data
       configAuthorization(token)
-      useAuthStore.getState().setUser({
-        name,
-        role,
-        email,
-        userId,
-        username,
-        createdDate,
-        updatedDate,
-      })
+      setUser(user)
+      setCourses(courses)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <BackDropLoading />
   }
 
   return (

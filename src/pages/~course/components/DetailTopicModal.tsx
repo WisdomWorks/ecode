@@ -4,6 +4,7 @@ import { useCreateTopic } from '@/apis'
 import { Dialog } from '@/components/common'
 import { Form, FormButtonGroup } from '@/components/form'
 import { FormInput } from '@/components/form/FormInput'
+import { useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 
 import { useParams } from '@tanstack/react-router'
@@ -13,9 +14,9 @@ interface Props {
 }
 
 export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
+  const { setSuccessMessage } = useToastMessage()
   const { isPending, mutate } = useCreateTopic()
   const { courseId } = useParams({ from: '/course/$courseId/' })
-  console.log(courseId)
 
   const form = useForm<Schema['CreateTopicRequest']>({
     defaultValues: {
@@ -25,10 +26,17 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
   })
 
   const handleSubmit: SubmitHandler<Schema['CreateTopicRequest']> = data => {
-    mutate({
-      ...data,
-      courseId: 'f4e89aa6-5c60-4981-9eef-8867312ed871',
-    })
+    mutate(
+      {
+        ...data,
+        courseId,
+      },
+      {
+        onSuccess: () => {
+          setSuccessMessage('Topic created successfully'), toggleModal()
+        },
+      },
+    )
   }
 
   return (

@@ -5,7 +5,7 @@ import { configAuthorization } from '@/apis/axios'
 import { Form } from '@/components/form'
 import { FormInput } from '@/components/form/FormInput'
 import { FormInputPassword } from '@/components/form/FormInputPassword'
-import { useAuthStore } from '@/context/useAuthStore'
+import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 
@@ -18,7 +18,9 @@ type TLogin = Schema['LoginRequest']
 
 export const Login = () => {
   const navigate = useNavigate()
-  const setUser = useAuthStore(state => state.setUser)
+  const setUser = useAppStore(state => state.setUser)
+  const user = useAppStore(state => state.user)
+  const setCourses = useAppStore(state => state.setCourses)
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { mutate } = useLogin()
   const form = useForm<TLogin>({
@@ -34,27 +36,11 @@ export const Login = () => {
   const onLogin: SubmitHandler<TLogin> = data => {
     mutate(data, {
       onSuccess: data => {
+        const { courses, token, user } = data.data
         setSuccessMessage('Login successfully!')
-        const {
-          createdDate,
-          email,
-          name,
-          role,
-          token,
-          updatedDate,
-          userId,
-          username,
-        } = data.data
         configAuthorization(token)
-        setUser({
-          name,
-          role,
-          email,
-          userId,
-          username,
-          createdDate,
-          updatedDate,
-        })
+        setUser(user)
+        setCourses(courses)
         navigate({ to: '/' })
       },
 
@@ -62,6 +48,8 @@ export const Login = () => {
         setErrorMessage(error.response?.data.message || 'Login failed!'),
     })
   }
+
+  if (user) return window.location.replace('/')
 
   return (
     <Form
@@ -82,7 +70,7 @@ export const Login = () => {
         id="oval"
       ></div>
 
-      <div className="z-50 flex size-full justify-between px-[20rem] py-[15rem]">
+      <div className="z-50 flex size-full justify-between gap-4 px-[20rem] py-[15rem]">
         <div className="z-50 flex flex-col items-center justify-center gap-8">
           <div className="flex items-center gap-8">
             <div className="flex size-[7.25rem] items-center justify-center  rounded-[3.625rem] bg-danger-400 ">
@@ -96,8 +84,11 @@ export const Login = () => {
             </div>
           </div>
 
-          <p className=" break-words text-center text-[2.5rem] font-semibold text-white">
-            Empowering Minds, Igniting Code <br />
+          <p className="break-words text-center text-[2.5rem] font-semibold text-white">
+            <span className="whitespace-nowrap">
+              Empowering Minds, Igniting Code
+            </span>
+            <br />
             Welcome to Your Learning Hub!
           </p>
         </div>

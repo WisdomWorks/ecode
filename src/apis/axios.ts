@@ -37,6 +37,19 @@ export const instance = axios.create({
   withCredentials: true,
 })
 
+instance.interceptors.response.use(
+  function (response) {
+    return response
+  },
+  function (error) {
+    if (error.response?.status === 403 || error.response?.status === 401) {
+      window.location.replace('/login')
+    }
+
+    return Promise.reject(error)
+  },
+)
+
 export const configAuthorization = (token?: string) => {
   const jwtToken = token || Cookies.get('accessToken')
   instance.interceptors.request.use(config => {

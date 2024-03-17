@@ -1,4 +1,4 @@
 export * from './Container'
-export * from './MenuBar'
+export * from './menu-bar/MenuBar'
 export * from './Navbar'
 export * from './ResizeHandle'
