@@ -17,9 +17,10 @@ export type TCourse = {
   courseId?: string
   courseName: string
   description: string
+  enrollKey?: string
   semester: string
   students: TUser[] | [] | null
-  teacher: TUser
+  teacher: TUser | null
   teacherName?: string
 }
 

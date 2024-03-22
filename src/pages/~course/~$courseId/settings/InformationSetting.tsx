@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { useUpdateCourse } from '@/apis'
-import { Form, FormInput } from '@/components/form'
+import { Form, FormInput, FormInputPassword } from '@/components/form'
 import { useToastMessage } from '@/hooks'
 import { TCourse } from '@/types'
 
@@ -40,7 +40,7 @@ export const InformationSetting = ({ courseDetail, refetchCourse }: Props) => {
     mutate(
       {
         ...data,
-        teacherId: courseDetail.teacher.userId,
+        teacherId: courseDetail.teacher?.userId,
         courseId: String(courseDetail.courseId),
       },
       {
@@ -84,6 +84,14 @@ export const InformationSetting = ({ courseDetail, refetchCourse }: Props) => {
               label="Semester"
               name="semester"
               placeholder="Fill the semester"
+              required
+            />
+            <FormInputPassword
+              className="col-span-3"
+              control={control}
+              label="Enrollment key"
+              name="enrollKey"
+              placeholder="Fill the enrollment key"
               required
             />
           </div>

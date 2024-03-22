@@ -47,6 +47,8 @@ export const EnrollCourse = () => {
         onError: error => {
           setErrorMessage(error.response?.data.message || 'Error')
         },
+        onSuccess: data =>
+          window.location.replace(`/course/${data.data.value.courseId}`),
       },
     )
   }

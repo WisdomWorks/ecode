@@ -9,7 +9,7 @@ export const Route = createRootRoute({
   component: RootComponent,
 })
 
-const fullScreenPath = ['/login', '/forget-password']
+const fullScreenPath = ['/login', '/forget-password', '/sandpack']
 
 function RootComponent() {
   const { location, navigate } = useRoute()
@@ -44,7 +44,7 @@ function RootComponent() {
           {location.pathname.includes('/course') ? (
             <Outlet />
           ) : (
-            <div className="h-full rounded-xl p-16 shadow-xl">
+            <div className="h-full overflow-auto rounded-xl p-16 shadow-xl">
               <Outlet />
             </div>
           )}

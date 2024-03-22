@@ -92,6 +92,7 @@ export const StudentsSetting = ({ courseDetail, refetchCourse }: Props) => {
       <AccordionDetails>
         <Table
           columns={columns}
+          containerClassName="max-h-[25rem] min-h-[25rem]"
           data={courseDetail.students || []}
           enableRowActions
           positionActionsColumn="last"

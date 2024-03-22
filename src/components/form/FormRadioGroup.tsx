@@ -14,6 +14,7 @@ type Props<TForm extends FieldValues> = RadioGroupProps &
   UseControllerProps<TForm> & {
     className?: string
     containerClassName?: string
+    label?: string
     options: IFormRadioOption[]
   }
 
@@ -21,6 +22,7 @@ export const FormRadioGroup = <TForm extends FieldValues>({
   className,
   containerClassName,
   control,
+  label,
   name,
   options,
   row = true,
@@ -41,14 +43,19 @@ export const FormRadioGroup = <TForm extends FieldValues>({
         row={row}
         value={value}
       >
-        {options.map(({ label, value }) => (
-          <FormControlLabel
-            control={<Radio />}
-            key={value}
-            label={label}
-            value={value}
-          />
-        ))}
+        <div className="flex flex-col">
+          {label && <span className="text-sm font-bold">{label}</span>}
+          <div>
+            {options.map(({ label, value }) => (
+              <FormControlLabel
+                control={<Radio />}
+                key={value}
+                label={label}
+                value={value}
+              />
+            ))}
+          </div>
+        </div>
       </RadioGroup>
     </FormControl>
   )

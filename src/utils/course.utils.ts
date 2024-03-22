@@ -30,3 +30,8 @@ export enum CreateCodeOption {
   Manually = 'Manually',
   Template = 'Template',
 }
+
+export enum MaterialType {
+  File = 'file',
+  Url = 'string',
+}

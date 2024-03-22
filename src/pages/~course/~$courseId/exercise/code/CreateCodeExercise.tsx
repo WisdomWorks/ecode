@@ -14,7 +14,7 @@ import {
 import { languages, primitiveType } from '@/constants'
 import { CreateCodeExerciseSchema } from '@/pages/~course/shema/createExercise.schema'
 import { TCreateCodeExerciseForm } from '@/types/exercise.types'
-import { CreateCodeOption } from '@/utils/exercise.utils'
+import { CreateCodeOption } from '@/utils/course.utils'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AddCircleOutline, Delete } from '@mui/icons-material'

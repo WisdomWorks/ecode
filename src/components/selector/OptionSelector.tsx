@@ -38,7 +38,7 @@ export const OptionSelector = <T,>({
   return (
     <div
       className={cn(
-        'flex flex-col w-full [&_.MuiChip-root]:bg-success-500',
+        'flex flex-col w-full [&_.MuiChip-root]:bg-success-500 [&_.MuiInputBase-root]:flex-wrap',
         className,
       )}
     >
@@ -51,6 +51,7 @@ export const OptionSelector = <T,>({
         blurOnSelect={blurOnSelect}
         className={className}
         defaultValue={defaultValue}
+        disableCloseOnSelect={true}
         fullWidth
         multiple={multiple}
         onBlur={onBlur}

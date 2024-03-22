@@ -1,5 +1,5 @@
 import { ExerciseType } from '@/constants'
-import { CreateCodeOption } from '@/utils/exercise.utils'
+import { CreateCodeOption } from '@/utils/course.utils'
 
 import { TLanguage } from './common.types'
 import { SvgIconTypeMap } from '@mui/material'

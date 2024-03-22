@@ -31,10 +31,10 @@ declare module '@tanstack/react-router' {
 }
 
 export const InnerApp = () => {
-  const { data, isLoading } = useCheckSession()
-
   const setUser = useAppStore(state => state.setUser)
   const setCourses = useAppStore(state => state.setCourses)
+
+  const { data, isLoading } = useCheckSession()
 
   useEffect(() => {
     if (data) {

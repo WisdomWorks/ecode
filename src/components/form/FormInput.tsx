@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react'
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 
 import { cn } from '@/utils'
@@ -5,7 +6,9 @@ import { cn } from '@/utils'
 import { TextField, TextFieldProps } from '@mui/material'
 
 export type TFormInputProps<TForm extends FieldValues> = TextFieldProps &
-  UseControllerProps<TForm>
+  UseControllerProps<TForm> & {
+    extraOnchange?: (e: ChangeEvent<HTMLInputElement>) => void
+  }
 
 export const FormInput = <TForm extends FieldValues>({
   className,
@@ -26,6 +29,11 @@ export const FormInput = <TForm extends FieldValues>({
     control,
   })
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e)
+    rest.extraOnchange?.(e)
+  }
+
   return (
     <div className={cn('flex flex-col w-full', className)}>
       <span className="text-sm font-bold">
@@ -44,7 +52,7 @@ export const FormInput = <TForm extends FieldValues>({
         }}
         name={name}
         onBlur={onBlur}
-        onChange={onChange}
+        onChange={handleChange}
         placeholder={placeholder}
         type={type}
         value={value}

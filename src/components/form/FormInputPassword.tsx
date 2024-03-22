@@ -10,6 +10,7 @@ export const FormInputPassword = <TData extends object>({
   label = 'Password',
   name,
   placeholder = 'Enter your password',
+  ...rest
 }: TFormInputProps<TData>) => {
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword(show => !show)
@@ -22,6 +23,7 @@ export const FormInputPassword = <TData extends object>({
 
   return (
     <FormInput
+      {...rest}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

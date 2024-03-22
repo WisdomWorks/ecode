@@ -13,8 +13,10 @@
 import { Route as rootRoute } from './../pages/~__root'
 import { Route as CourseRouteImport } from './../pages/~course/~route'
 import { Route as IndexImport } from './../pages/~index'
+import { Route as CourseCourseImport } from './../pages/~course/~_course'
 import { Route as CodeExerciseCodeIdImport } from './../pages/~code-exercise/~$codeId'
 import { Route as TextEditorIndexImport } from './../pages/~text-editor/~index'
+import { Route as SandpackIndexImport } from './../pages/~sandpack/~index'
 import { Route as LoginIndexImport } from './../pages/~login/~index'
 import { Route as ForgetPasswordIndexImport } from './../pages/~forget-password/~index'
 import { Route as EnrollCourseIndexImport } from './../pages/~enroll-course/~index'
@@ -32,6 +34,11 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CourseCourseRoute = CourseCourseImport.update({
+  id: '/_course',
+  getParentRoute: () => CourseRouteRoute,
+} as any)
+
 const CodeExerciseCodeIdRoute = CodeExerciseCodeIdImport.update({
   path: '/code-exercise/$codeId',
   getParentRoute: () => rootRoute,
@@ -39,6 +46,11 @@ const CodeExerciseCodeIdRoute = CodeExerciseCodeIdImport.update({
 
 const TextEditorIndexRoute = TextEditorIndexImport.update({
   path: '/text-editor/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const SandpackIndexRoute = SandpackIndexImport.update({
+  path: '/sandpack/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -86,6 +98,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/sandpack/': {
+      preLoaderRoute: typeof SandpackIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/text-editor/': {
       preLoaderRoute: typeof TextEditorIndexImport
       parentRoute: typeof rootRoute
@@ -93,6 +109,10 @@ declare module '@tanstack/react-router' {
     '/code-exercise/$codeId': {
       preLoaderRoute: typeof CodeExerciseCodeIdImport
       parentRoute: typeof rootRoute
+    }
+    '/course/_course': {
+      preLoaderRoute: typeof CourseCourseImport
+      parentRoute: typeof CourseRouteImport
     }
     '/course/$courseId/': {
       preLoaderRoute: typeof CourseCourseIdIndexImport
@@ -105,10 +125,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  CourseRouteRoute.addChildren([CourseCourseIdIndexRoute]),
+  CourseRouteRoute.addChildren([CourseCourseRoute, CourseCourseIdIndexRoute]),
   EnrollCourseIndexRoute,
   ForgetPasswordIndexRoute,
   LoginIndexRoute,
+  SandpackIndexRoute,
   TextEditorIndexRoute,
   CodeExerciseCodeIdRoute,
 ])

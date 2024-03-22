@@ -8,6 +8,7 @@ export const useCheckRole = () => {
   const isStudent = user?.role === Role.STUDENT
 
   return {
+    user,
     isTeacher,
     isStudent,
   }

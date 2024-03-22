@@ -1,31 +1,73 @@
+import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useCreateTopic } from '@/apis'
+import { useCreateTopic, useUpdateTopic } from '@/apis'
 import { Dialog } from '@/components/common'
 import { Form, FormButtonGroup } from '@/components/form'
 import { FormInput } from '@/components/form/FormInput'
 import { useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 
+import { TopicSchema, useCourseContext } from '../context/course.context'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from '@tanstack/react-router'
+import { z } from 'zod'
 interface Props {
   isOpen: boolean
+  isUpdate?: boolean
   toggleModal: () => void
+  topic?: TopicSchema | null
 }
 
-export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
-  const { setSuccessMessage } = useToastMessage()
-  const { isPending, mutate } = useCreateTopic()
+export const DetailTopicModal = ({
+  isOpen,
+  isUpdate = false,
+  toggleModal,
+  topic,
+}: Props) => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
 
+  const { refetchTopics } = useCourseContext()
+  const { setSuccessMessage } = useToastMessage()
+
+  const { isPending, mutate } = useCreateTopic()
+  const { mutate: updateTopic } = useUpdateTopic()
+
+  const defaultValue = useMemo(
+    () => ({
+      topicName: topic?.topicName || '',
+      description: topic?.description || '',
+    }),
+    [topic],
+  )
+
   const form = useForm<Schema['CreateTopicRequest']>({
-    defaultValues: {
-      topicName: '',
-      description: '',
-    },
+    defaultValues: defaultValue,
+    resolver: zodResolver(
+      z.object({
+        topicName: z.string().min(1, { message: 'Topic name is required' }),
+        description: z.string().nullable(),
+      }),
+    ),
   })
 
   const handleSubmit: SubmitHandler<Schema['CreateTopicRequest']> = data => {
+    if (isUpdate) {
+      updateTopic(
+        {
+          ...data,
+          topicId: topic?.topicId || '',
+        },
+        {
+          onSuccess: () => {
+            setSuccessMessage('Topic updated successfully')
+            toggleModal()
+            refetchTopics?.()
+          },
+        },
+      )
+      return
+    }
     mutate(
       {
         ...data,
@@ -33,7 +75,9 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
       },
       {
         onSuccess: () => {
-          setSuccessMessage('Topic created successfully'), toggleModal()
+          setSuccessMessage('Topic created successfully')
+          toggleModal()
+          refetchTopics?.()
         },
       },
     )
@@ -54,7 +98,7 @@ export const DetailTopicModal = ({ isOpen, toggleModal }: Props) => {
             },
             {
               type: 'submit',
-              label: 'Create',
+              label: isUpdate ? 'Update' : 'Create',
               className: 'submitBtn',
               disabled: isPending,
             },

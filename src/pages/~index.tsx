@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useGetCourses } from '@/apis'
-import { SearchInput } from '@/components/common'
+import { Loading, SearchInput } from '@/components/common'
 import { TCourse } from '@/types'
 import { getCourseLabel } from '@/utils/label.utils'
 
@@ -10,7 +10,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { debounce } from 'lodash'
 
 export const Home = () => {
-  const { data } = useGetCourses()
+  const { data, isLoading } = useGetCourses()
   const [course, setCourse] = useState<TCourse[] | []>([])
   const [search, setSearch] = useState('')
 
@@ -38,6 +38,8 @@ export const Home = () => {
     filterCourseDebounce(e.target.value)
   }
 
+  if (isLoading) return <Loading />
+
   return (
     <>
       <SearchInput
@@ -57,14 +59,14 @@ export const Home = () => {
               }}
               to="/course/$courseId"
             >
-              <div className="flex gap-4">
+              <div className="flex h-14 gap-4">
                 <SchoolOutlined className="text-4xl text-primary-700" />
 
                 <div className="flex flex-col gap-1">
                   <span className="text-lg font-bold text-neutral-800 group-hover:text-white">
                     {getCourseLabel(course)}
                   </span>
-                  <span className="ml-3 font-light italic">
+                  <span className="font-light italic">
                     {course.description}
                   </span>
                 </div>

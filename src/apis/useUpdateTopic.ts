@@ -4,22 +4,17 @@ import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-type TResponse = {
-  message: string
-  value: {
-    courseId: string
-  }
-}
-
-export const useEnrollCourse = () => {
+export const useUpdateTopic = () => {
   return useMutation<
-    AxiosResponse<TResponse>,
+    AxiosResponse,
     AxiosError<AxiosResponseError>,
-    Schema['CourseEnrollmentRequest']
+    Schema['CreateTopicRequest'] & {
+      topicId: string
+    }
   >({
-    mutationKey: ['enroll-course'],
+    mutationKey: ['updateTopic'],
     mutationFn: async data => {
-      return await callAPI('/courses/enrollment', 'post', {
+      return await callAPI('/topics', 'put', {
         data,
       })
     },

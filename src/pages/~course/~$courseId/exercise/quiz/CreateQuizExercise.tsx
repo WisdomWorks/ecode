@@ -5,7 +5,9 @@ import { Schema } from '@/types'
 
 import { FormInformation } from './FormInformation'
 import { FormQuestion } from './FormQuestion'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
+import { z } from 'zod'
 
 export type TQuestion = Schema['QuizQuestion'] & {
   isMultipleChoice?: boolean
@@ -39,7 +41,27 @@ export const CreateQuizExercise = () => {
       questions: [defaultQuestion],
       noOfQuestions: 4,
     },
+    mode: 'onChange',
+    resolver: zodResolver(
+      z.object({
+        exerciseName: z.string().min(1, { message: 'Title is required' }),
+        startTime: z.date(),
+        endTime: z.date(),
+        publicGroupIds: z.array(z.string()),
+        questions: z.array(
+          z.object({
+            title: z.string(),
+            isMultipleChoice: z.boolean(),
+            choices: z.array(z.string()),
+            answers: z.array(z.string()),
+            description: z.string(),
+          }),
+        ),
+      }),
+    ),
   })
+
+  console.log(form.formState.errors)
 
   const onSubmit: SubmitHandler<FormCreateQuizExercise> = data => {
     console.log(data)

@@ -5,7 +5,7 @@ import { FormDateTimePicker, FormInput } from '@/components/form'
 import { Divider } from '@mui/material'
 
 export const FormInformation = () => {
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
   return (
     <>
       <div className="col-span-6 flex justify-center gap-2">
@@ -35,7 +35,18 @@ export const FormInformation = () => {
         <FormInput
           className="w-20"
           control={control}
-          inputProps={{ min: 2, max: 5, className: 'text-center' }}
+          extraOnchange={e => {
+            const value = e.target.value
+            console.log(value)
+
+            if (+value > 5) setValue('noOfQuestions', 5)
+            if (+value < 2) setValue('noOfQuestions', 2)
+          }}
+          inputProps={{
+            min: 2,
+            max: 5,
+            className: 'text-center',
+          }}
           name="noOfQuestions"
           type="number"
         />

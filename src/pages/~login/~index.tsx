@@ -70,7 +70,7 @@ export const Login = () => {
         id="oval"
       ></div>
 
-      <div className="z-50 flex size-full justify-between gap-4 px-[20rem] py-[15rem]">
+      <div className="z-50 flex size-full items-center justify-center gap-x-24">
         <div className="z-50 flex flex-col items-center justify-center gap-8">
           <div className="flex items-center gap-8">
             <div className="flex size-[7.25rem] items-center justify-center  rounded-[3.625rem] bg-danger-400 ">
@@ -84,7 +84,7 @@ export const Login = () => {
             </div>
           </div>
 
-          <p className="break-words text-center text-[2.5rem] font-semibold text-white">
+          <p className="break-words text-center text-[2rem] font-semibold text-white">
             <span className="whitespace-nowrap">
               Empowering Minds, Igniting Code
             </span>
@@ -93,37 +93,39 @@ export const Login = () => {
           </p>
         </div>
 
-        <div className="z-50 h-fit w-[31rem] rounded-xl bg-white p-16 shadow-l">
-          <div className="flex flex-col items-center gap-2">
-            <h3 className="text-3xl font-semibold text-neutral-900">
-              Welcome!
-            </h3>
-            <span className="text-xs text-neutral-600">
-              Enter your credentials to access your account
-            </span>
-          </div>
+        <div className="z-50 flex h-full w-[31rem] items-center">
+          <div className="h-fit w-[31rem] rounded-xl bg-white p-16 shadow-l">
+            <div className="flex flex-col items-center gap-2">
+              <h3 className="text-3xl font-semibold text-neutral-900">
+                Welcome!
+              </h3>
+              <span className="text-xs text-neutral-600">
+                Enter your credentials to access your account
+              </span>
+            </div>
 
-          <div className="mt-12 flex flex-col gap-4">
-            <FormInput
-              label="Username"
-              name="userName"
-              placeholder="Enter your username"
-              required
-            />
-            <FormInputPassword control={control} name="password" />
-            <Button
-              className="mt-2 rounded-xl py-2 text-lg"
-              type="submit"
-              variant="contained"
-            >
-              Sign In
-            </Button>
-            <Link
-              className="mt-2 text-center text-xs text-primary-450 hover:text-primary-550"
-              to="/forget-password"
-            >
-              Forgot Password?
-            </Link>
+            <div className="mt-12 flex flex-col gap-4">
+              <FormInput
+                label="Username"
+                name="userName"
+                placeholder="Enter your username"
+                required
+              />
+              <FormInputPassword control={control} name="password" />
+              <Button
+                className="mt-2 rounded-xl py-2 text-lg"
+                type="submit"
+                variant="contained"
+              >
+                Sign In
+              </Button>
+              <Link
+                className="mt-2 text-center text-xs text-primary-450 hover:text-primary-550"
+                to="/forget-password"
+              >
+                Forgot Password?
+              </Link>
+            </div>
           </div>
         </div>
       </div>
