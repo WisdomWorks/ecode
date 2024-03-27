@@ -1,8 +1,9 @@
-import { Sandpack } from '@codesandbox/sandpack-react'
+import { SandpackComponent } from '@/components/code/SandpackComponent'
+
 import { createFileRoute } from '@tanstack/react-router'
 
 export const SandPackContainer = () => {
-  return <Sandpack template="react" theme="dark" />
+  return <SandpackComponent />
 }
 
 export const Route = createFileRoute('/sandpack/')({

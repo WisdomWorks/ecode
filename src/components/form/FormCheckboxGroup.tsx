@@ -1,4 +1,5 @@
-import { useController, UseControllerProps } from 'react-hook-form'
+import { ReactNode } from 'react'
+import { useController, UseControllerProps, useWatch } from 'react-hook-form'
 
 import {
   Checkbox,
@@ -9,7 +10,7 @@ import {
 } from '@mui/material'
 
 interface Props<TForm extends object> extends UseControllerProps<TForm> {
-  options: { label: string; value: string }[] & CheckboxProps
+  options: { label: ReactNode; value: string }[] & CheckboxProps
 }
 
 export const FormCheckboxGroup = <TForm extends object>({
@@ -18,11 +19,46 @@ export const FormCheckboxGroup = <TForm extends object>({
   options,
 }: Props<TForm>) => {
   const {
-    field: { onChange, value },
+    field: { onChange, ref, value },
   } = useController<TForm>({
     name,
     control,
   })
+
+  const checkboxIds = useWatch({ control, name: name })
+
+  const handleChange = (value: string) => {
+    const newArray = [...checkboxIds] as string[]
+    const item = value
+
+    //Ensure array isnt empty
+    if (newArray.length > 0) {
+      //Attempt to find an item in array with matching id
+      const index = newArray.findIndex(x => x === item)
+
+      // If theres no match add item to the array
+
+      if (typeof item === 'string') {
+        if (index === -1) {
+          newArray.push(item)
+        } else {
+          //If there is a match and the value is empty, remove the item from the array
+          newArray.splice(index, 1)
+        }
+      }
+    } else {
+      //If the array is empty, add the item to the array
+      newArray.push(item)
+    }
+
+    //Overwrite existing array with newArray}
+    onChange(newArray)
+  }
+
+  const isChecked = (valueOption: string) => {
+    const valueArray = Array.isArray(value) ? value : ([value] as string[])
+    return valueArray.includes(valueOption)
+  }
 
   return (
     <FormControl>
@@ -32,10 +68,9 @@ export const FormCheckboxGroup = <TForm extends object>({
             <FormControlLabel
               control={
                 <Checkbox
-                  {...option}
-                  checked={value === option.value}
-                  name={option.value}
-                  onChange={onChange}
+                  checked={isChecked(option.value)}
+                  inputRef={ref}
+                  onChange={() => handleChange(option.value)}
                 />
               }
               label={option.label}

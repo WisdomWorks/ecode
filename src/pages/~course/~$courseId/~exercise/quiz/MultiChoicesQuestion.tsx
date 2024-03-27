@@ -3,7 +3,7 @@ import { useFormContext, WatchObserver } from 'react-hook-form'
 
 import { FormInput } from '@/components/form'
 
-import { FormCreateQuizExercise } from './CreateQuizExercise'
+import { TCreateQuiz } from './CreateQuizExercise'
 import { Checkbox, FormGroup } from '@mui/material'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const MultiChoicesQuestion = ({ index }: Props) => {
-  const { control, setValue, watch } = useFormContext<FormCreateQuizExercise>()
+  const { control, setValue, watch } = useFormContext<TCreateQuiz>()
 
   const handleChangeMultipleChoice = (
     e: ChangeEvent<HTMLInputElement>,
@@ -21,9 +21,7 @@ export const MultiChoicesQuestion = ({ index }: Props) => {
     const checked = e.target.checked
     if (!value) return
 
-    const choiceValue = watch(
-      value as unknown as WatchObserver<FormCreateQuizExercise>,
-    )
+    const choiceValue = watch(value as unknown as WatchObserver<TCreateQuiz>)
 
     if (checked) {
       return setValue(`questions.${index}.answers`, [

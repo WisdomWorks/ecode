@@ -1,0 +1,24 @@
+{
+  "/styles.css": {
+    "code": "body {\n  font-family: sans-serif;\n  -webkit-font-smoothing: auto;\n  -moz-font-smoothing: auto;\n  -moz-osx-font-smoothing: grayscale;\n  font-smoothing: auto;\n  text-rendering: optimizeLegibility;\n  font-smooth: always;\n  -webkit-tap-highlight-color: transparent;\n  -webkit-touch-callout: none;\n}\n\nh1 {\n  font-size: 1.5rem;\n}"
+  },
+  "/App.jsx": {
+    "code": "export default function App() {\n  const data = \"world\"\n\n  return <h1>Hello {data}</h1>\n}\n"
+  },
+  "/index.jsx": {
+    "code": "import { render } from \"preact\";\nimport \"./styles.css\";\n\nimport App from \"./App\";\n\nconst root = document.getElementById(\"root\");\nrender(<App />, root);\n"
+  },
+  "/index.html": {
+    "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>Vite App</title>\n  </head>\n  <body>\n    <div id=\"root\"></div>\n    <script type=\"module\" src=\"/index.jsx\"></script>\n  </body>\n</html>\n"
+  },
+  "/package.json": {
+    "code": "{\n  \"scripts\": {\n    \"dev\": \"vite\",\n    \"build\": \"vite build\",\n    \"preview\": \"vite preview\"\n  },\n  \"dependencies\": {\n    \"preact\": \"^10.16.0\"\n  },\n  \"devDependencies\": {\n    \"@preact/preset-vite\": \"^2.5.0\",\n    \"vite\": \"4.1.4\",\n    \"esbuild-wasm\": \"0.17.12\"\n  }\n}"
+  },
+  "/vite.config.js": {
+    "code": "import { defineConfig } from \"vite\";\nimport preact from '@preact/preset-vite'\n\n// https://vitejs.dev/config/\nexport default defineConfig({\n  plugins: [preact()],\n});\n"
+  },
+  "/src/components/Wrapper.jsx": { "code": "export default () => \"\";" },
+  "/Button.jsx": {
+    "code": "export default () => {\n  return <button>Hello</button>\n};"
+  }
+}

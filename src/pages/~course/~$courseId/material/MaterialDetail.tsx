@@ -2,11 +2,13 @@ import { useMemo } from 'react'
 
 import { useDeleteMaterial } from '@/apis'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
-import { useToggle } from '@/hooks'
+import { useCheckRole, useToggle } from '@/hooks'
+import { MaterialSchema } from '@/types/exercise.types'
 import { getFileExtension, getFileIconByExtension } from '@/utils'
 import { MaterialType } from '@/utils/course.utils'
 
-import { MaterialSchema, useCourseContext } from '../../context/course.context'
+import { PermissionModal } from '../../components/PermissionModal'
+import { useCourseContext } from '../../context/course.context'
 import { Delete, LinkOutlined, RemoveRedEyeOutlined } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 
@@ -15,13 +17,22 @@ interface Props {
 }
 
 export const MaterialDetail = ({ material }: Props) => {
+  const { isTeacher } = useCheckRole()
   const { refetchTopics } = useCourseContext()
-  const { description, materialId, materialName, materialType, storageUrl } =
-    material
+  const {
+    description,
+    groups,
+    materialId,
+    materialName,
+    materialType,
+    storageUrl,
+  } = material
 
   const { mutate: deleteMaterial } = useDeleteMaterial()
 
   const [openModalDelete, toggleModalDelete] = useToggle()
+  const [onOpenSettingPermissionModal, toggleSettingPermissionModal] =
+    useToggle()
 
   const Icon = useMemo(
     () =>
@@ -52,15 +63,17 @@ export const MaterialDetail = ({ material }: Props) => {
         </a>
       </div>
 
-      <div className="flex">
-        <IconButton>
-          <RemoveRedEyeOutlined className="text-warning-500" />
-        </IconButton>
+      {isTeacher && (
+        <div className="flex">
+          <IconButton onClick={toggleSettingPermissionModal}>
+            <RemoveRedEyeOutlined className="text-warning-500" />
+          </IconButton>
 
-        <IconButton onClick={toggleModalDelete}>
-          <Delete className="text-red-500" />
-        </IconButton>
-      </div>
+          <IconButton onClick={toggleModalDelete}>
+            <Delete className="text-red-500" />
+          </IconButton>
+        </div>
+      )}
 
       {openModalDelete && (
         <ConfirmModal
@@ -71,6 +84,17 @@ export const MaterialDetail = ({ material }: Props) => {
           onClose={toggleModalDelete}
           onConfirm={handleDeleteMaterial}
           title="Delete material"
+        />
+      )}
+
+      {onOpenSettingPermissionModal && (
+        <PermissionModal
+          currentGroupPermission={groups}
+          isOpen={onOpenSettingPermissionModal}
+          isShowAll={material.showAll}
+          material={material}
+          toggleModal={toggleSettingPermissionModal}
+          variant="material"
         />
       )}
     </div>

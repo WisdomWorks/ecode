@@ -1,32 +1,29 @@
 import { useState } from 'react'
 
 import { ExerciseType } from '@/constants'
-import { useToggle } from '@/hooks'
 
+import { TopicContainer } from '../TopicContainer'
 import { CreateExercise } from './CreateExercise'
-import { CreateExerciseOptionModal } from './CreateExerciseOptionalModal'
-import { Button } from '@mui/material'
 
 export const Exercise = () => {
   const [exerciseType, setExerciseType] = useState<ExerciseType | null>(null)
-  const [openModalCreateExercise, toggleModalCreateExercise] = useToggle()
+  const [topicIdForExercise, setTopicIdForExercise] = useState<string>('')
 
   if (exerciseType)
     return (
       <CreateExercise
         exerciseType={exerciseType}
         setExerciseType={setExerciseType}
+        topicId={topicIdForExercise}
       />
     )
 
   return (
     <div>
-      Exercise
-      <Button onClick={toggleModalCreateExercise}>Create Exercise</Button>
-      <CreateExerciseOptionModal
-        isOpen={openModalCreateExercise}
+      <TopicContainer
         setExerciseType={setExerciseType}
-        toggleModal={toggleModalCreateExercise}
+        setTopicIdForExercise={setTopicIdForExercise}
+        variant="exercise"
       />
     </div>
   )

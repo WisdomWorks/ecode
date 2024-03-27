@@ -29,8 +29,6 @@ function RootComponent() {
 
   return (
     <div className="grid h-screen grid-cols-12 grid-rows-12">
-      {/* <Navbar /> */}
-
       <div className="col-span-12 bg-neutral-800">
         <Navbar />
       </div>
@@ -41,7 +39,7 @@ function RootComponent() {
         </div>
 
         <div className="col-span-4 row-span-12">
-          {location.pathname.includes('/course') ? (
+          {location.pathname.match(/^\/course\/[^-]+-[^/]+$/) ? (
             <Outlet />
           ) : (
             <div className="h-full overflow-auto rounded-xl p-16 shadow-xl">

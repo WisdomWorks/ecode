@@ -2,7 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 
 import { FormCheckbox, FormInput } from '@/components/form'
 
-import { FormCreateQuizExercise, TQuestion } from './CreateQuizExercise'
+import { TCreateQuiz, TQuestion } from './CreateQuizExercise'
 import { MultiChoicesQuestion } from './MultiChoicesQuestion'
 import { SingleChoiceQuestion } from './SingleChoiceQuestion'
 import { DeleteOutline } from '@mui/icons-material'
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const FormQuestion = ({ defaultQuestion }: Props) => {
-  const { control, setValue, watch } = useFormContext<FormCreateQuizExercise>()
+  const { control, setValue, watch } = useFormContext<TCreateQuiz>()
 
   const { append, fields, remove } = useFieldArray({
     control: control,
@@ -26,13 +26,13 @@ export const FormQuestion = ({ defaultQuestion }: Props) => {
 
   return (
     <>
-      <div className="col-span-12 flex flex-col gap-4">
+      <div className="col-span-12 grid grid-cols-12 gap-4">
         {fields.map((field, index) => {
           const { id } = field
 
           return (
             <div
-              className="grid grid-cols-12 rounded-lg border-2 border-solid border-gray-500 p-4 shadow-md"
+              className="col-span-12 grid grid-cols-12 rounded-lg border-2 border-solid border-gray-500 p-4 shadow-md lg:col-span-6"
               key={id}
             >
               <div className="col-span-12 flex w-full items-center justify-between">
@@ -67,7 +67,7 @@ export const FormQuestion = ({ defaultQuestion }: Props) => {
                   />
                 </div>
                 {!watch(`questions.${index}.isMultipleChoice`) ? (
-                  <SingleChoiceQuestion index={index} />
+                  <SingleChoiceQuestion field={field} index={index} />
                 ) : (
                   <MultiChoicesQuestion index={index} />
                 )}

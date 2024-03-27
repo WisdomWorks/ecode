@@ -1,23 +1,11 @@
 import { createContext, useContext } from 'react'
 
-import { Schema } from '@/types'
+import { TTopic } from '@/types/exercise.types'
 
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 
-export type TopicSchema = Schema['CreateTopicRequest'] & {
-  topicId: string
-}
-
-export type MaterialSchema = Schema['CreateMaterialRequest'] & {
-  materialId: string
-  storageUrl?: string
-}
-
-export type TTopic = TopicSchema & {
-  materials: MaterialSchema[]
-}
-
 interface CourseContextType {
+  courseId: string
   loading: boolean
   refetchTopics?: (
     options?: RefetchOptions | undefined,
@@ -30,6 +18,7 @@ export const CourseContext = createContext<CourseContextType>({
   setTopics: () => {},
   topics: [],
   loading: false,
+  courseId: '',
 })
 
 export const useCourseContext = () => {

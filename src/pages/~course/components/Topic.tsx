@@ -1,11 +1,14 @@
 import { PropsWithChildren } from 'react'
 
+import { useCheckRole } from '@/hooks'
+
 import {
   Add,
   Bookmark,
   Delete,
   Edit,
   MoreHorizOutlined,
+  RemoveRedEyeOutlined,
 } from '@mui/icons-material'
 import { IconButton, MenuItem } from '@mui/material'
 import {
@@ -21,6 +24,8 @@ interface Props {
   onDeleteTopic?: () => void
   onUpdateTopic?: () => void
   toggleModalCreate?: () => void
+  toggleModalCreateExercise?: () => void
+  toggleModalSettingPermission: () => void
   topicName: string
 }
 
@@ -31,8 +36,11 @@ export const Topic = ({
   onDeleteTopic,
   onUpdateTopic,
   toggleModalCreate,
+  toggleModalSettingPermission,
   topicName,
 }: PropsWithChildren<Props>) => {
+  const { isTeacher } = useCheckRole()
+
   const popupState = usePopupState({
     variant: 'popover',
     popupId: 'navbarMenu',
@@ -52,12 +60,14 @@ export const Topic = ({
             {children}
           </div>
         </div>
-        <IconButton
-          {...bindHover(popupState)}
-          className="text-sm text-neutral-900"
-        >
-          <MoreHorizOutlined className="size-9" />
-        </IconButton>
+        {isTeacher && (
+          <IconButton
+            {...bindHover(popupState)}
+            className="text-sm text-neutral-900"
+          >
+            <MoreHorizOutlined className="size-9" />
+          </IconButton>
+        )}
       </div>
 
       <HoverMenu
@@ -77,6 +87,13 @@ export const Topic = ({
         >
           <Add className="text-success-450" />
           {isMaterial ? 'Create material' : 'Create exercise'}
+        </MenuItem>
+        <MenuItem
+          className="flex items-center gap-2"
+          onClick={toggleModalSettingPermission}
+        >
+          <RemoveRedEyeOutlined className="text-warning-450" />
+          Setting permission
         </MenuItem>
         <MenuItem className="flex items-center gap-2" onClick={onUpdateTopic}>
           <Edit className="text-primary-450" />

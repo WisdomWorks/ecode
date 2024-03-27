@@ -18,6 +18,17 @@ export interface paths {
   "/exercises/{exerciseId}/run": {
     put: operations["runCode"];
   };
+  "/exercises/quiz": {
+    put: operations["updateQuizExercise"];
+    post: operations["createQuizExercise"];
+  };
+  "/exercises/essay": {
+    put: operations["updateEssayExercise"];
+    post: operations["createEssayExercise"];
+  };
+  "/exercises/essay/grade": {
+    put: operations["gradeEssaySubmission"];
+  };
   "/exercises/code": {
     put: operations["updateCodeExercise"];
     post: operations["createCodeExercise"];
@@ -66,15 +77,11 @@ export interface paths {
   "/exercises/{exerciseId}/check-key": {
     post: operations["checkCodeExerciseKey"];
   };
-  "/exercises/quiz": {
-    post: operations["createQuizExercise"];
-    patch: operations["updateQuizExercise"];
+  "/exercises/view": {
+    post: operations["addPermissionExercise"];
   };
   "/exercises/quiz/submit": {
     post: operations["submitQuizExercise"];
-  };
-  "/exercises/essay": {
-    post: operations["createEssayExercise"];
   };
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
@@ -100,9 +107,6 @@ export interface paths {
   };
   "/auth/login/admin": {
     post: operations["signInAdmin"];
-  };
-  "/exercises/essay/grade": {
-    patch: operations["gradeEssaySubmission"];
   };
   "/users/{userId}": {
     get: operations["getById"];
@@ -136,10 +140,13 @@ export interface paths {
   };
   "/exercises": {
     get: operations["getAllExerciseByCourseId"];
+  };
+  "/exercises/{exerciseId}": {
+    get: operations["getExerciseById"];
     delete: operations["deleteExerciseById"];
   };
-  "/exercises/exercise": {
-    get: operations["getExerciseById"];
+  "/exercises/detail/{exerciseId}": {
+    get: operations["getExerciseDetail"];
   };
   "/courses/{courseId}": {
     get: operations["getById_2"];
@@ -167,6 +174,7 @@ export interface components {
       topicId: string;
       topicName: string;
       description?: string;
+      showAll?: boolean;
     };
     UpdateGroupRequest: {
       groupName?: string;
@@ -181,7 +189,46 @@ export interface components {
       fileName?: string;
       inputs?: components["schemas"]["IOTestCase"][];
     };
-    CodeExercise: {
+    QuizChoice: {
+      choiceId?: string;
+      content: string;
+    };
+    QuizQuestion: {
+      questionId?: string;
+      title: string;
+      description: string;
+      choices: components["schemas"]["QuizChoice"][];
+      answers: components["schemas"]["QuizChoice"][];
+    };
+    UpdateQuizExerciseRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      questions?: components["schemas"]["QuizQuestion"][];
+    };
+    UpdateEssayExerciseRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      question: string;
+    };
+    CodeExerciseWBD: {
       exerciseId?: string;
       topicId: string;
       exerciseName: string;
@@ -192,6 +239,10 @@ export interface components {
       startTime: string;
       /** Format: date-time */
       endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt: number;
       type: string;
       publicGroupIds: string[];
       language: string;
@@ -199,6 +250,7 @@ export interface components {
       template: string;
       description: string;
       testcases: string[];
+      showAll?: boolean;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -223,6 +275,11 @@ export interface components {
       topicName: string;
       description?: string;
     };
+    CreatePermissionTopicRequest: {
+      topicId: string;
+      groupIds?: string[];
+      showAll?: boolean;
+    };
     CreateMaterialRequest: {
       materialName: string;
       materialType: string;
@@ -231,6 +288,11 @@ export interface components {
       description?: string;
       /** Format: binary */
       file?: string;
+    };
+    CreatePermissionMaterialRequest: {
+      materialId: string;
+      groupIds?: string[];
+      showAll?: boolean;
     };
     CreateGroupRequest: {
       courseId: string;
@@ -244,31 +306,24 @@ export interface components {
     SubmitCodeRequest: {
       containerId?: string;
     };
-    QuizChoice: {
-      choiceId?: string;
-      content: string;
-    };
-    QuizExercise: {
+    CreatePermissionExerciseRequest: {
+      groupIds?: string[];
       exerciseId?: string;
+      showAll?: boolean;
+    };
+    CreateQuizExerciseRequest: {
       topicId: string;
       exerciseName: string;
       key: string;
-      createdDate?: string;
-      updatedDate?: string;
       /** Format: date-time */
       startTime: string;
       /** Format: date-time */
       endTime: string;
-      type: string;
-      publicGroupIds: string[];
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
       questions: components["schemas"]["QuizQuestion"][];
-    };
-    QuizQuestion: {
-      questionId?: string;
-      title: string;
-      description: string;
-      choices: components["schemas"]["QuizChoice"][];
-      answers: components["schemas"]["QuizChoice"][];
     };
     QuizAnswers: {
       quizAnswerId?: string;
@@ -294,7 +349,10 @@ export interface components {
       startTime: string;
       /** Format: date-time */
       endTime: string;
-      publicGroupIds: string[];
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
       question: string;
     };
     EssaySubmission: {
@@ -366,21 +424,7 @@ export interface components {
     UpdateMaterialRequest: {
       materialId: string;
       description?: string;
-    };
-    UpdateQuizExerciseRequest: {
-      topicId?: string;
-      exerciseName?: string;
-      key?: string;
-      /** Format: date-time */
-      startTime?: string;
-      /** Format: date-time */
-      endTime?: string;
-      publicGroupIds?: string[];
-      questions?: components["schemas"]["QuizQuestion"][];
-    };
-    DeleteExerciseRequest: {
-      exerciseId: string;
-      type: string;
+      checkAll?: boolean;
     };
     RemoveStudentFromCourseRequest: {
       studentId: string;
@@ -557,10 +601,126 @@ export interface operations {
       };
     };
   };
+  updateQuizExercise: {
+    parameters: {
+      query: {
+        exerciseId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateQuizExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createQuizExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateQuizExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateEssayExercise: {
+    parameters: {
+      query: {
+        exerciseId: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateEssayExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createEssayExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateEssayExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  gradeEssaySubmission: {
+    parameters: {
+      query: {
+        essaySubmissionId: string;
+        score: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   updateCodeExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CodeExercise"];
+        "application/json": components["schemas"]["CodeExerciseWBD"];
       };
     };
     responses: {
@@ -787,10 +947,9 @@ export interface operations {
     };
   };
   addViewPermission: {
-    parameters: {
-      query: {
-        topicId: string;
-        groupIds: string[];
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreatePermissionTopicRequest"];
       };
     };
     responses: {
@@ -877,10 +1036,9 @@ export interface operations {
     };
   };
   addViewPermission_1: {
-    parameters: {
-      query: {
-        materialId: string;
-        groupIds: string[];
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreatePermissionMaterialRequest"];
       };
     };
     responses: {
@@ -1025,36 +1183,10 @@ export interface operations {
       };
     };
   };
-  createQuizExercise: {
+  addPermissionExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["QuizExercise"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  updateQuizExercise: {
-    parameters: {
-      query: {
-        exerciseId: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateQuizExerciseRequest"];
+        "application/json": components["schemas"]["CreatePermissionExerciseRequest"];
       };
     };
     responses: {
@@ -1076,27 +1208,6 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["QuizSubmission"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  createEssayExercise: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateEssayExerciseRequest"];
       };
     };
     responses: {
@@ -1284,28 +1395,6 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["LoginRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  gradeEssaySubmission: {
-    parameters: {
-      query: {
-        essaySubmissionId: string;
-        score: number;
       };
     };
     responses: {
@@ -1602,10 +1691,10 @@ export interface operations {
       };
     };
   };
-  deleteExerciseById: {
-    requestBody?: {
-      content: {
-        "application/json": components["schemas"]["DeleteExerciseRequest"];
+  getExerciseById: {
+    parameters: {
+      path: {
+        exerciseId: string;
       };
     };
     responses: {
@@ -1623,9 +1712,36 @@ export interface operations {
       };
     };
   };
-  getExerciseById: {
+  deleteExerciseById: {
     parameters: {
       query: {
+        type: string;
+      };
+      path: {
+        exerciseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getExerciseDetail: {
+    parameters: {
+      query: {
+        key: string;
+      };
+      path: {
         exerciseId: string;
       };
     };

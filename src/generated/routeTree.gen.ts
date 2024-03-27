@@ -20,7 +20,9 @@ import { Route as SandpackIndexImport } from './../pages/~sandpack/~index'
 import { Route as LoginIndexImport } from './../pages/~login/~index'
 import { Route as ForgetPasswordIndexImport } from './../pages/~forget-password/~index'
 import { Route as EnrollCourseIndexImport } from './../pages/~enroll-course/~index'
+import { Route as CourseCourseIdExerciseDetailRouteImport } from './../pages/~course/~$courseId/~exercise-detail/~route'
 import { Route as CourseCourseIdIndexImport } from './../pages/~course/~$courseId/~index'
+import { Route as CourseCourseIdExerciseDetailExerciseIdImport } from './../pages/~course/~$courseId/~exercise-detail/~$exerciseId'
 
 // Create/Update Routes
 
@@ -69,10 +71,22 @@ const EnrollCourseIndexRoute = EnrollCourseIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const CourseCourseIdExerciseDetailRouteRoute =
+  CourseCourseIdExerciseDetailRouteImport.update({
+    path: '/$courseId/exercise-detail',
+    getParentRoute: () => CourseRouteRoute,
+  } as any)
+
 const CourseCourseIdIndexRoute = CourseCourseIdIndexImport.update({
   path: '/$courseId/',
   getParentRoute: () => CourseRouteRoute,
 } as any)
+
+const CourseCourseIdExerciseDetailExerciseIdRoute =
+  CourseCourseIdExerciseDetailExerciseIdImport.update({
+    path: '/$exerciseId',
+    getParentRoute: () => CourseCourseIdExerciseDetailRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -118,6 +132,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseIdIndexImport
       parentRoute: typeof CourseRouteImport
     }
+    '/course/$courseId/exercise-detail': {
+      preLoaderRoute: typeof CourseCourseIdExerciseDetailRouteImport
+      parentRoute: typeof CourseRouteImport
+    }
+    '/course/$courseId/exercise-detail/$exerciseId': {
+      preLoaderRoute: typeof CourseCourseIdExerciseDetailExerciseIdImport
+      parentRoute: typeof CourseCourseIdExerciseDetailRouteImport
+    }
   }
 }
 
@@ -125,7 +147,13 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  CourseRouteRoute.addChildren([CourseCourseRoute, CourseCourseIdIndexRoute]),
+  CourseRouteRoute.addChildren([
+    CourseCourseRoute,
+    CourseCourseIdIndexRoute,
+    CourseCourseIdExerciseDetailRouteRoute.addChildren([
+      CourseCourseIdExerciseDetailExerciseIdRoute,
+    ]),
+  ]),
   EnrollCourseIndexRoute,
   ForgetPasswordIndexRoute,
   LoginIndexRoute,

@@ -9,7 +9,7 @@ import { Button } from '@mui/material'
 
 interface Props {
   isOpen: boolean
-  setExerciseType: Dispatch<SetStateAction<ExerciseType | null>>
+  setExerciseType?: Dispatch<SetStateAction<ExerciseType | null>>
   toggleModal: () => void
 }
 
@@ -20,7 +20,7 @@ export const CreateExerciseOptionModal = ({
 }: Props) => {
   const handleClickOption = (type: ExerciseType) => {
     toggleModal()
-    setExerciseType(type)
+    setExerciseType?.(type)
   }
 
   return (

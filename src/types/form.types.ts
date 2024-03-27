@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export interface IFormCardRadioOption {
   description?: string
   label: string
@@ -5,6 +7,6 @@ export interface IFormCardRadioOption {
 }
 
 export interface IFormRadioOption {
-  label: string
+  label: ReactNode
   value: string
 }

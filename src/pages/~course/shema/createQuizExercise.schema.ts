@@ -1,16 +1,34 @@
 import { isBefore, isPast } from 'date-fns'
 import { z } from 'zod'
 
-export const CreateEssayExerciseSchema = z
+export const CreateQuizExerciseSchema = z
   .object({
     exerciseId: z.string(),
     topicId: z.string().min(1, { message: 'Topic is required' }),
     exerciseName: z.string().min(1, { message: 'Title is required' }),
-    question: z.string().min(1, { message: 'Topic is required' }),
     startDate: z.date(),
     endDate: z.date(),
     durationObj: z.date(),
     key: z.string().min(1, { message: 'Enrollment key is required' }),
+    questions: z.array(
+      z.object({
+        title: z.string().optional(),
+        isMultipleChoice: z.boolean(),
+        choices: z.array(
+          z.object({
+            choiceId: z.string().optional(),
+            content: z.string().optional(),
+          }),
+        ),
+        answers: z.array(
+          z.object({
+            choiceId: z.string().optional(),
+            content: z.string().optional(),
+          }),
+        ),
+        description: z.string(),
+      }),
+    ),
   })
   .superRefine(({ endDate, startDate }, ctx) => {
     if (isPast(startDate) || isPast(endDate)) {

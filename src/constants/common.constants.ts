@@ -2,9 +2,9 @@ import { TLanguage } from '@/types'
 import { uuid } from '@/utils'
 
 export enum ExerciseType {
-  CODE = 'CODE',
-  ESSAY = 'ESSAY',
-  QUIZ = 'QUIZ',
+  CODE = 'code',
+  ESSAY = 'essay',
+  QUIZ = 'quiz',
 }
 
 export const languages: TLanguage[] = [

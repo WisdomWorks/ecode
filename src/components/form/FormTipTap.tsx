@@ -35,8 +35,8 @@ export const FormTipTap = <TForm extends object>({
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange } }) => {
-          return <TipTap {...rest} onChange={onChange} />
+        render={({ field: { onChange, value } }) => {
+          return <TipTap {...rest} defaultValue={value} onChange={onChange} />
         }}
       />
       {!!error?.message && <span className="textError">{error.message}</span>}

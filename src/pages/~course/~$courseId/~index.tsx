@@ -4,11 +4,12 @@ import { useGetTopicsByUserId, useGetTopicsForTeacher } from '@/apis'
 import { Loading, TabPanel, TabsClient, TTabProps } from '@/components/common'
 import { Role } from '@/constants'
 import { withPermissionOnCourse } from '@/HoCs/WithPermissionOnCourse'
-import { useCheckRole, useToggle } from '@/hooks'
+import { useCheckRole, useRoute, useToggle } from '@/hooks'
+import { TTopic } from '@/types/exercise.types'
 
 import { DetailTopicModal } from '../components/DetailTopicModal'
-import { CourseContext, TTopic } from '../context/course.context'
-import { Exercise } from './exercise/Exercise'
+import { CourseContext } from '../context/course.context'
+import { Exercise } from './~exercise/Exercise'
 import { Material } from './material/Material'
 import { Settings } from './settings/Settings'
 import {
@@ -43,6 +44,10 @@ const tabs: TTabProps[] = [
 
 export const Course = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
+  const {
+    location: { state },
+  } = useRoute()
+
   const [topics, setTopics] = useState<TTopic[]>([])
   const [tab, setTab] = useState(0)
 
@@ -78,8 +83,9 @@ export const Course = () => {
   }, [topicOfStudent, topicsOfTeacher])
 
   useEffect(() => {
+    if ('tab' in state) return setTab(state.tab as number)
     setTab(0)
-  }, [courseId])
+  }, [courseId, state])
 
   const loading = getTopicsOfStudentLoading || getTopicOfTeacherLoading
 
@@ -92,6 +98,7 @@ export const Course = () => {
           ? refetchTopicsOfTeacher
           : refetchTopicsOfStudent,
         loading,
+        courseId,
       }}
     >
       <div className="grid h-full grid-rows-8 gap-4">

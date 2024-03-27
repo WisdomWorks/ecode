@@ -1,4 +1,4 @@
-import { TTopic } from '@/pages/~course/context/course.context'
+import { TTopic } from '@/types/exercise.types'
 
 import { AxiosResponseError, callAPI, Path } from './axios'
 import { useQuery } from '@tanstack/react-query'

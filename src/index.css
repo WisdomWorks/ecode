@@ -24,3 +24,7 @@ html {
 .MuiTab-root {
   text-transform: none !important;
 }
+
+.MuiMultiSectionDigitalClockSection-root {
+  padding: 0 !important;
+}

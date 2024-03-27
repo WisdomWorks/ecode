@@ -43,9 +43,9 @@ export const FormRadioGroup = <TForm extends FieldValues>({
         row={row}
         value={value}
       >
-        <div className="flex flex-col">
+        <div>
           {label && <span className="text-sm font-bold">{label}</span>}
-          <div>
+          <div className="flex flex-col">
             {options.map(({ label, value }) => (
               <FormControlLabel
                 control={<Radio />}
