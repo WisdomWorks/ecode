@@ -20,8 +20,14 @@ export const SingleChoiceQuestion = ({ field, index }: Props) => {
   ) => {
     const value = e.target.value
     if (!value) return
+
+    const choiceId = watch('questions')
+      .at(index)
+      ?.choices.find(choice => choice.content === value)?.choiceId
+
     return setValue(`questions.${index}.answers.${0}`, {
       content: value,
+      choiceId,
     })
   }
 
@@ -31,7 +37,7 @@ export const SingleChoiceQuestion = ({ field, index }: Props) => {
         content: string
       }[]
     | [] = field.questionId
-    ? field.choices
+    ? watch(`questions.${index}`).choices
     : Array.from({ length: watch('noOfQuestions') })
 
   const answers = watch(`questions.${index}.answers`).map(
@@ -55,6 +61,7 @@ export const SingleChoiceQuestion = ({ field, index }: Props) => {
             <Radio checked={checked} disabled={!content} value={content} />
             <FormInput
               control={control}
+              extraOnchange={() => setValue(`questions.${index}.answers`, [])}
               name={`questions.${index}.choices.${i}.content`}
             />
           </div>

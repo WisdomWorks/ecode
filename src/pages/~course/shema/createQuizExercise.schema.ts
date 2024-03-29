@@ -12,6 +12,7 @@ export const CreateQuizExerciseSchema = z
     key: z.string().min(1, { message: 'Enrollment key is required' }),
     questions: z.array(
       z.object({
+        questionId: z.string().optional(),
         title: z.string().optional(),
         isMultipleChoice: z.boolean(),
         choices: z.array(

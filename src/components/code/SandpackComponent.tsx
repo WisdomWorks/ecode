@@ -18,7 +18,7 @@ export const SandpackComponent = () => {
         recompileMode: 'delayed',
         initMode: 'user-visible',
       }}
-      template="vite-preact"
+      template="vite-react"
     >
       <SandpackThemeProvider theme={nightOwl}>
         <SandpackStack>

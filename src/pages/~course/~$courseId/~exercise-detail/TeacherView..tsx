@@ -7,10 +7,12 @@ interface Props {
 }
 
 export const TeacherView = ({ exerciseId }: Props) => {
-  const { data, isLoading } = useGetExerciseDetailForTeacher({ exerciseId })
+  const { data, isLoading, isRefetching } = useGetExerciseDetailForTeacher({
+    exerciseId,
+  })
   const exercise = data?.data
 
-  if (isLoading) return null
+  if (isLoading || isRefetching) return null
   const { topicId, type } = exercise
 
   return (

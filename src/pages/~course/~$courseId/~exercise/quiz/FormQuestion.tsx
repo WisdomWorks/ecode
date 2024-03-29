@@ -69,7 +69,7 @@ export const FormQuestion = ({ defaultQuestion }: Props) => {
                 {!watch(`questions.${index}.isMultipleChoice`) ? (
                   <SingleChoiceQuestion field={field} index={index} />
                 ) : (
-                  <MultiChoicesQuestion index={index} />
+                  <MultiChoicesQuestion field={field} index={index} />
                 )}
               </div>
             </div>

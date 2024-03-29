@@ -4,16 +4,23 @@ import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-export const useUpdateQuizExercise = () => {
+interface Props {
+  exerciseId: string
+}
+
+export const useUpdateQuizExercise = ({ exerciseId }: Props) => {
   return useMutation<
     AxiosResponse,
     AxiosError<AxiosResponseError>,
     Schema['UpdateQuizExerciseRequest']
   >({
-    mutationKey: ['createQuizExercise'],
+    mutationKey: ['createQuizExercise', exerciseId],
     mutationFn: async data => {
       return await callAPI('/exercises/quiz', 'put', {
         data,
+        params: {
+          exerciseId,
+        },
       })
     },
   })

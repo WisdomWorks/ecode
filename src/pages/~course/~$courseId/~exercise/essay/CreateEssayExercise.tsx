@@ -39,6 +39,8 @@ export const CreateEssayExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
+  console.log(exercise)
+
   const { refetchTopics } = useCourseContext()
 
   const { isPending: createPending, mutate: createEssay } =

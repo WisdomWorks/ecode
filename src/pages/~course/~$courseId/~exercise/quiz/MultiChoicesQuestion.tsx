@@ -1,5 +1,5 @@
 import { ChangeEvent } from 'react'
-import { useFormContext, WatchObserver } from 'react-hook-form'
+import { FieldArrayWithId, useFormContext } from 'react-hook-form'
 
 import { FormInput } from '@/components/form'
 
@@ -7,10 +7,11 @@ import { TCreateQuiz } from './CreateQuizExercise'
 import { Checkbox, FormGroup } from '@mui/material'
 
 interface Props {
+  field: FieldArrayWithId<TCreateQuiz, 'questions', 'id'>
   index: number
 }
 
-export const MultiChoicesQuestion = ({ index }: Props) => {
+export const MultiChoicesQuestion = ({ field, index }: Props) => {
   const { control, setValue, watch } = useFormContext<TCreateQuiz>()
 
   const handleChangeMultipleChoice = (
@@ -21,13 +22,11 @@ export const MultiChoicesQuestion = ({ index }: Props) => {
     const checked = e.target.checked
     if (!value) return
 
-    const choiceValue = watch(value as unknown as WatchObserver<TCreateQuiz>)
-
     if (checked) {
       return setValue(`questions.${index}.answers`, [
         ...watch(`questions.${index}.answers`),
         {
-          content: String(choiceValue),
+          content: String(value),
         },
       ])
     }
@@ -35,23 +34,43 @@ export const MultiChoicesQuestion = ({ index }: Props) => {
     return setValue(
       `questions.${index}.answers`,
       watch(`questions.${index}.answers`).filter(
-        answer => answer.content !== String(choiceValue),
+        answer => answer.content !== String(value),
       ),
     )
   }
 
+  const arrayRender:
+    | {
+        choiceId?: string | undefined
+        content: string
+      }[]
+    | [] = field.questionId
+    ? watch(`questions.${index}`).choices
+    : Array.from({ length: watch('noOfQuestions') })
+
+  const answers = watch(`questions.${index}.answers`).map(
+    answer => answer.content,
+  )
+
   return (
     <FormGroup className="flex flex-col gap-2">
-      {Array.from({ length: watch('noOfQuestions') }).map((_, i) => {
+      {arrayRender.map((choice, i) => {
+        const content = watch(`questions.${index}.choices.${i}.content`)
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        const checked = choice ? answers.includes(choice.content) : undefined
+
         return (
           <div className="flex w-1/2 items-center" key={i}>
             <Checkbox
-              disabled={!watch(`questions.${index}.choices.${i}.content`)}
+              checked={checked}
+              disabled={!content}
               onChange={e => handleChangeMultipleChoice(e, index)}
-              value={`questions.${index}.choices.${i}.content`}
+              value={content}
             />
             <FormInput
               control={control}
+              extraOnchange={() => setValue(`questions.${index}.answers`, [])}
               name={`questions.${index}.choices.${i}.content`}
             />
           </div>

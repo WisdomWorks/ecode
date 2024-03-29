@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 
 import { useCreateQuizExercise, useUpdateQuizExercise } from '@/apis'
@@ -62,11 +63,16 @@ export const CreateQuizExercise = ({
   const { isPending: isPendingCreate, mutate: createExercise } =
     useCreateQuizExercise()
   const { isPending: isPendingUpdate, mutate: updateExercise } =
-    useUpdateQuizExercise()
+    useUpdateQuizExercise({
+      exerciseId: exercise?.exerciseId || '',
+    })
 
-  const form = useForm<TCreateQuiz>({
-    defaultValues: {
-      questions: exercise?.questions || [defaultQuestion],
+  const defaultValues = useMemo(
+    () => ({
+      questions: exercise?.questions.map(question => ({
+        ...question,
+        isMultipleChoice: question.answers.length > 1,
+      })) || [defaultQuestion],
       noOfQuestions: 4,
       exerciseId: exercise?.exerciseId || '',
       topicId,
@@ -84,10 +90,18 @@ export const CreateQuizExercise = ({
       endDate: exercise?.endTime
         ? new Date(exercise.endTime)
         : defaultTimeWithoutSecond,
-    },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [exercise, topicId],
+  )
+
+  const form = useForm<TCreateQuiz>({
+    defaultValues,
     mode: 'onChange',
     resolver: zodResolver(CreateQuizExerciseSchema),
   })
+
+  // console.log(form.formState.errors)
 
   const onSubmit: SubmitHandler<TCreateQuiz> = data => {
     const { durationObj, endDate, questions, startDate, ...rest } = data
@@ -122,8 +136,6 @@ export const CreateQuizExercise = ({
         `Please choose the answer in question ${questionDoNotHaveAnswers + 1}`,
       )
     }
-
-    console.log(data)
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
     const startTime = startDate.toISOString()
@@ -183,30 +195,6 @@ export const CreateQuizExercise = ({
           Exercise Question
         </Typography>
 
-        {/* <div className="col-span-12 flex items-center gap-2">
-          <span className="text-sm font-bold">
-            Default number of questions:
-          </span>
-          <FormInput
-            className="w-20"
-            control={control}
-            extraOnchange={e => {
-              const value = e.target.value
-              console.log(value)
-
-              if (+value > 5) setValue('noOfQuestions', 5)
-              if (+value < 2) setValue('noOfQuestions', 2)
-            }}
-            inputProps={{
-              min: 2,
-              max: 5,
-              className: 'text-center',
-            }}
-            name="noOfQuestions"
-            type="number"
-          />
-        </div> */}
-
         <FormQuestion defaultQuestion={defaultQuestion} />
 
         <div className="col-span-12 flex justify-end">
@@ -215,7 +203,7 @@ export const CreateQuizExercise = ({
             disabled={isPendingCreate || isPendingUpdate}
             type="submit"
           >
-            Create
+            {isUpdate ? 'Update' : 'Create'}
           </Button>
         </div>
       </Form>

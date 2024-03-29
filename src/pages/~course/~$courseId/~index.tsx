@@ -56,6 +56,7 @@ export const Course = () => {
   const {
     data: topicOfStudent,
     isLoading: getTopicsOfStudentLoading,
+    isRefetching: isRefetchingTopicsOfStudent,
     refetch: refetchTopicsOfStudent,
   } = useGetTopicsByUserId({
     isStudent,
@@ -66,6 +67,7 @@ export const Course = () => {
   const {
     data: topicsOfTeacher,
     isLoading: getTopicOfTeacherLoading,
+    isRefetching: isRefetchingTopicsOfTeacher,
     refetch: refetchTopicsOfTeacher,
   } = useGetTopicsForTeacher({
     courseId,
@@ -87,7 +89,11 @@ export const Course = () => {
     setTab(0)
   }, [courseId, state])
 
-  const loading = getTopicsOfStudentLoading || getTopicOfTeacherLoading
+  const loading =
+    getTopicsOfStudentLoading ||
+    getTopicOfTeacherLoading ||
+    isRefetchingTopicsOfStudent ||
+    isRefetchingTopicsOfTeacher
 
   return (
     <CourseContext.Provider

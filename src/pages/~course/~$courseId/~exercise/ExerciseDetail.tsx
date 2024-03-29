@@ -5,6 +5,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { ExerciseType } from '@/constants'
 import { useCheckRole, useToggle } from '@/hooks'
 import { ExerciseSchema } from '@/types/exercise.types'
+import { getTimeExerciseLabel } from '@/utils'
 
 import { PermissionModal } from '../../components/PermissionModal'
 import { useCourseContext } from '../../context/course.context'
@@ -17,7 +18,7 @@ import {
   QuizRounded,
   RemoveRedEyeOutlined,
 } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { Chip, IconButton } from '@mui/material'
 import { Link, useParams } from '@tanstack/react-router'
 
 interface Props {
@@ -63,18 +64,23 @@ export const ExerciseDetail = ({ exercise }: Props) => {
     toggleModalDelete()
   }
 
+  const exerciseLabel = getTimeExerciseLabel(exercise)
+
   return (
     <div className="flex w-full items-center gap-4 ">
-      <div className="flex w-2/3 cursor-pointer gap-4 rounded-lg px-5 py-3 transition-all hover:bg-primary-500 hover:text-white">
-        <Icon className="size-6" />
-        {isTeacher && (
-          <div>
-            <p>{exerciseName}</p>
-            <p className="font-light capitalize italic tracking-wider">
-              {type}
-            </p>
+      <div className="flex w-2/3 cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:outline hover:outline-primary-500">
+        <Icon className="mt-1 size-6" />
+        <div>
+          <p className="text-lg capitalize">{exerciseName}</p>
+          <div className="flex gap-2 font-light capitalize italic tracking-wider">
+            <Chip
+              className="border-primary-500 text-primary-500"
+              label={type}
+              variant="outlined"
+            />
+            <Chip color={exerciseLabel.color} label={exerciseLabel.label} />
           </div>
-        )}
+        </div>
       </div>
 
       {isTeacher && (
