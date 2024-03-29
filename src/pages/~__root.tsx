@@ -1,23 +1,24 @@
 import { Navbar } from '@/components/layout'
 import { MenuBar } from '@/components/layout/menu-bar/MenuBar'
-import { useAppStore } from '@/context/useAppStore'
 import { useRoute } from '@/hooks'
+import { TUser } from '@/types'
 
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { QueryClient } from '@tanstack/react-query'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+  queryClient: QueryClient
+  user?: TUser | null
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 })
 
 const fullScreenPath = ['/login', '/forget-password', '/sandpack']
 
 function RootComponent() {
-  const { location, navigate } = useRoute()
-  const user = useAppStore(state => state.user)
-
-  if (!user) {
-    navigate({ to: '/login', replace: true })
-  }
+  const { location } = useRoute()
 
   if (fullScreenPath.includes(location.pathname)) {
     return (

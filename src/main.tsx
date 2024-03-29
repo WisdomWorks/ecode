@@ -20,6 +20,7 @@ const router = createRouter({
   routeTree,
   context: {
     queryClient,
+    user: undefined,
   },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
@@ -55,7 +56,7 @@ export const InnerApp = () => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <RouterProvider
           context={{
-            user: undefined,
+            user: data?.data.user || null,
           }}
           router={router}
         />
