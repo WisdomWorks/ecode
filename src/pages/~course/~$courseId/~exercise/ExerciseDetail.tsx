@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 
 import { useDeleteExercise } from '@/apis'
+import { ButtonTooltip } from '@/components/common'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { ExerciseType } from '@/constants'
 import { useCheckRole, useToggle } from '@/hooks'
@@ -18,17 +19,42 @@ import {
   QuizRounded,
   RemoveRedEyeOutlined,
 } from '@mui/icons-material'
-import { Chip, IconButton } from '@mui/material'
+import { Chip } from '@mui/material'
 import { Link, useParams } from '@tanstack/react-router'
 
 interface Props {
   exercise: ExerciseSchema
 }
 
+const LinkToExerciseDetail = ({
+  children,
+  className = '',
+  exerciseId,
+  isTeacher = false,
+}: PropsWithChildren<{
+  className?: string
+  exerciseId: string
+  isTeacher?: boolean
+}>) => {
+  const params = useParams({ from: '/course/$courseId/' })
+  return (
+    <Link
+      className={className}
+      params={{
+        exerciseId,
+        courseId: params.courseId,
+      }}
+      to="/course/$courseId/exercise-detail/$exerciseId"
+    >
+      {children}
+      {isTeacher && <Edit className="cursor-pointer text-primary-500" />}
+    </Link>
+  )
+}
+
 export const ExerciseDetail = ({ exercise }: Props) => {
   const { refetchTopics } = useCourseContext()
   const { isTeacher } = useCheckRole()
-  const params = useParams({ from: '/course/$courseId/' })
 
   const { exerciseId, exerciseName, groups, showAll, type } = exercise
 
@@ -66,9 +92,14 @@ export const ExerciseDetail = ({ exercise }: Props) => {
 
   const exerciseLabel = getTimeExerciseLabel(exercise)
 
+  const ContainerComponent = isTeacher ? 'div' : LinkToExerciseDetail
+
   return (
     <div className="flex w-full items-center gap-4 ">
-      <div className="flex w-2/3 cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:outline hover:outline-primary-500">
+      <ContainerComponent
+        className="flex w-2/3 cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:outline hover:outline-primary-500"
+        exerciseId={exerciseId}
+      >
         <Icon className="mt-1 size-6" />
         <div>
           <p className="text-lg capitalize">{exerciseName}</p>
@@ -81,29 +112,46 @@ export const ExerciseDetail = ({ exercise }: Props) => {
             <Chip color={exerciseLabel.color} label={exerciseLabel.label} />
           </div>
         </div>
-      </div>
+      </ContainerComponent>
 
       {isTeacher && (
-        <div className="flex items-center">
-          <IconButton onClick={toggleSettingPermissionModal}>
-            <RemoveRedEyeOutlined className="text-warning-500" />
-          </IconButton>
+        <div className="flex items-center gap-4">
+          <ButtonTooltip
+            iconButtonProps={{
+              children: (
+                <RemoveRedEyeOutlined className="cursor-pointer text-warning-500" />
+              ),
+              onClick: toggleSettingPermissionModal,
+            }}
+            isIconButton
+            tooltipProps={{
+              title: 'View permission',
+            }}
+          />
 
-          <IconButton>
-            <Link
-              params={{
-                exerciseId,
-                courseId: params.courseId,
-              }}
-              to="/course/$courseId/exercise-detail/$exerciseId"
-            >
-              <Edit className="text-primary-500" />
-            </Link>
-          </IconButton>
+          <ButtonTooltip
+            iconButtonProps={{
+              children: (
+                <LinkToExerciseDetail exerciseId={exerciseId} isTeacher />
+              ),
+              onClick: toggleSettingPermissionModal,
+            }}
+            isIconButton
+            tooltipProps={{
+              title: 'Edit exercise',
+            }}
+          />
 
-          <IconButton onClick={toggleModalDelete}>
-            <Delete className="text-red-500" />
-          </IconButton>
+          <ButtonTooltip
+            iconButtonProps={{
+              children: <Delete className="cursor-pointer text-red-500" />,
+              onClick: toggleModalDelete,
+            }}
+            isIconButton
+            tooltipProps={{
+              title: 'Delete exercise',
+            }}
+          />
         </div>
       )}
 

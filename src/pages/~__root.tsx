@@ -8,7 +8,7 @@ import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 
 interface MyRouterContext {
   queryClient: QueryClient
-  user?: TUser | null
+  user?: TUser
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({

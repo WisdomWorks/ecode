@@ -50,6 +50,7 @@ export type MaterialSchema = Schema['CreateMaterialRequest'] & {
 }
 
 export type ExerciseSchema = Schema['CreateEssayExerciseRequest'] & {
+  durationTime?: number
   exerciseId: string
   groups: Pick<TGroup, 'groupId' | 'groupName'>[]
   showAll: boolean

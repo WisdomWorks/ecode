@@ -4,6 +4,7 @@ import { useEnrollCourse, useGetCourseDetail } from '@/apis'
 import { Form, FormInputPassword } from '@/components/form'
 import { useAppStore } from '@/context/useAppStore'
 import { useRoute, useToastMessage } from '@/hooks'
+import { beforeLoadProtected } from '@/utils'
 import { getCourseLabel } from '@/utils/label.utils'
 
 import { Alert, Button } from '@mui/material'
@@ -84,4 +85,5 @@ export const EnrollCourse = () => {
 
 export const Route = createFileRoute('/enroll-course/')({
   component: EnrollCourse,
+  beforeLoad: beforeLoadProtected,
 })

@@ -1,3 +1,5 @@
+import { beforeLoadProtected } from '@/utils'
+
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Course = () => {
@@ -10,4 +12,5 @@ export const Course = () => {
 
 export const Route = createFileRoute('/course/_course')({
   component: Course,
+  beforeLoad: beforeLoadProtected,
 })

@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 
 import { useDeleteMaterial } from '@/apis'
+import { ButtonTooltip } from '@/components/common'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { useCheckRole, useToggle } from '@/hooks'
 import { MaterialSchema } from '@/types/exercise.types'
@@ -10,7 +11,6 @@ import { MaterialType } from '@/utils/course.utils'
 import { PermissionModal } from '../../components/PermissionModal'
 import { useCourseContext } from '../../context/course.context'
 import { Delete, LinkOutlined, RemoveRedEyeOutlined } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
 
 interface Props {
   material: MaterialSchema
@@ -65,13 +65,28 @@ export const MaterialDetail = ({ material }: Props) => {
 
       {isTeacher && (
         <div className="flex">
-          <IconButton onClick={toggleSettingPermissionModal}>
-            <RemoveRedEyeOutlined className="text-warning-500" />
-          </IconButton>
-
-          <IconButton onClick={toggleModalDelete}>
-            <Delete className="text-red-500" />
-          </IconButton>
+          <ButtonTooltip
+            iconButtonProps={{
+              children: (
+                <RemoveRedEyeOutlined className="cursor-pointer text-warning-500" />
+              ),
+              onClick: toggleSettingPermissionModal,
+            }}
+            isIconButton
+            tooltipProps={{
+              title: 'View permission',
+            }}
+          />
+          <ButtonTooltip
+            iconButtonProps={{
+              children: <Delete className="cursor-pointer text-red-500" />,
+              onClick: toggleModalDelete,
+            }}
+            isIconButton
+            tooltipProps={{
+              title: 'Delete material',
+            }}
+          />
         </div>
       )}
 

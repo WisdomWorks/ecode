@@ -1,6 +1,7 @@
 import { TCourse } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 
+import { formatDDMMyyyyHHmm } from './dates.utils'
 import { ChipProps } from '@mui/material'
 import { differenceInDays, isAfter, isBefore } from 'date-fns'
 
@@ -28,7 +29,10 @@ export const getTimeExerciseLabel = (
 
   if (isBefore(now, startTimeObj)) {
     const diffDays = differenceInDays(startTimeObj, now)
-    const label = diffDays === 0 ? 'Start today' : `Start in ${diffDays} days`
+    const label =
+      diffDays === 0
+        ? 'Start today'
+        : `Start in ${formatDDMMyyyyHHmm(startTimeObj)}`
 
     return {
       color: 'info',

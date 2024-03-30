@@ -1,3 +1,5 @@
+import { format } from 'date-fns'
+
 export const ddMMyyyyHHmm = 'dd/MM/yyyy HH:mm'
 
 export const HHmmss = 'HH:mm:ss'
@@ -32,3 +34,5 @@ export const getDateByMinutes = (minutes: number) => {
   )
   return date
 }
+
+export const formatDDMMyyyyHHmm = (date: Date) => format(date, ddMMyyyyHHmm)

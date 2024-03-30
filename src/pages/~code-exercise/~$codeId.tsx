@@ -1,6 +1,7 @@
 import { Panel, PanelGroup } from 'react-resizable-panels'
 
 import { ResizeHandle } from '@/components/layout'
+import { beforeLoadProtected } from '@/utils'
 
 import { CodeConsole } from './components/CodeConsole'
 import { Topic } from './components/Topic'
@@ -35,4 +36,5 @@ export default CodeEditorContainer
 
 export const Route = createFileRoute('/code-exercise/$codeId')({
   component: CodeEditorContainer,
+  beforeLoad: beforeLoadProtected,
 })

@@ -42,7 +42,10 @@ instance.interceptors.response.use(
     return response
   },
   function (error) {
-    if (error.response?.status === 403 || error.response?.status === 401) {
+    if (
+      error?.config?.url !== '/auth/check-session/user' &&
+      (error?.response?.status === 403 || error?.response?.status === 401)
+    ) {
       window.location.replace('/login')
     }
 

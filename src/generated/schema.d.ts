@@ -15,9 +15,6 @@ export interface paths {
     put: operations["updateGroup"];
     delete: operations["deleteGroup"];
   };
-  "/exercises/{exerciseId}/run": {
-    put: operations["runCode"];
-  };
   "/exercises/quiz": {
     put: operations["updateQuizExercise"];
     post: operations["createQuizExercise"];
@@ -28,10 +25,6 @@ export interface paths {
   };
   "/exercises/essay/grade": {
     put: operations["gradeEssaySubmission"];
-  };
-  "/exercises/code": {
-    put: operations["updateCodeExercise"];
-    post: operations["createCodeExercise"];
   };
   "/courses": {
     get: operations["getAll"];
@@ -71,12 +64,6 @@ export interface paths {
   "/groups/student": {
     post: operations["addStudentsToGroup"];
   };
-  "/exercises/{exerciseId}/submit": {
-    post: operations["submitCodeExercise"];
-  };
-  "/exercises/{exerciseId}/check-key": {
-    post: operations["checkCodeExerciseKey"];
-  };
   "/exercises/view": {
     post: operations["addPermissionExercise"];
   };
@@ -85,6 +72,12 @@ export interface paths {
   };
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
+  };
+  "/exercises/code": {
+    post: operations["createCodeExercise"];
+  };
+  "/exercises/code/submit": {
+    post: operations["submitCodeExercise"];
   };
   "/courses/student": {
     post: operations["addStudentToCourse"];
@@ -145,6 +138,18 @@ export interface paths {
     get: operations["getExerciseById"];
     delete: operations["deleteExerciseById"];
   };
+  "/exercises/{exerciseId}/preview": {
+    get: operations["getPreviewExercise"];
+  };
+  "/exercises/{exerciseId}/all-submission": {
+    get: operations["getAllSubmissionByExerciseId"];
+  };
+  "/exercises/submit/{submissionId}": {
+    get: operations["getStudentEssaySubmission"];
+  };
+  "/exercises/essay/submit/user/{userId}": {
+    get: operations["getStudentEssayUserId"];
+  };
   "/exercises/detail/{exerciseId}": {
     get: operations["getExerciseDetail"];
   };
@@ -179,16 +184,6 @@ export interface components {
     UpdateGroupRequest: {
       groupName?: string;
     };
-    IOTestCase: {
-      value: string;
-      dataType: string;
-    };
-    RunCodeRequest: {
-      containerId?: string;
-      contentFile?: string;
-      fileName?: string;
-      inputs?: components["schemas"]["IOTestCase"][];
-    };
     QuizChoice: {
       choiceId?: string;
       content: string;
@@ -201,6 +196,7 @@ export interface components {
       answers: components["schemas"]["QuizChoice"][];
     };
     UpdateQuizExerciseRequest: {
+      exerciseId: string;
       topicId: string;
       exerciseName: string;
       key: string;
@@ -215,6 +211,7 @@ export interface components {
       questions?: components["schemas"]["QuizQuestion"][];
     };
     UpdateEssayExerciseRequest: {
+      exerciseId: string;
       topicId: string;
       exerciseName: string;
       key: string;
@@ -227,30 +224,6 @@ export interface components {
       /** Format: int32 */
       reAttempt?: number;
       question: string;
-    };
-    CodeExerciseWBD: {
-      exerciseId?: string;
-      topicId: string;
-      exerciseName: string;
-      key: string;
-      createdDate?: string;
-      updatedDate?: string;
-      /** Format: date-time */
-      startTime: string;
-      /** Format: date-time */
-      endTime: string;
-      /** Format: int32 */
-      durationTime: number;
-      /** Format: int32 */
-      reAttempt: number;
-      type: string;
-      publicGroupIds: string[];
-      language: string;
-      functionName: string;
-      template: string;
-      description: string;
-      testcases: string[];
-      showAll?: boolean;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -303,9 +276,6 @@ export interface components {
       description?: string;
       groupId: string;
     };
-    SubmitCodeRequest: {
-      containerId?: string;
-    };
     CreatePermissionExerciseRequest: {
       groupIds?: string[];
       exerciseId?: string;
@@ -325,21 +295,15 @@ export interface components {
       reAttempt?: number;
       questions: components["schemas"]["QuizQuestion"][];
     };
+    CreateQuizSubmissionRequest: {
+      studentId: string;
+      exerciseId: string;
+      submission?: components["schemas"]["QuizAnswers"][];
+    };
     QuizAnswers: {
       quizAnswerId?: string;
       questionId: string;
       answers: components["schemas"]["QuizChoice"][];
-    };
-    QuizSubmission: {
-      submissionId?: string;
-      studentId: string;
-      exerciseId: string;
-      /** Format: float */
-      score?: number;
-      dateSubmit?: string;
-      dateGrade?: string;
-      reviewable: boolean;
-      submission: components["schemas"]["QuizAnswers"][];
     };
     CreateEssayExerciseRequest: {
       topicId: string;
@@ -355,16 +319,10 @@ export interface components {
       reAttempt?: number;
       question: string;
     };
-    EssaySubmission: {
-      submissionId?: string;
+    CreateEssaySubmissionRequest: {
       studentId: string;
       exerciseId: string;
-      /** Format: float */
-      score?: number;
-      dateSubmit?: string;
-      dateGrade?: string;
-      reviewable: boolean;
-      submission: string;
+      submission?: string;
     };
     CreateCodeExerciseRequest: {
       topicId: string;
@@ -380,12 +338,12 @@ export interface components {
       functionName: string;
       template: string;
       description: string;
-      testcases: components["schemas"]["TestCase"][];
     };
-    TestCase: {
-      testcaseId?: string;
-      inputs: components["schemas"]["IOTestCase"][];
-      output: components["schemas"]["IOTestCase"];
+    SubmitCodeExerciseRequest: {
+      studentId: string;
+      exerciseId: string;
+      languageId: string;
+      source: string;
     };
     CreateCourseRequest: {
       courseName: string;
@@ -575,38 +533,7 @@ export interface operations {
       };
     };
   };
-  runCode: {
-    parameters: {
-      path: {
-        exerciseId: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["RunCodeRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
   updateQuizExercise: {
-    parameters: {
-      query: {
-        exerciseId: string;
-      };
-    };
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateQuizExerciseRequest"];
@@ -649,11 +576,6 @@ export interface operations {
     };
   };
   updateEssayExercise: {
-    parameters: {
-      query: {
-        exerciseId: string;
-      };
-    };
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateEssayExerciseRequest"];
@@ -700,48 +622,6 @@ export interface operations {
       query: {
         essaySubmissionId: string;
         score: number;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  updateCodeExercise: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CodeExerciseWBD"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  createCodeExercise: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateCodeExerciseRequest"];
       };
     };
     responses: {
@@ -1136,53 +1016,6 @@ export interface operations {
       };
     };
   };
-  submitCodeExercise: {
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["SubmitCodeRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  checkCodeExerciseKey: {
-    parameters: {
-      path: {
-        exerciseId: string;
-      };
-    };
-    requestBody: {
-      content: {
-        "application/json": string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
   addPermissionExercise: {
     requestBody: {
       content: {
@@ -1207,7 +1040,7 @@ export interface operations {
   submitQuizExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["QuizSubmission"];
+        "application/json": components["schemas"]["CreateQuizSubmissionRequest"];
       };
     };
     responses: {
@@ -1228,7 +1061,49 @@ export interface operations {
   submitEssayExercise: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["EssaySubmission"];
+        "application/json": components["schemas"]["CreateEssaySubmissionRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createCodeExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateCodeExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  submitCodeExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SubmitCodeExerciseRequest"];
       };
     };
     responses: {
@@ -1736,10 +1611,105 @@ export interface operations {
       };
     };
   };
+  getPreviewExercise: {
+    parameters: {
+      path: {
+        exerciseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getAllSubmissionByExerciseId: {
+    parameters: {
+      query: {
+        type: string;
+      };
+      path: {
+        exerciseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentEssaySubmission: {
+    parameters: {
+      query: {
+        type: string;
+      };
+      path: {
+        submissionId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  getStudentEssayUserId: {
+    parameters: {
+      query: {
+        exerciseId: string;
+        type: string;
+      };
+      path: {
+        userId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getExerciseDetail: {
     parameters: {
       query: {
         key: string;
+        studentId: string;
       };
       path: {
         exerciseId: string;

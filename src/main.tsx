@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { configAuthorization } from './apis/axios.ts'
@@ -56,7 +56,7 @@ export const InnerApp = () => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <RouterProvider
           context={{
-            user: data?.data.user || null,
+            user: data?.data.user,
           }}
           router={router}
         />
@@ -65,10 +65,17 @@ export const InnerApp = () => {
   )
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
       <InnerApp />
     </QueryClientProvider>
-  </React.StrictMode>,
-)
+  )
+}
+
+const rootElement = document.getElementById('root')!
+
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(<App />)
+}

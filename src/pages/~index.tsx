@@ -3,10 +3,11 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import { useGetCourses } from '@/apis'
 import { Loading, SearchInput } from '@/components/common'
 import { TCourse } from '@/types'
+import { beforeLoadProtected } from '@/utils'
 import { getCourseLabel } from '@/utils/label.utils'
 
 import { SchoolOutlined } from '@mui/icons-material'
-import { createFileRoute, Link, redirect } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { debounce } from 'lodash'
 
 export const Home = () => {
@@ -84,12 +85,6 @@ export const Home = () => {
 }
 
 export const Route = createFileRoute('/')({
-  beforeLoad: ({ context }) => {
-    if (!context.user) {
-      throw redirect({
-        to: '/login',
-      })
-    }
-  },
   component: Home,
+  beforeLoad: beforeLoadProtected,
 })

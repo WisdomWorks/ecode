@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
 
-import { useGetTopicsByUserId, useGetTopicsForTeacher } from '@/apis'
+import {
+  useGetCourseDetail,
+  useGetTopicsByUserId,
+  useGetTopicsForTeacher,
+} from '@/apis'
 import { Loading, TabPanel, TabsClient, TTabProps } from '@/components/common'
 import { Role } from '@/constants'
 import { withPermissionOnCourse } from '@/HoCs/WithPermissionOnCourse'
 import { useCheckRole, useRoute, useToggle } from '@/hooks'
+import { TCourse } from '@/types'
 import { TTopic } from '@/types/exercise.types'
+import { beforeLoadProtected } from '@/utils'
 
 import { DetailTopicModal } from '../components/DetailTopicModal'
 import { CourseContext } from '../context/course.context'
@@ -49,6 +55,7 @@ export const Course = () => {
   } = useRoute()
 
   const [topics, setTopics] = useState<TTopic[]>([])
+  const [course, setCourse] = useState<TCourse | null>(null)
   const [tab, setTab] = useState(0)
 
   const { isStudent, isTeacher, user } = useCheckRole()
@@ -74,6 +81,10 @@ export const Course = () => {
     isTeacher,
   })
 
+  const { data: courseData, isLoading: isLoadingCourse } = useGetCourseDetail({
+    courseId,
+  })
+
   useEffect(() => {
     if (isStudent) {
       setTopics(topicOfStudent || [])
@@ -81,8 +92,12 @@ export const Course = () => {
     if (isTeacher) {
       setTopics(topicsOfTeacher || [])
     }
+
+    if (course) {
+      setCourse(courseData?.data || null)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [topicOfStudent, topicsOfTeacher])
+  }, [topicOfStudent, topicsOfTeacher, course])
 
   useEffect(() => {
     if ('tab' in state) return setTab(state.tab as number)
@@ -93,7 +108,8 @@ export const Course = () => {
     getTopicsOfStudentLoading ||
     getTopicOfTeacherLoading ||
     isRefetchingTopicsOfStudent ||
-    isRefetchingTopicsOfTeacher
+    isRefetchingTopicsOfTeacher ||
+    isLoadingCourse
 
   return (
     <CourseContext.Provider
@@ -105,6 +121,8 @@ export const Course = () => {
           : refetchTopicsOfStudent,
         loading,
         courseId,
+        setCourse,
+        course,
       }}
     >
       <div className="grid h-full grid-rows-8 gap-4">
@@ -152,4 +170,5 @@ export const Course = () => {
 }
 export const Route = createFileRoute('/course/$courseId/')({
   component: withPermissionOnCourse(Course),
+  beforeLoad: beforeLoadProtected,
 })

@@ -2,12 +2,11 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { Form, FormCodeIDE, FormSelector } from '@/components/form'
 import { languages } from '@/constants'
-import { Schema } from '@/types'
 
 import { Button, Divider, TextField } from '@mui/material'
 
 export const CodeConsole = () => {
-  const form = useForm<Schema['RunCodeRequest']>({
+  const form = useForm({
     defaultValues: {
       containerId: '',
       contentFile: '',
@@ -16,8 +15,7 @@ export const CodeConsole = () => {
     },
   })
 
-  const handleSubmitForm: SubmitHandler<Schema['RunCodeRequest']> = data =>
-    console.log(data)
+  const handleSubmitForm: SubmitHandler<object> = data => console.log(data)
 
   return (
     <Form

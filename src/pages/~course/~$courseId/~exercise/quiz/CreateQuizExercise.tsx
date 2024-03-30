@@ -187,7 +187,7 @@ export const CreateQuizExercise = ({
         onSubmit={onSubmit}
       >
         <h2 className="col-span-12 text-2xl font-bold">
-          {isUpdate ? 'Update ' : 'Create '} Essay Exercise
+          {isUpdate ? 'Update ' : 'Create '} Quiz Exercise
         </h2>
         <CreateExerciseInformation control={control} />
 
