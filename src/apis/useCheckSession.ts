@@ -16,7 +16,7 @@ export const useCheckSession = () => {
         })
       },
       retry: false,
-      enabled: !user,
+      enabled: false,
     },
   )
 }

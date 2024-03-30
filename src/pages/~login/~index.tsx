@@ -43,7 +43,6 @@ export const Login = () => {
         setCourses(courses)
         navigate({ to: '/' })
       },
-
       onError: error =>
         setErrorMessage(error.response?.data.message || 'Login failed!'),
     })

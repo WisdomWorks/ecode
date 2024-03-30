@@ -84,12 +84,12 @@ export const Home = () => {
 }
 
 export const Route = createFileRoute('/')({
-  beforeLoad: ({ context }) => {
-    if (!context.user) {
-      throw redirect({
-        to: '/login',
-      })
-    }
-  },
+  // beforeLoad: ({ context }) => {
+  //   if (!context.user) {
+  //     throw redirect({
+  //       to: '/login',
+  //     })
+  //   }
+  // },
   component: Home,
 })
