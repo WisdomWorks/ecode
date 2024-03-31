@@ -59,7 +59,9 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
       },
       {
         onError: error =>
-          setErrorMessage(error.response?.data.message || 'Submission failed'),
+          setErrorMessage(
+            error.response?.data.message || 'Submission failed. Try again',
+          ),
         onSuccess: () => navigate({ to: '/', replace: true }),
       },
     )

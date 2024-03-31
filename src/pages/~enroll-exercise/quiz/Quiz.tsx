@@ -9,10 +9,11 @@ import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage, useToggle } from '@/hooks'
 import { TQuestion } from '@/pages/~course/~$courseId/~exercise/quiz/CreateQuizExercise'
 import { QuizExerciseSchema } from '@/types/exercise.types'
+import { cn } from '@/utils'
 
 import { MultipleChoiceAnswer } from './MultipleChoiceAnswer'
 import { SingleChoiceAnswer } from './SingleChoiceAnswer'
-import { Button, TextField } from '@mui/material'
+import { Button, ButtonGroup, TextField } from '@mui/material'
 import { useNavigate, useParams } from '@tanstack/react-router'
 
 interface Props {
@@ -25,8 +26,6 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
   const navigate = useNavigate()
   const { setErrorMessage } = useToastMessage()
   const { exerciseId } = useParams({ from: '/enroll-exercise/$exerciseId' })
-
-  console.log(exercise)
 
   const [openModal, toggleOpenModal] = useToggle()
 
@@ -56,29 +55,63 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
   }, [isTimeOut])
 
   const handleSubmit: SubmitHandler<TQuizSubmission> = data => {
-    // mutate(data, {
-    //   onSuccess: () => {
-    //     navigate({ to: '/' })
-    //   },
-    //   onError: error => {
-    //     setErrorMessage(error.message)
-    //   },
-    // })
-
-    console.log(data)
+    const { exerciseId, studentId, submission } = data
+    mutate(
+      {
+        exerciseId,
+        studentId,
+        submission,
+      },
+      {
+        onSuccess: () => {
+          navigate({ to: '/' })
+        },
+        onError: error => {
+          setErrorMessage(
+            error.response?.data.message || 'Submit failed. Try again',
+          )
+        },
+      },
+    )
   }
 
   const { watch } = form
 
   if (isTimeOut || isPending) return <Loading />
 
+  const { questions } = exercise
+
   return (
     <FormProvider {...form}>
-      <Form className="flex flex-col gap-4" form={form} onSubmit={handleSubmit}>
-        <div className="col-span-12 grid h-full grid-cols-12 gap-4">
-          {exercise.questions.map((question, index) => {
-            const isMultipleChoice = false
-            const { choices, questionId, title } = question
+      <Form
+        className="flex h-full flex-col gap-4 overflow-hidden [&_.Mui-disabled]:disabled-text-neutral-900  [&_.MuiInputBase-root]:text-neutral-900"
+        form={form}
+        onSubmit={handleSubmit}
+      >
+        <div className="flex flex-col">
+          <span className="text-lg font-semibold">
+            {questions.length} Questions
+          </span>
+          <ButtonGroup className="flex flex-wrap">
+            {questions.map((question, index) => {
+              const isAnswered = watch(`submission.${index}.answers`).length > 0
+              return (
+                <Button
+                  className={cn({
+                    'bg-primary-500 text-white': isAnswered,
+                  })}
+                  key={question.questionId}
+                  onClick={() => console.log(index)}
+                >
+                  {index + 1}
+                </Button>
+              )
+            })}
+          </ButtonGroup>
+        </div>
+        <div className="col-span-12 grid h-full grid-cols-12 gap-4 overflow-auto">
+          {questions.map((question, index) => {
+            const { choices, isMultipleChoice, questionId, title } = question
 
             return (
               <div

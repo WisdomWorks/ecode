@@ -61,8 +61,14 @@ export type EssayExerciseSchema = ExerciseSchema & {
   question: string
 }
 
-export type QuizExerciseSchema = Schema['CreateQuizExerciseRequest'] & {
+export type QuizExerciseSchema = Omit<
+  Schema['CreateQuizExerciseRequest'],
+  'questions'
+> & {
   exerciseId?: string
+  questions: (Schema['CreateQuizExerciseRequest']['questions'][number] & {
+    isMultipleChoice?: boolean
+  })[]
   type?: string
 }
 

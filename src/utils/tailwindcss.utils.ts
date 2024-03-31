@@ -116,5 +116,11 @@ export const generateCustomComponentPlugin = (
         color: `${theme('colors.danger.500')}`,
       },
     },
+    {
+      '.disabled-text-neutral-900': {
+        color: `${theme('colors.neutral.900')}`,
+        WebkitTextFillColor: `${theme('colors.neutral.900')}`,
+      },
+    },
   ]
 }

@@ -54,7 +54,7 @@ export const MultipleChoiceAnswer = ({ choices, index }: Props) => {
         const checked = answers.includes(String(choice.choiceId))
 
         return (
-          <div className="flex w-1/2 items-center" key={i}>
+          <div className="flex w-full items-center" key={i}>
             <Checkbox
               checked={checked}
               onChange={e => handleChangeMultipleChoice(e)}
