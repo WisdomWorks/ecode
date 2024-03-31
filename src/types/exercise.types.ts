@@ -63,6 +63,7 @@ export type EssayExerciseSchema = ExerciseSchema & {
 
 export type QuizExerciseSchema = Schema['CreateQuizExerciseRequest'] & {
   exerciseId?: string
+  type?: string
 }
 
 export type TTopic = TopicSchema & {

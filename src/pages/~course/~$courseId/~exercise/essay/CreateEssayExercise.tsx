@@ -5,7 +5,6 @@ import { useCreateEssayExercise, useUpdateEssayExercise } from '@/apis'
 import { Form } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { CreateExerciseInformation } from '@/pages/~course/components'
-import { useCourseContext } from '@/pages/~course/context/course.context'
 import { CreateEssayExerciseSchema } from '@/pages/~course/shema/createEssayExercise.schema'
 import { Schema } from '@/types'
 import { EssayExerciseSchema } from '@/types/exercise.types'
@@ -39,10 +38,6 @@ export const CreateEssayExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
-  console.log(exercise)
-
-  const { refetchTopics } = useCourseContext()
-
   const { isPending: createPending, mutate: createEssay } =
     useCreateEssayExercise()
   const { isPending: updatePending, mutate: updateEssay } =
@@ -93,7 +88,6 @@ export const CreateEssayExercise = ({
         },
         {
           onSuccess: () => {
-            refetchTopics?.()
             handleBack()
           },
         },
@@ -110,7 +104,6 @@ export const CreateEssayExercise = ({
       },
       {
         onSuccess: () => {
-          refetchTopics?.()
           handleBack()
         },
       },

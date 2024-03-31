@@ -15,12 +15,14 @@ export type TFormTipTap = Partial<EditorOptions> & {
 export const TipTap = ({
   classNameEditor = '',
   defaultValue,
+  editable = true,
   onChange,
   ...rest
 }: TFormTipTap) => {
   const editor = useEditor({
     ...rest,
     content: defaultValue,
+    editable: editable,
     extensions: [StarterKit.configure(), Underline],
     editorProps: {
       attributes: {
@@ -32,7 +34,7 @@ export const TipTap = ({
 
   return (
     <>
-      <ToolbarTipTap editor={editor} />
+      {editable && <ToolbarTipTap editor={editor} />}
       <EditorContent editor={editor} />
     </>
   )

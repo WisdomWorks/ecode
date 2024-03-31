@@ -73,6 +73,9 @@ export interface paths {
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
   };
+  "/exercises/detail": {
+    post: operations["getExerciseDetail"];
+  };
   "/exercises/code": {
     post: operations["createCodeExercise"];
   };
@@ -138,20 +141,17 @@ export interface paths {
     get: operations["getExerciseById"];
     delete: operations["deleteExerciseById"];
   };
-  "/exercises/{exerciseId}/preview": {
-    get: operations["getPreviewExercise"];
-  };
   "/exercises/{exerciseId}/all-submission": {
     get: operations["getAllSubmissionByExerciseId"];
   };
   "/exercises/submit/{submissionId}": {
     get: operations["getStudentEssaySubmission"];
   };
+  "/exercises/preview/{exerciseId}": {
+    get: operations["getPreviewExercise"];
+  };
   "/exercises/essay/submit/user/{userId}": {
     get: operations["getStudentEssayUserId"];
-  };
-  "/exercises/detail/{exerciseId}": {
-    get: operations["getExerciseDetail"];
   };
   "/courses/{courseId}": {
     get: operations["getById_2"];
@@ -168,6 +168,9 @@ export interface paths {
   };
   "/groups/{groupId}/student": {
     delete: operations["deleteStudentInGroup"];
+  };
+  "/courses/unEnrollment": {
+    delete: operations["unEnrollUserInCourse"];
   };
 }
 
@@ -323,6 +326,11 @@ export interface components {
       studentId: string;
       exerciseId: string;
       submission?: string;
+    };
+    GetDetailExerciseRequest: {
+      exerciseId: string;
+      studentId: string;
+      key: string;
     };
     CreateCodeExerciseRequest: {
       topicId: string;
@@ -1079,6 +1087,27 @@ export interface operations {
       };
     };
   };
+  getExerciseDetail: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GetDetailExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   createCodeExercise: {
     requestBody: {
       content: {
@@ -1611,27 +1640,6 @@ export interface operations {
       };
     };
   };
-  getPreviewExercise: {
-    parameters: {
-      path: {
-        exerciseId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
   getAllSubmissionByExerciseId: {
     parameters: {
       query: {
@@ -1680,14 +1688,10 @@ export interface operations {
       };
     };
   };
-  getStudentEssayUserId: {
+  getPreviewExercise: {
     parameters: {
-      query: {
-        exerciseId: string;
-        type: string;
-      };
       path: {
-        userId: string;
+        exerciseId: string;
       };
     };
     responses: {
@@ -1705,14 +1709,14 @@ export interface operations {
       };
     };
   };
-  getExerciseDetail: {
+  getStudentEssayUserId: {
     parameters: {
       query: {
-        key: string;
-        studentId: string;
+        exerciseId: string;
+        type: string;
       };
       path: {
-        exerciseId: string;
+        userId: string;
       };
     };
     responses: {
@@ -1834,6 +1838,28 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": string[];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  unEnrollUserInCourse: {
+    parameters: {
+      query: {
+        userId: string;
+        courseId: string;
       };
     };
     responses: {

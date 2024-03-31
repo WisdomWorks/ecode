@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, isValid, parseISO } from 'date-fns'
 
 export const ddMMyyyyHHmm = 'dd/MM/yyyy HH:mm'
 
@@ -36,3 +36,20 @@ export const getDateByMinutes = (minutes: number) => {
 }
 
 export const formatDDMMyyyyHHmm = (date: Date) => format(date, ddMMyyyyHHmm)
+
+export const parseTimeToMilliseconds = (timeString: string) => {
+  // Prepend the date part to the time string to create a valid ISO date string
+  const isoDateString = `1970-01-01T${timeString}Z`
+
+  // Parse the ISO date string into a Date object
+  const parsedDate = parseISO(isoDateString)
+
+  // Check if the parsed date is valid
+  if (isValid(parsedDate)) {
+    // Convert the Date object to milliseconds
+    return parsedDate.getTime()
+  }
+
+  // Return NaN if the input is invalid
+  return NaN
+}

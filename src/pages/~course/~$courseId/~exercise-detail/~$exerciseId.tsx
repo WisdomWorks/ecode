@@ -1,7 +1,7 @@
 import { useCheckRole } from '@/hooks'
 import { beforeLoadProtected } from '@/utils'
 
-import { StudentView } from './StudetnView'
+import { StudentView } from './StudentView'
 import { TeacherView } from './TeacherView.'
 import { createFileRoute, useParams } from '@tanstack/react-router'
 

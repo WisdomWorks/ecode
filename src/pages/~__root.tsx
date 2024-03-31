@@ -15,12 +15,17 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 })
 
-const fullScreenPath = ['/login', '/forget-password', '/sandpack']
+const fullScreenPath = [
+  '/login',
+  '/forget-password',
+  '/sandpack',
+  '/enroll-exercise',
+]
 
 function RootComponent() {
   const { location } = useRoute()
 
-  if (fullScreenPath.includes(location.pathname)) {
+  if (fullScreenPath.some(path => location.pathname.includes(path))) {
     return (
       <div className="h-screen">
         <Outlet />

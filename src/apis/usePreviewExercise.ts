@@ -11,7 +11,7 @@ export const usePreviewExercise = ({ exerciseId }: { exerciseId: string }) => {
   >({
     queryKey: ['exercise', exerciseId],
     queryFn: async () => {
-      return await callAPI(`/exercises/${exerciseId}/preview` as Path, 'get')
+      return await callAPI(`/exercises/preview/${exerciseId}` as Path, 'get')
     },
     enabled: !!exerciseId,
   })

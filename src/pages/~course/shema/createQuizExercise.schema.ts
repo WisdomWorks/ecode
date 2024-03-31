@@ -32,8 +32,8 @@ export const CreateQuizExerciseSchema = z
     ),
   })
   .superRefine(({ endDate, startDate }, ctx) => {
-    if (isPast(startDate) || isPast(endDate)) {
-      const error = isPast(startDate) ? 'startDate' : 'endDate'
+    if (isPast(endDate)) {
+      const error = 'endDate'
 
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,

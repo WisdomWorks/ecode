@@ -5,7 +5,6 @@ import { useCreateQuizExercise, useUpdateQuizExercise } from '@/apis'
 import { Form } from '@/components/form'
 import { useToastMessage } from '@/hooks'
 import { CreateExerciseInformation } from '@/pages/~course/components'
-import { useCourseContext } from '@/pages/~course/context/course.context'
 import { CreateQuizExerciseSchema } from '@/pages/~course/shema/createQuizExercise.schema'
 import { Schema } from '@/types'
 import { QuizExerciseSchema } from '@/types/exercise.types'
@@ -57,7 +56,6 @@ export const CreateQuizExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
-  const { refetchTopics } = useCourseContext()
   const { setErrorMessage } = useToastMessage()
 
   const { isPending: isPendingCreate, mutate: createExercise } =
@@ -152,7 +150,6 @@ export const CreateQuizExercise = ({
         },
         {
           onSuccess: () => {
-            refetchTopics?.()
             handleBack()
           },
         },
@@ -170,7 +167,6 @@ export const CreateQuizExercise = ({
       },
       {
         onSuccess: () => {
-          refetchTopics?.()
           handleBack()
         },
       },

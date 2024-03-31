@@ -3,16 +3,15 @@ import { cn } from '@/utils'
 
 interface Props {
   milliseconds: number
+  onEnd?: () => void
 }
 
-export const CountDownTimer = ({ milliseconds }: Props) => {
+export const CountDownTimer = ({ milliseconds, onEnd }: Props) => {
   const {
     counter: { minutes, seconds },
     isWarningTimeOut,
   } = useCountdown(milliseconds, {
-    onEnd: () => {
-      console.log("Time's up!")
-    },
+    onEnd,
   })
 
   return (

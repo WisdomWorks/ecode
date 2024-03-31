@@ -3,7 +3,7 @@ import { ExerciseSchema } from '@/types/exercise.types'
 
 import { formatDDMMyyyyHHmm } from './dates.utils'
 import { ChipProps } from '@mui/material'
-import { differenceInDays, isAfter, isBefore } from 'date-fns'
+import { isAfter, isBefore } from 'date-fns'
 
 export const getCourseLabel = (course?: TCourse) => {
   if (!course) return ''
@@ -28,11 +28,7 @@ export const getTimeExerciseLabel = (
   const endTimeObj = new Date(endTime)
 
   if (isBefore(now, startTimeObj)) {
-    const diffDays = differenceInDays(startTimeObj, now)
-    const label =
-      diffDays === 0
-        ? 'Start today'
-        : `Start in ${formatDDMMyyyyHHmm(startTimeObj)}`
+    const label = `Start in ${formatDDMMyyyyHHmm(startTimeObj)}`
 
     return {
       color: 'info',
@@ -41,9 +37,7 @@ export const getTimeExerciseLabel = (
   }
 
   if (isAfter(now, endTimeObj)) {
-    const expiredDay = differenceInDays(now, endTimeObj)
-    const label =
-      expiredDay === 0 ? 'Expired today' : `Expired ${expiredDay} days`
+    const label = 'Expired'
 
     return {
       color: 'error',
@@ -52,6 +46,6 @@ export const getTimeExerciseLabel = (
   }
   return {
     color: 'success',
-    label: 'Ongoing',
+    label: 'On going',
   }
 }

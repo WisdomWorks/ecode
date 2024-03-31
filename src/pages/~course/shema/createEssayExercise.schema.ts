@@ -13,8 +13,8 @@ export const CreateEssayExerciseSchema = z
     key: z.string().min(1, { message: 'Enrollment key is required' }),
   })
   .superRefine(({ endDate, startDate }, ctx) => {
-    if (isPast(startDate) || isPast(endDate)) {
-      const error = isPast(startDate) ? 'startDate' : 'endDate'
+    if (isPast(endDate)) {
+      const error = 'endDate'
 
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,

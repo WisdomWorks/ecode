@@ -11,8 +11,10 @@
 // Import Routes
 
 import { Route as rootRoute } from './../pages/~__root'
+import { Route as EnrollExerciseRouteImport } from './../pages/~enroll-exercise/~route'
 import { Route as CourseRouteImport } from './../pages/~course/~route'
 import { Route as IndexImport } from './../pages/~index'
+import { Route as EnrollExerciseExerciseIdImport } from './../pages/~enroll-exercise/~$exerciseId'
 import { Route as CourseCourseImport } from './../pages/~course/~_course'
 import { Route as CodeExerciseCodeIdImport } from './../pages/~code-exercise/~$codeId'
 import { Route as TextEditorIndexImport } from './../pages/~text-editor/~index'
@@ -26,6 +28,11 @@ import { Route as CourseCourseIdExerciseDetailExerciseIdImport } from './../page
 
 // Create/Update Routes
 
+const EnrollExerciseRouteRoute = EnrollExerciseRouteImport.update({
+  path: '/enroll-exercise',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const CourseRouteRoute = CourseRouteImport.update({
   path: '/course',
   getParentRoute: () => rootRoute,
@@ -34,6 +41,11 @@ const CourseRouteRoute = CourseRouteImport.update({
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const EnrollExerciseExerciseIdRoute = EnrollExerciseExerciseIdImport.update({
+  path: '/$exerciseId',
+  getParentRoute: () => EnrollExerciseRouteRoute,
 } as any)
 
 const CourseCourseRoute = CourseCourseImport.update({
@@ -100,6 +112,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseRouteImport
       parentRoute: typeof rootRoute
     }
+    '/enroll-exercise': {
+      preLoaderRoute: typeof EnrollExerciseRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/enroll-course/': {
       preLoaderRoute: typeof EnrollCourseIndexImport
       parentRoute: typeof rootRoute
@@ -128,6 +144,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseImport
       parentRoute: typeof CourseRouteImport
     }
+    '/enroll-exercise/$exerciseId': {
+      preLoaderRoute: typeof EnrollExerciseExerciseIdImport
+      parentRoute: typeof EnrollExerciseRouteImport
+    }
     '/course/$courseId/': {
       preLoaderRoute: typeof CourseCourseIdIndexImport
       parentRoute: typeof CourseRouteImport
@@ -154,6 +174,7 @@ export const routeTree = rootRoute.addChildren([
       CourseCourseIdExerciseDetailExerciseIdRoute,
     ]),
   ]),
+  EnrollExerciseRouteRoute.addChildren([EnrollExerciseExerciseIdRoute]),
   EnrollCourseIndexRoute,
   ForgetPasswordIndexRoute,
   LoginIndexRoute,
