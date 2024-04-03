@@ -41,7 +41,7 @@ function RootComponent() {
       </div>
 
       <div className="col-span-12 row-span-11 grid grid-cols-5 grid-rows-12 gap-4 px-16 py-8">
-        <div className="col-span-1 row-span-10 overflow-hidden rounded-xl shadow-xl">
+        <div className="col-span-1 row-span-12 overflow-hidden rounded-xl shadow-xl">
           <MenuBar />
         </div>
 

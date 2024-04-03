@@ -53,11 +53,7 @@ export const CourseMenuBar = () => {
         Courses
       </span>
       <div>
-        <SearchInput
-          label="Search your course"
-          onChange={onChangeSearch}
-          value={search}
-        />
+        <SearchInput label="" onChange={onChangeSearch} value={search} />
       </div>
 
       <div className="flex max-h-[30rem] flex-col gap-3 overflow-auto">
@@ -72,7 +68,7 @@ export const CourseMenuBar = () => {
                 params={{ courseId: String(item.ID) }}
                 to="/course/$courseId"
               >
-                <AutoStoriesOutlined className="size-7 group-hover:text-white" />
+                <AutoStoriesOutlined className="size-6 group-hover:text-white" />
                 <span className="truncate whitespace-nowrap text-base text-neutral-600 group-hover:text-white">
                   {item.label}
                 </span>

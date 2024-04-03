@@ -14,6 +14,7 @@ import { Settings } from './settings/Settings'
 import { SubmissionTab } from './submission/SubmissionTab'
 import { TopicTabs } from './TopicTabs'
 import {
+  AddOutlined,
   GradingOutlined,
   MenuBookOutlined,
   QuizOutlined,
@@ -78,7 +79,7 @@ export const Course = () => {
     <CourseProvider>
       <div className="grid h-full grid-rows-8 gap-4">
         <div className="row-span-1 flex flex-col">
-          <div className="h-full rounded-xl py-3 shadow-l">
+          <div className="h-full rounded-xl px-5 py-3 shadow-l">
             <TabsClient setTab={setTab} tab={tab} tabs={tabs} />
           </div>
         </div>
@@ -86,12 +87,8 @@ export const Course = () => {
         <div className="row-span-7 overflow-auto rounded-xl p-4 shadow-xl">
           <div className="flex w-full justify-end">
             {isTeacher && tab !== 2 && (
-              <Button
-                className=""
-                onClick={toggleTopicModal}
-                size="large"
-                variant="contained"
-              >
+              <Button onClick={toggleTopicModal} size="large" variant="text">
+                <AddOutlined className="mr-3" />
                 Create Topic
               </Button>
             )}

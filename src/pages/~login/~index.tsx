@@ -111,9 +111,13 @@ export const Login = () => {
                 placeholder="Enter your username"
                 required
               />
-              <FormInputPassword control={control} name="password" />
+              <FormInputPassword
+                className="mt-1"
+                control={control}
+                name="password"
+              />
               <Button
-                className="mt-2 rounded-xl py-2 text-lg"
+                className="mt-12 rounded-xl py-2 text-lg"
                 type="submit"
                 variant="contained"
               >

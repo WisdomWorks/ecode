@@ -1,5 +1,5 @@
 import { activeClassName, TMenu } from './MenuBar'
-import { FolderOutlined } from '@mui/icons-material'
+import { HomeOutlined } from '@mui/icons-material'
 import { Link } from '@tanstack/react-router'
 
 const staticMenus: TMenu[] = [
@@ -27,7 +27,7 @@ export const StaticMenuBar = () => {
             params={{ courseId: item }}
             to={item.to as string}
           >
-            <FolderOutlined className="size-7 group-hover:text-white" />
+            <HomeOutlined className="size-6 group-hover:text-white" />
             <span className="text-base text-neutral-600 group-hover:text-white">
               {item.label}
             </span>

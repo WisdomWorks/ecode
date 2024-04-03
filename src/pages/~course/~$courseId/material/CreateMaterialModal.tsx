@@ -99,13 +99,14 @@ export const CreateMaterialModal = ({
     <Dialog onClose={toggleModal} open={isOpen}>
       <Form form={form} onSubmit={handleSubmit}>
         <h2>Create Material</h2>
-        <div className="grid grid-cols-12 gap-2">
+        <div className="mt-7 grid grid-cols-12 gap-4">
           <FormInput
-            className="col-span-6"
+            className="col-span-12"
             control={control}
             label="Material Name"
             name="materialName"
             required
+            size="small"
           />
 
           <FormInput
@@ -115,7 +116,7 @@ export const CreateMaterialModal = ({
             maxRows={4}
             multiline
             name="description"
-            rows={2}
+            rows={4}
           />
 
           <FormRadioGroup
@@ -125,7 +126,7 @@ export const CreateMaterialModal = ({
             options={[
               {
                 value: MaterialType.Url,
-                label: 'Upload load url',
+                label: 'Upload load URL',
               },
               {
                 value: MaterialType.File,
@@ -141,6 +142,7 @@ export const CreateMaterialModal = ({
               label="URL"
               name="url"
               required
+              size="small"
             />
           )}
 

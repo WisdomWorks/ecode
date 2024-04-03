@@ -37,7 +37,7 @@ export const TabsClient = ({
     <>
       <Tabs
         {...rest}
-        className="h-full"
+        className="flex h-full items-center"
         classes={{
           flexContainer: 'h-full',
         }}
