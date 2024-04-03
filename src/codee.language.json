@@ -1,0 +1,243 @@
+[
+  {
+    "model": "judge.language",
+    "pk": 1,
+    "fields": {
+      "key": "PY2",
+      "name": "Python 2",
+      "short_name": "",
+      "common_name": "Python",
+      "ace": "python",
+      "pygments": "python",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "py"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 5,
+    "fields": {
+      "key": "PHP",
+      "name": "PHP",
+      "short_name": null,
+      "common_name": "PHP",
+      "ace": "php",
+      "pygments": "php",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "php"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 8,
+    "fields": {
+      "key": "PY3",
+      "name": "Python 3",
+      "short_name": "",
+      "common_name": "Python",
+      "ace": "python",
+      "pygments": "python3",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "py"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 9,
+    "fields": {
+      "key": "C",
+      "name": "C",
+      "short_name": "",
+      "common_name": "C",
+      "ace": "c_cpp",
+      "pygments": "c",
+      "template": "#include <stdio.h>\r\n\r\nint main() {\r\n    return 0;\r\n}",
+      "info": "",
+      "description": "",
+      "extension": "c"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 10,
+    "fields": {
+      "key": "PAS",
+      "name": "Pascal",
+      "short_name": "",
+      "common_name": "Pascal",
+      "ace": "pascal",
+      "pygments": "pascal",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "pas"
+    }
+  },
+
+  {
+    "model": "judge.language",
+    "pk": 14,
+    "fields": {
+      "key": "MONOCS",
+      "name": "C#",
+      "short_name": "C#",
+      "common_name": "C#",
+      "ace": "csharp",
+      "pygments": "c#",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "cs"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 16,
+    "fields": {
+      "key": "GO",
+      "name": "Go",
+      "short_name": "GO",
+      "common_name": "Go",
+      "ace": "golang",
+      "pygments": "go",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "go"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 21,
+    "fields": {
+      "key": "RUBY",
+      "name": "Ruby",
+      "short_name": "",
+      "common_name": "Ruby",
+      "ace": "ruby",
+      "pygments": "ruby",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "rb"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 22,
+    "fields": {
+      "key": "LUA",
+      "name": "Lua",
+      "short_name": "LUA",
+      "common_name": "Lua",
+      "ace": "lua",
+      "pygments": "lua",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "lua"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 27,
+    "fields": {
+      "key": "V8JS",
+      "name": "V8 JavaScript",
+      "short_name": null,
+      "common_name": "JS",
+      "ace": "javascript",
+      "pygments": "javascript",
+      "template": "/* \r\n * This is a custom version of V8 that adds six functions in order to perform I/O and aid in online judging.\r\n *\r\n * * `print(...)`: similar to Python's `print`, prints all argument separated by space followed by new line.\r\n * * `flush()`: flushes stdout, ensuring everything output by `print()` immediately shows up.\r\n * * `gets()`: similar to the Ruby equivalent, returns one line of input from `stdin`.\r\n * * `read(bytes)`: read `bytes` bytes from stdin as an `ArrayBuffer`.\r\n * * `write(buffer)`: write a typed array, `ArrayBuffer`, or a view of `ArrayBuffer` to stdout.\r\n * * `quit(code)`: exits the program with `code`.\r\n * * You can also assign to the global variable `autoflush` to control whether `print()` flushes.\r\n *\r\n */",
+      "info": "",
+      "description": "This is a custom version of V8 that adds six functions in order to perform I/O and aid in online judging.\r\n\r\n* `print(...)`: similar to Python's `print`, prints all argument separated by space followed by new line.\r\n* `flush()`: flushes stdout, ensuring everything output by `print()` immediately shows up.\r\n* `gets()`: similar to the Ruby equivalent, returns one line of input from `stdin`.\r\n* `read(bytes)`: read `bytes` bytes from stdin as an [`ArrayBuffer`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer).\r\n* `write(buffer)`: write a typed array, `ArrayBuffer`, or a view of `ArrayBuffer` to stdout.\r\n* `quit(code)`: exits the program with `code`.\r\n* You can also assign to the global variable `autoflush` to control whether `print()` flushes.",
+      "extension": "js"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 44,
+    "fields": {
+      "key": "RUST",
+      "name": "Rust",
+      "short_name": "RUST",
+      "common_name": "Rust",
+      "ace": "rust",
+      "pygments": "rust",
+      "template": "#[macro_use] extern crate dmoj;\r\n\r\nfn main() {\r\n    println!(\"Hello, World!\");\r\n}",
+      "info": "",
+      "description": "",
+      "extension": "rs"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 54,
+    "fields": {
+      "key": "SWIFT",
+      "name": "Swift",
+      "short_name": null,
+      "common_name": "Swift",
+      "ace": "swift",
+      "pygments": "swift",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "swift"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 61,
+    "fields": {
+      "key": "JAVA",
+      "name": "Java",
+      "short_name": null,
+      "common_name": "Java",
+      "ace": "java",
+      "pygments": "java",
+      "template": "import java.io.*;\r\nimport java.util.*;\r\n\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n\r\n    }\r\n}",
+      "info": "",
+      "description": "",
+      "extension": "java"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 67,
+    "fields": {
+      "key": "KOTLIN",
+      "name": "Kotlin",
+      "short_name": "",
+      "common_name": "Kotlin",
+      "ace": "kotlin",
+      "pygments": "kotlin",
+      "template": "",
+      "info": "",
+      "description": "",
+      "extension": "kt"
+    }
+  },
+  {
+    "model": "judge.language",
+    "pk": 76,
+    "fields": {
+      "key": "CPP20",
+      "name": "C++20",
+      "short_name": "C++20",
+      "common_name": "C++",
+      "ace": "c_cpp",
+      "pygments": "cpp",
+      "template": "#include <bits/stdc++.h>\r\n\r\nusing namespace std;\r\n\r\nint main() {\r\n    return 0;\r\n}",
+      "info": "",
+      "description": "",
+      "extension": "cpp"
+    }
+  }
+]

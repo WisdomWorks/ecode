@@ -11,8 +11,10 @@ import { CourseProvider } from '../context/course.context'
 import { Exercise } from './~exercise/Exercise'
 import { Material } from './material/Material'
 import { Settings } from './settings/Settings'
+import { SubmissionTab } from './submission/SubmissionTab'
 import { TopicTabs } from './TopicTabs'
 import {
+  GradingOutlined,
   MenuBookOutlined,
   QuizOutlined,
   SettingsOutlined,
@@ -34,9 +36,23 @@ const tabs: TTabProps[] = [
     component: Exercise,
   },
   {
+    label: 'Submission',
+    icon: <GradingOutlined />,
+    value: 2,
+    component: SubmissionTab,
+    permission: [Role.TEACHER],
+  },
+  {
+    label: 'Grades',
+    icon: <GradingOutlined />,
+    value: 4,
+    component: SubmissionTab,
+    permission: [Role.STUDENT],
+  },
+  {
     label: 'Settings',
     icon: <SettingsOutlined />,
-    value: 2,
+    value: 3,
     component: Settings,
     permission: [Role.TEACHER],
   },

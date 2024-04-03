@@ -147,11 +147,11 @@ export interface paths {
   "/exercises/submit/{submissionId}": {
     get: operations["getStudentEssaySubmission"];
   };
+  "/exercises/submit/user/{userId}": {
+    get: operations["getStudentEssayUserId"];
+  };
   "/exercises/preview/{exerciseId}": {
     get: operations["getPreviewExercise"];
-  };
-  "/exercises/essay/submit/user/{userId}": {
-    get: operations["getStudentEssayUserId"];
   };
   "/courses/{courseId}": {
     get: operations["getById_2"];
@@ -211,6 +211,7 @@ export interface components {
       durationTime: number;
       /** Format: int32 */
       reAttempt?: number;
+      exerciseDescription?: string;
       questions?: components["schemas"]["QuizQuestion"][];
     };
     UpdateEssayExerciseRequest: {
@@ -226,6 +227,7 @@ export interface components {
       durationTime: number;
       /** Format: int32 */
       reAttempt?: number;
+      exerciseDescription?: string;
       question: string;
     };
     UpdateCourseRequest: {
@@ -296,12 +298,14 @@ export interface components {
       durationTime: number;
       /** Format: int32 */
       reAttempt?: number;
+      exerciseDescription?: string;
       questions: components["schemas"]["QuizQuestion"][];
     };
     CreateQuizSubmissionRequest: {
       studentId: string;
       exerciseId: string;
       submission?: components["schemas"]["QuizAnswers"][];
+      teacherComment?: string;
     };
     QuizAnswers: {
       quizAnswerId?: string;
@@ -320,6 +324,7 @@ export interface components {
       durationTime: number;
       /** Format: int32 */
       reAttempt?: number;
+      exerciseDescription?: string;
       question: string;
     };
     CreateEssaySubmissionRequest: {
@@ -340,12 +345,25 @@ export interface components {
       startTime: string;
       /** Format: date-time */
       endTime: string;
-      type: string;
+      /** Format: int32 */
+      reAttempt: number;
       publicGroupIds: string[];
-      language: string;
-      functionName: string;
-      template: string;
       description: string;
+      /** Format: double */
+      timeLimit: number;
+      /** Format: int32 */
+      memoryLimit: number;
+      allowedLanguageIds: string[];
+      /** Format: double */
+      points: number;
+      testCaseList: components["schemas"]["TestCase"][];
+      template?: string;
+    };
+    TestCase: {
+      input?: string;
+      output?: string;
+      /** Format: int32 */
+      points?: number;
     };
     SubmitCodeExerciseRequest: {
       studentId: string;
@@ -1688,10 +1706,14 @@ export interface operations {
       };
     };
   };
-  getPreviewExercise: {
+  getStudentEssayUserId: {
     parameters: {
-      path: {
+      query: {
         exerciseId: string;
+        type: string;
+      };
+      path: {
+        userId: string;
       };
     };
     responses: {
@@ -1709,14 +1731,10 @@ export interface operations {
       };
     };
   };
-  getStudentEssayUserId: {
+  getPreviewExercise: {
     parameters: {
-      query: {
-        exerciseId: string;
-        type: string;
-      };
       path: {
-        userId: string;
+        exerciseId: string;
       };
     };
     responses: {

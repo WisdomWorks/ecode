@@ -20,6 +20,7 @@ const fullScreenPath = [
   '/forget-password',
   '/sandpack',
   '/enroll-exercise',
+  '/code-exercise',
 ]
 
 function RootComponent() {

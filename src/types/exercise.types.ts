@@ -1,8 +1,6 @@
 import { ExerciseType } from '@/constants'
-import { CreateCodeOption } from '@/utils/course.utils'
 
 import { Schema, TGroup } from './api.types'
-import { TLanguage } from './common.types'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 
@@ -21,18 +19,6 @@ export interface TInput {
 export interface TTestCase {
   inputs: TInput[]
   output: string
-}
-
-export interface TCreateCodeExerciseForm {
-  createCodeOption: CreateCodeOption
-  isSameInputDataType: boolean
-  language: TLanguage | null
-  mainFunctionName: string
-  noOfParameters: number
-  template: string
-  templateFile: File | null
-  testCase: TTestCase[]
-  title: string
 }
 
 export type TopicSchema = Schema['CreateTopicRequest'] & {
@@ -69,6 +55,12 @@ export type QuizExerciseSchema = Omit<
   questions: (Schema['CreateQuizExerciseRequest']['questions'][number] & {
     isMultipleChoice?: boolean
   })[]
+  type?: string
+}
+
+export type CodeExerciseSchema = Schema['CreateCodeExerciseRequest'] & {
+  durationTime?: number
+  exerciseId?: string
   type?: string
 }
 

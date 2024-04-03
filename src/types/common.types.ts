@@ -18,5 +18,6 @@ export type BaseEntity = {
 
 export type TLanguage = {
   ID: string
+  key?: string
   label: string
 }

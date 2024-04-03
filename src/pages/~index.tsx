@@ -53,7 +53,7 @@ export const Home = () => {
         {course.length ? (
           course.map((course, index) => (
             <Link
-              className="group w-1/2 cursor-pointer rounded-lg p-2 transition-all hover:bg-primary-350"
+              className="group cursor-pointer rounded-lg p-2 transition-all hover:bg-primary-350 lg:w-1/2"
               key={index}
               params={{
                 courseId: String(course.courseId),

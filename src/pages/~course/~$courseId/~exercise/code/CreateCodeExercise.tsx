@@ -1,215 +1,341 @@
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 
-import { FileUpload } from '@/components/common'
+import { useCreateCodeExercise } from '@/apis'
 import {
   Form,
   FormButtonGroup,
   FormCheckbox,
-  FormCodeIDE,
   FormInput,
-  FormRadioGroup,
   FormSelector,
 } from '@/components/form'
-import { languages, primitiveType } from '@/constants'
-import { CreateCodeExerciseSchema } from '@/pages/~course/shema/createExercise.schema'
-import { TCreateCodeExerciseForm } from '@/types/exercise.types'
-import { CreateCodeOption } from '@/utils/course.utils'
+import { FormTipTap } from '@/components/form/FormTipTap'
+import { programmingLanguages } from '@/constants'
+import { useToastMessage } from '@/hooks'
+import { CreateExerciseInformation } from '@/pages/~course/components'
+import { CreateCodeExerciseSchema } from '@/pages/~course/shema/createCodeExercise.schema'
+import { Schema } from '@/types'
+import { CodeExerciseSchema } from '@/types/exercise.types'
+import {
+  cn,
+  defaultDurationObj,
+  defaultTimeWithoutSecond,
+  getDateByMinutes,
+} from '@/utils'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AddCircleOutline, Delete } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { AddCircleOutline, Delete, HelpOutline } from '@mui/icons-material'
+import { Button, IconButton, Tooltip, Typography } from '@mui/material'
+import { getHours, getMinutes } from 'date-fns'
 
-const defaultValues: TCreateCodeExerciseForm = {
-  createCodeOption: CreateCodeOption.Manually,
-  isSameInputDataType: true,
-  language: null,
-  mainFunctionName: '',
-  noOfParameters: 1,
-  template: '',
-  templateFile: null,
-  testCase: [
-    {
-      inputs: [{ dataValue: '' }],
-      output: '',
-    },
-  ],
-  title: '',
+interface Props {
+  exercise?: CodeExerciseSchema
+  isUpdate?: boolean
+  topicId: string
 }
 
-export const CreateCodeExercise = () => {
-  const [filesTemplate, setFilesTemplate] = useState<FileList | null>(null)
-  const form = useForm({
+type TCreateCodeExercise = Omit<
+  Schema['CreateCodeExerciseRequest'],
+  'allowedLanguageIds' | 'testCaseList'
+> & {
+  allowedLanguageIds: { key: string }[]
+  durationObj: Date
+  endDate: Date
+  exerciseId: string
+  startDate: Date
+  testCaseList: (Schema['TestCase'] & {
+    defaultTestCase?: boolean
+    isPretest?: boolean
+  })[]
+}
+
+export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
+  const { setErrorMessage } = useToastMessage()
+  const { isPending: isPendingCreate, mutate: createExercise } =
+    useCreateCodeExercise()
+
+  const defaultValues = useMemo(
+    () => ({
+      exerciseId: exercise?.exerciseId || undefined,
+      topicId,
+      startTime: '',
+      endTime: '',
+      key: exercise?.key || '',
+      exerciseName: exercise?.exerciseName || '',
+      durationTime: exercise?.durationTime || 0,
+      durationObj: exercise?.durationTime
+        ? getDateByMinutes(exercise.durationTime)
+        : defaultDurationObj,
+      startDate: exercise?.startTime
+        ? new Date(exercise.startTime)
+        : defaultTimeWithoutSecond,
+      endDate: exercise?.endTime
+        ? new Date(exercise.endTime)
+        : defaultTimeWithoutSecond,
+      allowedLanguageIds:
+        exercise?.allowedLanguageIds.map(item => ({ key: item })) || [],
+      description: exercise?.description || '',
+      testCaseList: exercise?.testCaseList || [
+        {
+          input: '',
+          output: '',
+          points: 0,
+          isPretest: true,
+          defaultTestCase: true,
+        },
+        {
+          input: '',
+          output: '',
+          points: 10,
+          isPretest: false,
+          defaultTestCase: true,
+        },
+      ],
+      timeLimit: 2,
+      memoryLimit: 1024,
+      points: 10,
+    }),
+    [exercise, topicId],
+  )
+
+  const form = useForm<TCreateCodeExercise>({
     defaultValues,
     mode: 'onChange',
     resolver: zodResolver(CreateCodeExerciseSchema),
   })
-  const { control, watch } = form
+
+  const { control, setValue, watch } = form
+
   const { append, fields, remove } = useFieldArray({
     control,
-    name: 'testCase',
+    name: 'testCaseList',
   })
 
-  const handleSubmit: SubmitHandler<TCreateCodeExerciseForm> = data => {
-    console.log(data)
+  const handleSubmit: SubmitHandler<TCreateCodeExercise> = data => {
+    const {
+      allowedLanguageIds,
+      durationObj,
+      endDate,
+      startDate,
+      testCaseList,
+      ...rest
+    } = data
+
+    const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
+    const startTime = startDate.toISOString()
+    const endTime = endDate.toISOString()
+
+    const testCaseListInput = testCaseList.map(tc => ({
+      input: tc.input,
+      output: tc.output,
+      points: tc.points,
+    }))
+
+    const allowedLanguageIdsInput = allowedLanguageIds.map(lang => lang.key)
+
+    const input = {
+      ...rest,
+      exerciseId: undefined,
+      allowedLanguageIds: allowedLanguageIdsInput,
+      testCaseList: testCaseListInput,
+      durationTime,
+      endTime,
+      startTime,
+      publicGroupIds: [],
+    }
+
+    createExercise(input, {
+      onError: error =>
+        setErrorMessage(
+          error.response?.data.message || 'Create exercise failed',
+        ),
+    })
+  }
+
+  const calculatePoint = () => {
+    const testCaseList = watch('testCaseList')
+    const noOfTcNotPreset = testCaseList.filter(tc => !tc.isPretest).length
+    testCaseList.forEach((testCase, index) => {
+      if (!testCase.isPretest) {
+        setValue(
+          `testCaseList.${index}.points`,
+          Math.round((10 / noOfTcNotPreset) * 100) / 100,
+        )
+      }
+    })
   }
 
   return (
     <Form
-      className="grid grid-cols-2 gap-4"
+      className="flex h-full flex-col justify-between "
       form={form}
       onSubmit={handleSubmit}
     >
-      <section>
-        <h2 className="text-lg text-neutral-900">Information</h2>
-        <div className="mt-4 flex flex-col gap-2">
-          <FormInput label="Title" name="title" required />
-          <FormSelector
-            label="Language"
-            name="language"
-            options={languages}
-            required
-          />
-
-          <h2 className="mt-2 text-lg text-neutral-900">Template</h2>
-          <FormRadioGroup
-            name="createCodeOption"
-            options={[
-              {
-                value: CreateCodeOption.Manually,
-                label: 'Create manually',
-              },
-              {
-                value: CreateCodeOption.Template,
-                label: 'Upload template file',
-              },
-            ]}
-          />
-          <div className="grid grid-cols-12 gap-2">
-            <FormInput
-              className="col-span-8"
-              label="Main function name"
-              name="mainFunctionName"
-              required
-            />
-            <FormInput
-              className="col-span-4"
-              inputProps={{
-                min: 1,
-                max: 5,
-              }}
-              label="Number of parameters"
-              name="noOfParameters"
-              required
-              type="number"
-            />
-          </div>
-          {watch('createCodeOption') === CreateCodeOption.Manually ? (
-            <div className="max-h-[20rem] min-h-[10rem] overflow-auto bg-editor-dark">
-              <FormCodeIDE name="template" />
-            </div>
-          ) : (
-            <FileUpload
-              files={filesTemplate}
-              name="templateFile"
-              setFiles={setFilesTemplate}
-            />
-          )}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="mb-4 text-lg text-neutral-900">Preview Template</h2>
-        <div className="h-[31rem]">
-          <FormCodeIDE editable={false} name="template" />
-        </div>
-      </section>
-
-      <section className="col-span-2 flex flex-col gap-2">
-        <div className="flex w-1/2 items-center justify-between">
-          <h2 className="text-lg text-neutral-900">Data Type</h2>
-          <FormCheckbox
-            label="The same input data type"
-            name="isSameInputDataType"
-          />
-        </div>
-
-        <div className="grid grid-cols-6 items-center gap-2">
-          <FormSelector
-            label="Input Type"
-            name="inputType"
-            options={primitiveType}
+      <div>
+        <h2 className="col-span-12 text-2xl font-bold">
+          {isUpdate ? 'Update ' : 'Create '} Essay Exercise
+        </h2>
+        <CreateExerciseInformation control={control} />
+        <Typography className="col-span-12 mt-2" variant="h5">
+          Exercise Question
+        </Typography>
+        <div className="mt-4 grid grid-cols-12 gap-2">
+          <FormTipTap
+            className="col-span-8"
+            classNameEditor="min-h-[10rem] max-h-[10rem] overflow-y-auto"
+            label="Topic"
+            name="description"
             required
           />
           <FormSelector
-            label="Output Type"
-            name="inputType"
-            options={primitiveType}
-            required
-          />
-        </div>
-
-        <div className="flex items-center gap-1">
-          <h2 className="text-lg text-neutral-900">{`Test case (${
-            watch('testCase').length
-          })`}</h2>
-          <IconButton
-            onClick={() =>
-              append({
-                inputs: [{ dataValue: '' }],
-                output: '',
-              })
+            className="col-span-4 mt-6"
+            filterSelectedOptions
+            getOptionKey={option =>
+              typeof option === 'object' ? option.ID : option
             }
-          >
-            <AddCircleOutline className="text-success-450" />
-          </IconButton>
+            getOptionLabel={option =>
+              typeof option === 'object' && 'name' in option
+                ? option.name
+                : option
+            }
+            isOptionEqualToValue={(option, value) => option.ID === value.ID}
+            label="Language"
+            multiple
+            name="allowedLanguageIds"
+            options={programmingLanguages}
+            renderOption={(props, option) => <li {...props}>{option.name}</li>}
+            required
+          />
         </div>
-        <div className="flex flex-col gap-2">
-          {fields.map((field, index) => {
-            return (
-              <div key={field.id}>
-                <div className="flex items-center  gap-2">
-                  <div className="flex gap-2">
+
+        <section className="col-span-2 mt-2 flex flex-col gap-3">
+          <h2 className="text-lg text-neutral-900">{`Test case (${
+            watch('testCaseList').length
+          })`}</h2>
+          <div className="flex flex-col gap-2">
+            {fields.map((field, index) => {
+              return (
+                <div className="mt-2 flex w-full flex-col gap-1" key={field.id}>
+                  <h4 className="col-span-1 text-nowrap underline">
+                    {`Test case ${index + 1}`}:
+                  </h4>
+                  <div className="grid grid-cols-12 gap-2">
                     <FormInput
-                      label={`Input ${index + 1}`}
-                      name={`testCase[${index}].inputs[0].dataValue`}
+                      className="col-span-4"
+                      label={`Input`}
+                      maxRows={4}
+                      minRows={4}
+                      multiline
+                      name={`testCaseList.${index}.input`}
+                      placeholder='e.g. "1 2 3 4 5"'
                       required
                     />
                     <FormInput
-                      label={`Output ${index + 1}`}
-                      name={`testCase[${index}].output`}
+                      className="col-span-4"
+                      label={`Output`}
+                      maxRows={4}
+                      minRows={4}
+                      multiline
+                      name={`testCaseList.${index}.output`}
+                      placeholder="Enter output"
                       required
                     />
+                    <FormInput
+                      className="col-span-1"
+                      disabled
+                      inputMode="numeric"
+                      inputProps={{
+                        min: 0,
+                        max: 10,
+                      }}
+                      label={`Points`}
+                      name={`testCaseList.${index}.points`}
+                      required
+                      type="number"
+                    />
+                    <div className="col-span-2 mt-3">
+                      <FormCheckbox
+                        disabled={
+                          watch(`testCaseList`).at(index)?.defaultTestCase
+                        }
+                        extraOnChange={() => {
+                          setValue(`testCaseList.${index}.points`, 0)
+                          calculatePoint()
+                        }}
+                        label={
+                          <Tooltip
+                            arrow
+                            placement="top-start"
+                            title="Tick the checkbox to allow show this test case to student"
+                          >
+                            <div className="flex gap-2">
+                              <span className="whitespace-nowrap">
+                                Shown test case
+                              </span>
+                              <HelpOutline />
+                            </div>
+                          </Tooltip>
+                        }
+                        name={`testCaseList.${index}.isPretest`}
+                      />
+                    </div>
+                    <IconButton
+                      className={cn('col-span-1', {
+                        'opacity-0 pointer-events-none':
+                          index === 0 ||
+                          watch(`testCaseList`).at(index)?.defaultTestCase,
+                      })}
+                      onClick={() => {
+                        remove(index)
+                        calculatePoint()
+                      }}
+                      type="button"
+                    >
+                      <Delete className="text-red-500" />
+                    </IconButton>
                   </div>
-                  <IconButton
-                    className="mt-2"
-                    onClick={() => remove(index)}
-                    type="button"
-                  >
-                    <Delete className="text-red-500" />
-                  </IconButton>
                 </div>
-              </div>
-            )
-          })}
-        </div>
-        <FormButtonGroup
-          buttons={[
-            {
-              type: 'submit',
-              label: 'Cancel',
-              onClick: () => {},
-              className: 'clearBtn',
-            },
-            {
-              type: 'submit',
-              label: 'Create',
-              className: 'submitBtn',
-            },
-          ]}
-          className="justify-end"
-        />
-      </section>
+              )
+            })}
+          </div>
+        </section>
+      </div>
+      <div className="mt-3">
+        <Button
+          onClick={() => {
+            append({
+              input: '',
+              output: '',
+              points: 0,
+              isPretest: false,
+              defaultTestCase: false,
+            })
+            calculatePoint()
+          }}
+          variant="contained"
+        >
+          <AddCircleOutline className="mr-2 text-white" />
+          Add test case
+        </Button>
+      </div>
+      <FormButtonGroup
+        buttons={[
+          {
+            type: 'submit',
+            label: 'Cancel',
+            onClick: () => {},
+            className: 'clearBtn',
+            disabled: isPendingCreate,
+          },
+          {
+            type: 'submit',
+            label: 'Create',
+            className: 'submitBtn',
+            disabled: isPendingCreate,
+          },
+        ]}
+        className="mt-2 justify-end"
+      />
     </Form>
   )
 }

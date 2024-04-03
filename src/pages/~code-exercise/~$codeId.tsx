@@ -14,7 +14,15 @@ const CodeEditorContainer = () => {
   return (
     <PanelGroup className="h-screen" direction="horizontal">
       <Panel defaultSize={40}>
-        <Topic topic={TOPIC} />
+        <PanelGroup direction="vertical">
+          <Panel defaultSize={80} minSize={80}>
+            <Topic topic={TOPIC} />
+          </Panel>
+
+          <ResizeHandle direction="vertical" />
+
+          <Panel defaultSize={20}>Test case</Panel>
+        </PanelGroup>
       </Panel>
       <ResizeHandle />
 
@@ -23,9 +31,6 @@ const CodeEditorContainer = () => {
           <Panel defaultSize={80} minSize={80}>
             <CodeConsole />
           </Panel>
-          <ResizeHandle direction="vertical" />
-
-          <Panel defaultSize={20}>Test case</Panel>
         </PanelGroup>
       </Panel>
     </PanelGroup>

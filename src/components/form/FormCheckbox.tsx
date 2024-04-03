@@ -1,14 +1,16 @@
+import { ReactNode } from 'react'
 import { useController, UseControllerProps } from 'react-hook-form'
 
 import { Checkbox, FormControl, FormControlLabel } from '@mui/material'
 
 interface Props<TForm extends object> extends UseControllerProps<TForm> {
   extraOnChange?: () => void
-  label?: string
+  label?: ReactNode
 }
 
 export const FormCheckbox = <TForm extends object>({
   control,
+  disabled,
   extraOnChange,
   label,
   name,
@@ -30,6 +32,7 @@ export const FormCheckbox = <TForm extends object>({
     <FormControl>
       <FormControlLabel
         control={<Checkbox checked={value} onChange={handleChange} />}
+        disabled={disabled}
         label={label}
         name={name}
         onChange={extraOnChange}

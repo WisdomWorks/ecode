@@ -1,6 +1,4 @@
-import { Loading, TabPanel, TTabProps } from '@/components/common'
-
-import { useCourseContext } from '../context/course.context'
+import { TabPanel, TTabProps } from '@/components/common'
 
 interface Props {
   tab: number
@@ -8,21 +6,13 @@ interface Props {
 }
 
 export const TopicTabs = ({ tab, tabs }: Props) => {
-  const { loading } = useCourseContext()
-
   return (
     <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          {tabs.map(({ component: Component, value }) => (
-            <TabPanel index={value} key={value} value={tab}>
-              {Component ? <Component /> : null}
-            </TabPanel>
-          ))}
-        </>
-      )}
+      {tabs.map(({ component: Component, value }) => (
+        <TabPanel index={value} key={value} value={tab}>
+          {Component ? <Component /> : null}
+        </TabPanel>
+      ))}
     </>
   )
 }

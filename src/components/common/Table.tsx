@@ -27,6 +27,7 @@ export const Table = <T extends MRT_RowData>({
       data={data}
       initialState={{
         showGlobalFilter: true,
+        showColumnFilters: true,
         ...initialState,
       }}
       muiTableContainerProps={{

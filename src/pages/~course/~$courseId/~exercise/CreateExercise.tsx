@@ -8,12 +8,16 @@ import { CreateEssayExercise } from './essay/CreateEssayExercise'
 import { CreateQuizExercise } from './quiz/CreateQuizExercise'
 import { ArrowBackIos } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 
 interface Props {
   exercise?: EssayExerciseSchema | QuizExerciseSchema
   exerciseType: ExerciseType | string
   isUpdate?: boolean
+  refetchTopics?: (
+    options?: RefetchOptions | undefined,
+  ) => Promise<QueryObserverResult>
   setExerciseType?: Dispatch<SetStateAction<ExerciseType | null>>
   topicId: string
 }
@@ -22,6 +26,7 @@ export const CreateExercise = ({
   exercise,
   exerciseType,
   isUpdate = false,
+  refetchTopics,
   setExerciseType,
   topicId,
 }: Props) => {
@@ -29,7 +34,11 @@ export const CreateExercise = ({
   const { courseId } = useParams({ from: '/course/$courseId/' })
 
   const handleBack = useCallback(() => {
-    if (setExerciseType && !isUpdate) return setExerciseType(null)
+    if (setExerciseType && !isUpdate) {
+      setExerciseType(null)
+      refetchTopics?.()
+      return
+    }
     navigate({
       to: '/course/$courseId',
       params: { courseId },
@@ -49,7 +58,7 @@ export const CreateExercise = ({
     }
     switch (exerciseType) {
       case ExerciseType.CODE:
-        return <CreateCodeExercise />
+        return <CreateCodeExercise {...commonProps} />
       case ExerciseType.ESSAY:
         return (
           <CreateEssayExercise

@@ -1,3 +1,4 @@
+import languagesJSON from '@/codee.language.json'
 import { TLanguage } from '@/types'
 import { uuid } from '@/utils'
 
@@ -33,3 +34,16 @@ export const primitiveType = [
   'boolean',
   'String',
 ]
+
+export const programmingLanguages = languagesJSON.map(item => {
+  const {
+    fields: { common_name, ...rest },
+    pk,
+  } = item
+
+  return {
+    ID: pk,
+    label: common_name,
+    ...rest,
+  }
+})

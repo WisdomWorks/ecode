@@ -6,11 +6,7 @@ import {
   useState,
 } from 'react'
 
-import {
-  useGetCourseDetail,
-  useGetTopicsByUserId,
-  useGetTopicsForTeacher,
-} from '@/apis'
+import { useGetTopicsByUserId, useGetTopicsForTeacher } from '@/apis'
 import { useCheckRole } from '@/hooks'
 import { TTopic } from '@/types/exercise.types'
 
@@ -55,10 +51,6 @@ export const CourseProvider = ({ children }: PropsWithChildren<object>) => {
     isTeacher,
   })
 
-  const { data: courseData, isLoading: isLoadingCourse } = useGetCourseDetail({
-    courseId,
-  })
-
   useEffect(() => {
     if (isStudent) {
       setTopics(topicOfStudent || [])
@@ -66,14 +58,13 @@ export const CourseProvider = ({ children }: PropsWithChildren<object>) => {
     if (isTeacher) {
       setTopics(topicsOfTeacher || [])
     }
-  }, [topicOfStudent, topicsOfTeacher, courseData, isStudent, isTeacher])
+  }, [topicOfStudent, topicsOfTeacher, isStudent, isTeacher])
 
   const loading =
     getTopicsOfStudentLoading ||
     getTopicOfTeacherLoading ||
     isRefetchingTopicsOfStudent ||
-    isRefetchingTopicsOfTeacher ||
-    isLoadingCourse
+    isRefetchingTopicsOfTeacher
 
   return (
     <CourseContext.Provider
