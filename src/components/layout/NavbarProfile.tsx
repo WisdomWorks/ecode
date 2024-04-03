@@ -1,8 +1,12 @@
 import { useLogout } from '@/apis'
 import { useAppStore } from '@/context/useAppStore'
 
-import { KeyboardArrowDown, Logout } from '@mui/icons-material'
-import { Avatar, Button, MenuItem } from '@mui/material'
+import {
+  AssignmentIndOutlined,
+  KeyboardArrowDown,
+  Logout,
+} from '@mui/icons-material'
+import { Avatar, MenuItem } from '@mui/material'
 import {
   bindHover,
   bindMenu,
@@ -43,7 +47,7 @@ export const NavbarProfile = () => {
       <HoverMenu
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'center',
         }}
         transformOrigin={{
           vertical: 'top',
@@ -51,12 +55,16 @@ export const NavbarProfile = () => {
         }}
         {...bindMenu(popupState)}
       >
-        <MenuItem>View Details</MenuItem>
-        <MenuItem className="mt-2 rounded-md bg-danger-500 transition-all hover:bg-danger-600">
-          <Button onClick={handleLogout}>
-            <Logout className="text-white" />
-            <span className="ml-2 text-white">Logout</span>
-          </Button>
+        <MenuItem className="cursor-pointer rounded-md text-sm">
+          <AssignmentIndOutlined className="mr-4" />
+          View Details
+        </MenuItem>
+        <MenuItem
+          className="mt-2 cursor-pointer rounded-md text-sm transition-all hover:bg-red-100"
+          onClick={handleLogout}
+        >
+          <Logout className="mr-4 text-red-600" />
+          <span className="ml-2 text-red-600">Logout</span>
         </MenuItem>
       </HoverMenu>
     </>

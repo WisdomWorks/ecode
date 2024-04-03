@@ -7,7 +7,8 @@ import { useRoute, useToastMessage } from '@/hooks'
 import { beforeLoadProtected } from '@/utils'
 import { getCourseLabel } from '@/utils/label.utils'
 
-import { Alert, Button } from '@mui/material'
+import { KeyboardDoubleArrowRight } from '@mui/icons-material'
+import { Alert, Button, Divider } from '@mui/material'
 import { createFileRoute, Link, Navigate } from '@tanstack/react-router'
 
 interface TForm {
@@ -55,29 +56,36 @@ export const EnrollCourse = () => {
   }
 
   return (
-    <div className="flex h-2/3 items-center justify-center gap-4">
-      <div className="flex w-1/2 flex-col gap-4">
-        <h3>Enroll course: {getCourseLabel(course?.data)}</h3>
-        <Alert severity="warning" variant="filled">
+    <div className="h-full items-center justify-center gap-4">
+      <div className="flex h-1/3 w-full flex-col">
+        <p>
+          <KeyboardDoubleArrowRight className="mr-1 size-7 text-blue-500" />
+          Enroll course: <h2>{getCourseLabel(course?.data)}</h2>
+        </p>
+        <Divider className="mb-6 mt-3" />
+        <Alert severity="warning">
           Please enroll the key to access the course
         </Alert>
+      </div>
+      <div className="flex h-2/3 w-full justify-center pt-16">
+        <div className="flex w-1/2 flex-col gap-4">
+          <Form className="mt-4" form={form} onSubmit={onSubmit}>
+            <FormInputPassword label="Enrollment key" name="enrollmentKey" />
 
-        <Form className="mt-4" form={form} onSubmit={onSubmit}>
-          <FormInputPassword label="Enrollment key" name="enrollmentKey" />
-
-          <div className="mt-4 flex justify-end gap-2">
-            <Button>
-              <Link to="/">Back to Home</Link>
-            </Button>
-            <Button
-              disabled={!form.watch('enrollmentKey')}
-              type="submit"
-              variant="contained"
-            >
-              Enroll
-            </Button>
-          </div>
-        </Form>
+            <div className="mt-4 flex justify-end gap-2">
+              <Button>
+                <Link to="/">Back to Home</Link>
+              </Button>
+              <Button
+                disabled={!form.watch('enrollmentKey')}
+                type="submit"
+                variant="contained"
+              >
+                Enroll
+              </Button>
+            </div>
+          </Form>
+        </div>
       </div>
     </div>
   )

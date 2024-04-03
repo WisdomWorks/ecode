@@ -4,11 +4,11 @@ import { useCheckRole } from '@/hooks'
 
 import {
   Add,
-  Bookmark,
+  BookmarkBorderOutlined,
   Delete,
   Edit,
-  MoreHorizOutlined,
   RemoveRedEyeOutlined,
+  TuneOutlined,
 } from '@mui/icons-material'
 import { IconButton, MenuItem } from '@mui/material'
 import {
@@ -50,10 +50,10 @@ export const Topic = ({
     <>
       <div className="flex items-start justify-between">
         <div className="flex w-full gap-4">
-          <Bookmark className="size-9" />
+          <BookmarkBorderOutlined className="size-9" />
           <div className="flex w-full flex-col gap-6">
             <div className="flex flex-col">
-              <h1 className="capitalize">{topicName}</h1>
+              <h2 className="capitalize">{topicName}</h2>
               <p className="italic tracking-wide">{description}</p>
             </div>
 
@@ -65,7 +65,7 @@ export const Topic = ({
             {...bindHover(popupState)}
             className="text-sm text-neutral-900"
           >
-            <MoreHorizOutlined className="size-9" />
+            <TuneOutlined className="size-7" />
           </IconButton>
         )}
       </div>

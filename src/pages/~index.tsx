@@ -44,8 +44,8 @@ export const Home = () => {
   return (
     <>
       <SearchInput
-        className="w-4/5"
-        label="Search course"
+        className="w-full"
+        label=""
         onChange={onChangeSearch}
         value={search}
       />
@@ -53,15 +53,17 @@ export const Home = () => {
         {course.length ? (
           course.map((course, index) => (
             <Link
-              className="group cursor-pointer rounded-lg p-2 transition-all hover:bg-primary-350 lg:w-1/2"
+              className={`group cursor-pointer rounded-lg p-2 transition-all hover:bg-primary-350 lg:w-full ${
+                index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+              } p-3`}
               key={index}
               params={{
                 courseId: String(course.courseId),
               }}
               to="/course/$courseId"
             >
-              <div className="flex h-14 gap-4">
-                <SchoolOutlined className="text-4xl text-primary-700" />
+              <div className="flex h-14 items-center gap-4">
+                <SchoolOutlined className="mr-3 text-4xl text-primary-700" />
 
                 <div className="flex flex-col gap-1">
                   <span className="text-lg font-bold text-neutral-800 group-hover:text-white">
