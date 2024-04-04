@@ -1,8 +1,9 @@
-import { CodeExerciseSchema } from '@/types/exercise.types'
-import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import { useState } from 'react'
+
+import { CodeExerciseSchema } from '@/types/exercise.types'
+
+import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import { Button } from '@mui/material'
-import { set } from 'lodash'
 
 interface Props {
   testCases: CodeExerciseSchema['testCases']
@@ -20,32 +21,32 @@ export const TestCases = ({ testCases }: Props) => {
   }
 
   return (
-    <div className="rounded-md border border-gray-300 mx-1 h-full overflow-y-auto max-h-full">
-      <div className="rounded-md bg-gray-100 px-3 pt-1 h-8 flex">
-        <VerifiedUserOutlinedIcon className=" text-lg mr-2 mt-1 text-green-500" />
+    <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
+      <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
+        <VerifiedUserOutlinedIcon className=" mr-2 mt-1 text-lg text-green-500" />
         <p className="mb-3 text-base font-bold capitalize">Testcase</p>
       </div>
       {testCases.map((testCase, index) => (
         <div key={index}>
           <div className="m-3">
             <Button
-              variant={currentCase === index ? 'outlined' : 'outlined'}
+              className="rounded-lg px-3 py-1"
               color="success"
-              className="rounded-lg py-1 px-3"
               onClick={() => handleChangeTestcase(index)}
+              variant={currentCase === index ? 'outlined' : 'outlined'}
             >
               Case {index + 1}
             </Button>
           </div>
-          <div className=" flex-col m-4">
+          <div className=" m-4 flex-col">
             <p className=" font-bold">Input</p>
-            <div className=" bg-gray-100 py-2 px-3 rounded-lg my-2">
+            <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2">
               {currentInput}
             </div>
           </div>
-          <div className=" flex-col m-4">
+          <div className=" m-4 flex-col">
             <p className=" font-bold">Output</p>
-            <div className=" bg-gray-100 py-2 px-3 rounded-lg my-2">
+            <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2">
               {currentOutput}
             </div>
           </div>

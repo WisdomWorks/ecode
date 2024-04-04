@@ -394,10 +394,6 @@ export interface components {
       reAttempt: number;
       publicGroupIds: string[];
       description: string;
-      /** Format: double */
-      timeLimit: number;
-      /** Format: int32 */
-      memoryLimit: number;
       allowedLanguageIds: string[];
       /** Format: double */
       points: number;

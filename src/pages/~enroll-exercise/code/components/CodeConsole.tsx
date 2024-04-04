@@ -9,27 +9,29 @@ import {
 import { Form, FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
+import { useInterval, useToastMessage } from '@/hooks'
 // import { useInterval } from '@/hooks'
 import { Schema } from '@/types'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
+import {
+  BackupOutlined,
+  KeyboardArrowDownOutlined,
+  PlayArrow,
+  TerminalOutlined,
+} from '@mui/icons-material'
 import { Button, Divider, MenuItem } from '@mui/material'
 import Menu, { MenuProps } from '@mui/material/Menu'
-import { styled, alpha } from '@mui/material/styles'
-import {
-  KeyboardArrowDownOutlined,
-  TerminalOutlined,
-  PlayArrow,
-  BackupOutlined,
-} from '@mui/icons-material'
+import { alpha, styled } from '@mui/material/styles'
+import { useNavigate } from '@tanstack/react-router'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
-    elevation={0}
     anchorOrigin={{
       vertical: 'bottom',
       horizontal: 'right',
     }}
+    elevation={0}
     transformOrigin={{
       vertical: 'top',
       horizontal: 'right',
@@ -78,7 +80,7 @@ type TForm = Schema['SubmitCodeExerciseRequest'] & {
 export const CodeConsole = ({ exercise }: Props) => {
   const user = useAppStore(state => state.user)
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -86,6 +88,8 @@ export const CodeConsole = ({ exercise }: Props) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+  const navigate = useNavigate()
+  const { setErrorMessage } = useToastMessage()
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
   const { isPending: isPendingSubmit, mutate: submitExercise } =
@@ -145,16 +149,27 @@ export const CodeConsole = ({ exercise }: Props) => {
         },
       })
     }
+
+    submitExercise(input, {
+      onSuccess: () => {
+        navigate({ to: '/' })
+      },
+      onError: error => {
+        setErrorMessage(
+          error.response?.data.message || 'Submit failed. Try again',
+        )
+      },
+    })
   }
 
   return (
     <Form
-      className="flex h-full flex-col bg-white rounded-md border border-gray-300"
+      className="flex h-full flex-col rounded-md border border-gray-300 bg-white"
       form={form}
       onSubmit={handleSubmitForm}
     >
-      <div className="rounded-md bg-gray-100 px-3 pt-1 h-8 flex">
-        <TerminalOutlined className=" text-lg mr-2 mt-1 text-green-500" />
+      <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
+        <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
         <p className="mb-3 text-base font-bold capitalize">Code</p>
       </div>
       {/* <div className="grid grid-cols-3 p-2">
@@ -182,30 +197,30 @@ export const CodeConsole = ({ exercise }: Props) => {
         </div> */}
       <div className=" flex justify-between">
         <Button
-          id="demo-customized-button"
           aria-controls={open ? 'demo-customized-menu' : undefined}
-          aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
-          variant="text"
-          disableElevation
-          onClick={handleClick}
-          endIcon={<KeyboardArrowDownOutlined />}
+          aria-haspopup="true"
           className="m-1"
           color="success"
+          disableElevation
+          endIcon={<KeyboardArrowDownOutlined />}
+          id="demo-customized-button"
+          onClick={handleClick}
+          variant="text"
         >
           Options
         </Button>
         <StyledMenu
-          id="demo-customized-menu"
           MenuListProps={{
             'aria-labelledby': 'demo-customized-button',
           }}
           anchorEl={anchorEl}
-          open={open}
+          id="demo-customized-menu"
           onClose={handleClose}
+          open={open}
         >
           {languages.map((option, index) => (
-            <MenuItem key={index} onClick={handleClose} disableRipple>
+            <MenuItem disableRipple key={index} onClick={handleClose}>
               {option?.name}
             </MenuItem>
           ))}
@@ -216,20 +231,20 @@ export const CodeConsole = ({ exercise }: Props) => {
             color="success"
             disabled={isPendingRunCode || isPendingSubmit || isRefetching}
             onClick={() => setValue('typeSubmit', 'run')}
+            startIcon={<PlayArrow />}
             type="submit"
             variant="text"
-            startIcon={<PlayArrow />}
           >
             Run code
           </Button>
-          <Divider orientation="vertical" className="bg-gray-100" />
+          <Divider className="bg-gray-100" orientation="vertical" />
           <Button
             color="primary"
             disabled={isPendingRunCode || isPendingSubmit || isRefetching}
             onClick={() => setValue('typeSubmit', 'submit')}
+            startIcon={<BackupOutlined />}
             type="submit"
             variant="text"
-            startIcon={<BackupOutlined />}
           >
             Submit
           </Button>

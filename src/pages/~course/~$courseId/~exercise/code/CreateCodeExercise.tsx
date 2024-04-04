@@ -102,8 +102,6 @@ export const CreateCodeExercise = ({
           defaultTestCase: true,
         },
       ],
-      timeLimit: 2,
-      memoryLimit: 1024,
       points: 10,
     }),
     [exercise, topicId],
