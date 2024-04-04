@@ -110,17 +110,17 @@ export const ExerciseDetail = ({ exercise, index }: Props) => {
           <div className=" flex items-center">
             <p className="text-lg capitalize">{exerciseName}</p>
             <Chip
-              variant="outlined"
+              className="ml-3"
+              color={exerciseLabel.color}
+              label={exerciseLabel.label}
               size="small"
               sx={{
                 fontSize: '0.6rem',
               }}
-              color={exerciseLabel.color}
-              label={exerciseLabel.label}
-              className="ml-3"
+              variant="outlined"
             />
           </div>
-          <div className="flex gap-2 font-light capitalize italic tracking-wider mt-1">
+          <div className="mt-1 flex gap-2 font-light capitalize italic tracking-wider">
             <p className=" text-sm">{type} exercise</p>
           </div>
         </div>

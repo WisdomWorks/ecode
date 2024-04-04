@@ -172,31 +172,31 @@ export const CodeConsole = ({ exercise }: Props) => {
         <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
         <p className="mb-3 text-base font-bold capitalize">Code</p>
       </div>
-      {/* <div className="grid grid-cols-3 p-2">
-          <FormSelector
-            className="text-white"
-            classes={{
-              root: 'bg-white rounded-lg',
-            }}
-            filterSelectedOptions
-            getOptionKey={option =>
-              typeof option === 'object' ? option?.ID : (option as string)
-            }
-            getOptionLabel={option =>
-              typeof option === 'object' && 'name' in option
-                ? option.name
-                : (option as string)
-            }
-            isOptionEqualToValue={(option, value) => option?.ID === value?.ID}
-            label="Language"
-            name="language"
-            options={languages}
-            renderOption={(props, option) => <li {...props}>{option?.name}</li>}
-            required
-          />
-        </div> */}
+      <div className="grid grid-cols-3 p-2">
+        <FormSelector
+          className="text-white"
+          classes={{
+            root: 'bg-white rounded-lg',
+          }}
+          filterSelectedOptions
+          getOptionKey={option =>
+            typeof option === 'object' ? option?.ID : (option as string)
+          }
+          getOptionLabel={option =>
+            typeof option === 'object' && 'name' in option
+              ? option.name
+              : (option as string)
+          }
+          isOptionEqualToValue={(option, value) => option?.ID === value?.ID}
+          label="Language"
+          name="language"
+          options={languages}
+          renderOption={(props, option) => <li {...props}>{option?.name}</li>}
+          required
+        />
+      </div>
       <div className=" flex justify-between">
-        <Button
+        {/* <Button
           aria-controls={open ? 'demo-customized-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
           aria-haspopup="true"
@@ -224,7 +224,7 @@ export const CodeConsole = ({ exercise }: Props) => {
               {option?.name}
             </MenuItem>
           ))}
-        </StyledMenu>
+        </StyledMenu> */}
 
         <div className="flex justify-end gap-2 p-2">
           <Button

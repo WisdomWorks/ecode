@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useEnrollExercise } from '@/apis'
+import Logo from '@/assets/logo.png'
 import { CountDownTimer, Loading } from '@/components/common'
 import { ExerciseType } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
@@ -15,11 +16,9 @@ import { cn, formatDDMMyyyyHHmm, parseTimeToMilliseconds } from '@/utils'
 import { CodeExercise } from './code/CodeExercise'
 import { Essay } from './essay/Essay'
 import { Quiz } from './quiz/Quiz'
-import { Divider } from '@mui/material'
 import { CodeOutlined } from '@mui/icons-material'
+import { Divider } from '@mui/material'
 import { createFileRoute, useParams } from '@tanstack/react-router'
-
-import Logo from '@/assets/logo.png'
 
 export const EnrollExercise = () => {
   const { location, navigate } = useRoute()
@@ -67,24 +66,21 @@ export const EnrollExercise = () => {
         'gap-4': type !== ExerciseType.CODE,
       })}
     >
-      <div
-        className="py-2 px-5 h-12 border border-gray-300"
-        style={{ backgroundColor: '#F0F0F0' }}
-      >
-        <div className="mb-2 flex items-center gap-4">
-          <img
-            alt="Logo"
-            className="h-7 w-7 object-contain rounded-full"
-            src={Logo}
-          />
-          <Divider orientation="vertical" className=" bg-white" />
-          <CodeOutlined className=" text-gray-400" />
-          <p className="text-lg text-gray-900">{exerciseName}</p>
+      <div className="row-span-2 grid grid-cols-12">
+        <div className="col-span-12 h-12 border border-gray-300 bg-[#F0F0F0] px-5 py-2">
+          <div className="mb-2 flex items-center gap-4">
+            <img
+              alt="Logo"
+              className="size-7 rounded-full object-contain"
+              src={Logo}
+            />
+            <Divider className=" bg-white" orientation="vertical" />
+            <CodeOutlined className=" text-gray-400" />
+            <p className="text-lg text-gray-900">{exerciseName}</p>
+          </div>
         </div>
-      </div>
-      <div className="row-span-2 h-3/4 flex justify-between overflow-auto rounded-lg px-7 shadow-lg items-center">
-        <div className="flex flex-col gap-2">
-          <div className="">
+        <div className=" col-span-12 flex items-center justify-between overflow-auto rounded-lg px-7 shadow-lg">
+          <div className="flex flex-col gap-2">
             <div className="flex items-end gap-4">
               <span className="w-[5rem] text-base font-bold">Start time</span>
               <span className=" text-sm text-neutral-500">
@@ -106,15 +102,15 @@ export const EnrollExercise = () => {
               </span>
             </div>
           </div>
-        </div>
 
-        <div>
-          <CountDownTimer
-            milliseconds={parseTimeToMilliseconds(timeLess || '00:00:00')}
-            onEnd={() => {
-              setIsTimeOut(true)
-            }}
-          />
+          <div>
+            <CountDownTimer
+              milliseconds={parseTimeToMilliseconds(timeLess || '00:00:00')}
+              onEnd={() => {
+                setIsTimeOut(true)
+              }}
+            />
+          </div>
         </div>
       </div>
 
