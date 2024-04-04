@@ -4,15 +4,22 @@ import { AxiosResponseError, callAPI, Path } from './axios'
 import { useQuery } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-export const usePreviewExercise = ({ exerciseId }: { exerciseId: string }) => {
-  return useQuery<
-    AxiosResponse<ExerciseSchema>,
-    AxiosError<AxiosResponseError>
-  >({
-    queryKey: ['exercise', exerciseId],
-    queryFn: async () => {
-      return await callAPI(`/exercises/preview/${exerciseId}` as Path, 'get')
+interface Props {
+  exerciseId: string
+  studentId: string
+}
+
+type TReposponse = ExerciseSchema & { available: boolean }
+
+export const usePreviewExercise = ({ exerciseId, studentId }: Props) => {
+  return useQuery<AxiosResponse<TReposponse>, AxiosError<AxiosResponseError>>({
+    queryKey: ['exercise', exerciseId, studentId],
+    queryFn: async ({ queryKey }) => {
+      return await callAPI(`/exercises/preview/${queryKey[1]}` as Path, 'get', {
+        params: {
+          studentId: queryKey[2],
+        },
+      })
     },
-    enabled: !!exerciseId,
   })
 }

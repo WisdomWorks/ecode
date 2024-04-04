@@ -1,7 +1,11 @@
 import { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 
 import { ExerciseType } from '@/constants'
-import { EssayExerciseSchema, QuizExerciseSchema } from '@/types/exercise.types'
+import {
+  CodeExerciseSchema,
+  EssayExerciseSchema,
+  QuizExerciseSchema,
+} from '@/types/exercise.types'
 
 import { CreateCodeExercise } from './code/CreateCodeExercise'
 import { CreateEssayExercise } from './essay/CreateEssayExercise'
@@ -12,7 +16,7 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 
 interface Props {
-  exercise?: EssayExerciseSchema | QuizExerciseSchema
+  exercise?: CodeExerciseSchema | EssayExerciseSchema | QuizExerciseSchema
   exerciseType: ExerciseType | string
   isUpdate?: boolean
   refetchTopics?: (
@@ -58,7 +62,12 @@ export const CreateExercise = ({
     }
     switch (exerciseType) {
       case ExerciseType.CODE:
-        return <CreateCodeExercise {...commonProps} />
+        return (
+          <CreateCodeExercise
+            {...commonProps}
+            exercise={exercise as CodeExerciseSchema}
+          />
+        )
       case ExerciseType.ESSAY:
         return (
           <CreateEssayExercise

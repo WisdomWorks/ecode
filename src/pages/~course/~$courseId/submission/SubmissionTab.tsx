@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
-import { useGetExercises } from '@/apis'
-import { GetExerciseDetailToReviewProps } from '@/apis/useGetExerciseDetailToReview'
+import { GetDetailSubmissionProps, useGetExercises } from '@/apis'
 import { Loading, Table } from '@/components/common'
 import { useToggle } from '@/hooks'
 import { TColumn } from '@/types'
@@ -17,8 +16,12 @@ export const SubmissionTab = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
   const { data, isLoading } = useGetExercises({ courseId })
 
-  const [modalState, setModalState] =
-    useState<GetExerciseDetailToReviewProps | null>(null)
+  const [modalState, setModalState] = useState<
+    | (GetDetailSubmissionProps & {
+        exercise: ExerciseSchema
+      })
+    | null
+  >(null)
   const [openModalDetail, toggleModalDetail] = useToggle()
 
   if (isLoading) return <Loading />

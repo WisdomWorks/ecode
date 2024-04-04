@@ -1,4 +1,8 @@
-import { EssayExerciseSchema, QuizExerciseSchema } from '@/types/exercise.types'
+import {
+  CodeExerciseSchema,
+  EssayExerciseSchema,
+  QuizExerciseSchema,
+} from '@/types/exercise.types'
 
 import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
@@ -10,7 +14,7 @@ export interface IEnrollExercise {
   studentId: string
 }
 
-type Response = EssayExerciseSchema | QuizExerciseSchema
+type Response = CodeExerciseSchema | EssayExerciseSchema | QuizExerciseSchema
 
 export const useEnrollExercise = () => {
   return useMutation<

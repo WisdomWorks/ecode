@@ -1,12 +1,11 @@
 import { Dispatch, SetStateAction } from 'react'
 
 import {
+  GetDetailSubmissionProps,
   TStudentSubmissionResponse,
   useGetSubmissionByExerciseId,
 } from '@/apis'
-import { GetExerciseDetailToReviewProps } from '@/apis/useGetExerciseDetailToReview'
 import { ButtonTooltip, Table } from '@/components/common'
-import { useAppStore } from '@/context/useAppStore'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
@@ -16,7 +15,14 @@ import { MRT_Row } from 'material-react-table'
 
 interface Props {
   row: MRT_Row<ExerciseSchema>
-  setModalState: Dispatch<SetStateAction<GetExerciseDetailToReviewProps | null>>
+  setModalState: Dispatch<
+    SetStateAction<
+      | (GetDetailSubmissionProps & {
+          exercise: ExerciseSchema
+        })
+      | null
+    >
+  >
   toggleModalDetail: () => void
 }
 
@@ -26,7 +32,6 @@ export const DetailPanelSubmission = ({
   toggleModalDetail,
 }: Props) => {
   const { exerciseId, type } = row.original
-  const user = useAppStore(state => state.user)
 
   const { data } = useGetSubmissionByExerciseId({
     exerciseId,
@@ -60,15 +65,6 @@ export const DetailPanelSubmission = ({
     },
   ]
 
-  const onViewSubmission = () => {
-    setModalState({
-      exerciseId,
-      userId: user?.userId || '',
-      type,
-    })
-    toggleModalDetail()
-  }
-
   const onGradingSubmission = () => {}
 
   return (
@@ -86,7 +82,14 @@ export const DetailPanelSubmission = ({
             <ButtonTooltip
               iconButtonProps={{
                 children: <RemoveRedEyeOutlined className="text-warning-500" />,
-                onClick: onViewSubmission,
+                onClick: () => {
+                  setModalState({
+                    submissionId: original.submissions.submissionId,
+                    type,
+                    exercise: row.original,
+                  })
+                  toggleModalDetail()
+                },
               }}
               isIconButton
               tooltipProps={{

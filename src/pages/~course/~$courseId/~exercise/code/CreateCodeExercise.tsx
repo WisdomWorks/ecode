@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form'
 
-import { useCreateCodeExercise } from '@/apis'
+import { useCreateCodeExercise, useUpdateCodeExercise } from '@/apis'
 import {
   Form,
   FormButtonGroup,
@@ -30,29 +30,38 @@ import { getHours, getMinutes } from 'date-fns'
 
 interface Props {
   exercise?: CodeExerciseSchema
+  handleBack: () => void
   isUpdate?: boolean
   topicId: string
 }
 
 type TCreateCodeExercise = Omit<
   Schema['CreateCodeExerciseRequest'],
-  'allowedLanguageIds' | 'testCaseList'
+  'allowedLanguageIds' | 'testCases'
 > & {
   allowedLanguageIds: { key: string }[]
   durationObj: Date
   endDate: Date
   exerciseId: string
   startDate: Date
-  testCaseList: (Schema['TestCase'] & {
+  testCases: (Schema['TestCase'] & {
     defaultTestCase?: boolean
     isPretest?: boolean
   })[]
 }
 
-export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
+export const CreateCodeExercise = ({
+  exercise,
+  handleBack,
+  isUpdate,
+  topicId,
+}: Props) => {
   const { setErrorMessage } = useToastMessage()
+
   const { isPending: isPendingCreate, mutate: createExercise } =
     useCreateCodeExercise()
+  const { isPending: isPendingUpdate, mutate: updateExercise } =
+    useUpdateCodeExercise()
 
   const defaultValues = useMemo(
     () => ({
@@ -73,9 +82,11 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
         ? new Date(exercise.endTime)
         : defaultTimeWithoutSecond,
       allowedLanguageIds:
-        exercise?.allowedLanguageIds.map(item => ({ key: item })) || [],
+        exercise?.allowedLanguageIds.map(item =>
+          programmingLanguages.find(pr => pr.key === item),
+        ) || [],
       description: exercise?.description || '',
-      testCaseList: exercise?.testCaseList || [
+      testCases: exercise?.testCases || [
         {
           input: '',
           output: '',
@@ -108,7 +119,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
 
   const { append, fields, remove } = useFieldArray({
     control,
-    name: 'testCaseList',
+    name: 'testCases',
   })
 
   const handleSubmit: SubmitHandler<TCreateCodeExercise> = data => {
@@ -117,7 +128,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
       durationObj,
       endDate,
       startDate,
-      testCaseList,
+      testCases,
       ...rest
     } = data
 
@@ -125,7 +136,8 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
     const startTime = startDate.toISOString()
     const endTime = endDate.toISOString()
 
-    const testCaseListInput = testCaseList.map(tc => ({
+    const testCaseListInput = testCases.map(tc => ({
+      testcaseId: tc.testcaseId || undefined,
       input: tc.input,
       output: tc.output,
       points: tc.points,
@@ -135,16 +147,27 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
 
     const input = {
       ...rest,
-      exerciseId: undefined,
       allowedLanguageIds: allowedLanguageIdsInput,
-      testCaseList: testCaseListInput,
+      testCases: testCaseListInput,
       durationTime,
       endTime,
       startTime,
       publicGroupIds: [],
     }
 
+    if (isUpdate) {
+      updateExercise(input, {
+        onSuccess: () => handleBack(),
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Create exercise failed',
+          ),
+      })
+      return
+    }
+
     createExercise(input, {
+      onSuccess: () => handleBack(),
       onError: error =>
         setErrorMessage(
           error.response?.data.message || 'Create exercise failed',
@@ -153,12 +176,12 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
   }
 
   const calculatePoint = () => {
-    const testCaseList = watch('testCaseList')
-    const noOfTcNotPreset = testCaseList.filter(tc => !tc.isPretest).length
-    testCaseList.forEach((testCase, index) => {
+    const testCases = watch('testCases')
+    const noOfTcNotPreset = testCases.filter(tc => !tc.isPretest).length
+    testCases.forEach((testCase, index) => {
       if (!testCase.isPretest) {
         setValue(
-          `testCaseList.${index}.points`,
+          `testCases.${index}.points`,
           Math.round((10 / noOfTcNotPreset) * 100) / 100,
         )
       }
@@ -173,7 +196,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
     >
       <div>
         <h2 className="col-span-12 text-2xl font-bold">
-          {isUpdate ? 'Update ' : 'Create '} Essay Exercise
+          {isUpdate ? 'Update ' : 'Create '} Code Exercise
         </h2>
         <CreateExerciseInformation control={control} />
         <Typography className="col-span-12 mt-2" variant="h5">
@@ -210,7 +233,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
 
         <section className="col-span-2 mt-2 flex flex-col gap-3">
           <h2 className="text-lg text-neutral-900">{`Test case (${
-            watch('testCaseList').length
+            watch('testCases').length
           })`}</h2>
           <div className="flex flex-col gap-2">
             {fields.map((field, index) => {
@@ -226,7 +249,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
                       maxRows={4}
                       minRows={4}
                       multiline
-                      name={`testCaseList.${index}.input`}
+                      name={`testCases.${index}.input`}
                       placeholder='e.g. "1 2 3 4 5"'
                       required
                     />
@@ -236,7 +259,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
                       maxRows={4}
                       minRows={4}
                       multiline
-                      name={`testCaseList.${index}.output`}
+                      name={`testCases.${index}.output`}
                       placeholder="Enter output"
                       required
                     />
@@ -249,17 +272,15 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
                         max: 10,
                       }}
                       label={`Points`}
-                      name={`testCaseList.${index}.points`}
+                      name={`testCases.${index}.points`}
                       required
                       type="number"
                     />
                     <div className="col-span-2 mt-3">
                       <FormCheckbox
-                        disabled={
-                          watch(`testCaseList`).at(index)?.defaultTestCase
-                        }
+                        disabled={watch(`testCases`).at(index)?.defaultTestCase}
                         extraOnChange={() => {
-                          setValue(`testCaseList.${index}.points`, 0)
+                          setValue(`testCases.${index}.points`, 0)
                           calculatePoint()
                         }}
                         label={
@@ -276,15 +297,16 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
                             </div>
                           </Tooltip>
                         }
-                        name={`testCaseList.${index}.isPretest`}
+                        name={`testCases.${index}.isPretest`}
                       />
                     </div>
                     <IconButton
                       className={cn('col-span-1', {
                         'opacity-0 pointer-events-none':
                           index === 0 ||
-                          watch(`testCaseList`).at(index)?.defaultTestCase,
+                          watch(`testCases`).at(index)?.defaultTestCase,
                       })}
+                      disabled={isPendingCreate || isPendingUpdate}
                       onClick={() => {
                         remove(index)
                         calculatePoint()
@@ -302,6 +324,7 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
       </div>
       <div className="mt-3">
         <Button
+          disabled={isPendingCreate || isPendingUpdate}
           onClick={() => {
             append({
               input: '',
@@ -325,13 +348,13 @@ export const CreateCodeExercise = ({ exercise, isUpdate, topicId }: Props) => {
             label: 'Cancel',
             onClick: () => {},
             className: 'clearBtn',
-            disabled: isPendingCreate,
+            disabled: isPendingCreate || isPendingUpdate,
           },
           {
             type: 'submit',
-            label: 'Create',
+            label: isUpdate ? 'Update' : 'Create',
             className: 'submitBtn',
-            disabled: isPendingCreate,
+            disabled: isPendingCreate || isPendingUpdate,
           },
         ]}
         className="mt-2 justify-end"

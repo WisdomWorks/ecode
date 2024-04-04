@@ -17,9 +17,10 @@ export const CreateCodeExerciseSchema = z
     allowedLanguageIds: z
       .array(z.object({ key: z.string() }))
       .nonempty({ message: 'Language is required' }),
-    testCaseList: z
+    testCases: z
       .array(
         z.object({
+          testcaseId: z.string().optional(),
           input: z.string().min(1, { message: 'Input is required' }),
           output: z.string().min(1, { message: 'Output is required' }),
           points: z

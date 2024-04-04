@@ -24,7 +24,10 @@ export const StudentView = ({ exerciseId }: Props) => {
 
   const navigate = useNavigate()
 
-  const { data, isLoading } = usePreviewExercise({ exerciseId })
+  const { data, isLoading } = usePreviewExercise({
+    exerciseId,
+    studentId: user?.userId || '',
+  })
   const { isPending, mutate } = useEnrollExercise()
 
   const form = useForm<IEnrollExercise>({
@@ -75,7 +78,8 @@ export const StudentView = ({ exerciseId }: Props) => {
 
   const { control, watch } = form
 
-  const { durationTime, endTime, exerciseName, startTime, type } = exercise
+  const { available, durationTime, endTime, exerciseName, startTime, type } =
+    exercise
 
   const isOnGoing = checkIsOnGoing(startTime, endTime)
 
@@ -128,21 +132,25 @@ export const StudentView = ({ exerciseId }: Props) => {
         >
           <h3 className="mb-2">Attempt the exercise</h3>
 
-          <Alert severity={isOnGoing ? 'info' : 'warning'}>
-            {isOnGoing
-              ? 'Enter the key to start the exercise'
-              : 'The exercise is not available now'}
+          <Alert
+            severity={!available ? 'error' : isOnGoing ? 'info' : 'warning'}
+          >
+            {!available
+              ? 'You have attempted more than the allowed number of times'
+              : isOnGoing
+                ? 'Enter the key to start the exercise'
+                : 'The exercise is not available now'}
           </Alert>
           <FormInputPassword
             control={control}
-            disabled={!isOnGoing || isPending}
+            disabled={!isOnGoing || isPending || !available}
             label="Enter the enrollment key"
             name="key"
           />
           <div className="flex justify-end">
             <Button
               className="submitBtn"
-              disabled={!isOnGoing || isPending || !watch('key')}
+              disabled={!isOnGoing || isPending || !watch('key') || !available}
               type="submit"
             >
               Attempt

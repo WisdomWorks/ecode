@@ -5,9 +5,14 @@ import { CountDownTimer, Loading } from '@/components/common'
 import { ExerciseType } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
 import { useRoute } from '@/hooks'
-import { EssayExerciseSchema, QuizExerciseSchema } from '@/types/exercise.types'
-import { formatDDMMyyyyHHmm, parseTimeToMilliseconds } from '@/utils'
+import {
+  CodeExerciseSchema,
+  EssayExerciseSchema,
+  QuizExerciseSchema,
+} from '@/types/exercise.types'
+import { cn, formatDDMMyyyyHHmm, parseTimeToMilliseconds } from '@/utils'
 
+import { CodeExercise } from './code/CodeExercise'
 import { Essay } from './essay/Essay'
 import { Quiz } from './quiz/Quiz'
 import { Chip } from '@mui/material'
@@ -23,7 +28,7 @@ export const EnrollExercise = () => {
   const [exercise, setExercise] = useState<
     | ({
         timeLess?: string
-      } & (EssayExerciseSchema | QuizExerciseSchema))
+      } & (CodeExerciseSchema | EssayExerciseSchema | QuizExerciseSchema))
     | null
   >(null)
   const { isPending, mutate: getExercise } = useEnrollExercise()
@@ -54,7 +59,11 @@ export const EnrollExercise = () => {
     exercise
 
   return (
-    <div className="grid h-screen w-screen grid-rows-12 gap-4 overflow-hidden p-8">
+    <div
+      className={cn('grid h-screen w-screen grid-rows-12 overflow-hidden', {
+        'gap-4': type !== ExerciseType.CODE,
+      })}
+    >
       <div className="row-span-2 flex justify-between overflow-auto rounded-lg p-4 shadow-lg">
         <div className="flex flex-col gap-2">
           <div className="mb-2 flex items-center gap-4">
@@ -101,7 +110,7 @@ export const EnrollExercise = () => {
         </div>
       </div>
 
-      <div className="row-span-10 overflow-hidden rounded-lg p-4 shadow-2xl">
+      <div className="row-span-10 overflow-hidden rounded-lg shadow-2xl">
         {type === ExerciseType.ESSAY && (
           <Essay
             exercise={exercise as EssayExerciseSchema}
@@ -112,6 +121,13 @@ export const EnrollExercise = () => {
         {type === ExerciseType.QUIZ && (
           <Quiz
             exercise={exercise as QuizExerciseSchema}
+            isTimeOut={isTimeOut}
+          />
+        )}
+
+        {type === ExerciseType.CODE && (
+          <CodeExercise
+            exercise={exercise as CodeExerciseSchema}
             isTimeOut={isTimeOut}
           />
         )}
