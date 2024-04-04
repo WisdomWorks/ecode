@@ -17,7 +17,7 @@ export const CountDownTimer = ({ milliseconds, onEnd }: Props) => {
   return (
     <div>
       <span
-        className={cn('text-6xl font-bold', {
+        className={cn('text-5xl', {
           'text-danger-500': isWarningTimeOut,
         })}
       >
