@@ -10,8 +10,6 @@ export const CreateCodeExerciseSchema = z
     endDate: z.date(),
     durationObj: z.date(),
     key: z.string().min(1, { message: 'Enrollment key is required' }),
-    timeLimit: z.number(),
-    memoryLimit: z.number(),
     points: z.number(),
     description: z.string().min(1, { message: 'Topic is required' }),
     allowedLanguageIds: z
