@@ -24,7 +24,9 @@ export const TestCases = ({ testCases }: Props) => {
     <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
       <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
         <VerifiedUserOutlinedIcon className=" mr-2 mt-1 text-lg text-green-500" />
-        <p className="mb-3 text-base font-bold capitalize">Testcase</p>
+        <p className="mb-3 text-base font-bold capitalize">
+          {testCases.length} Pre Test Case
+        </p>
       </div>
       {testCases.map((testCase, index) => (
         <div key={index}>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import {
@@ -80,6 +80,8 @@ type TForm = Schema['SubmitCodeExerciseRequest'] & {
 export const CodeConsole = ({ exercise }: Props) => {
   const user = useAppStore(state => state.user)
 
+  const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -97,22 +99,36 @@ export const CodeConsole = ({ exercise }: Props) => {
 
   const [submissionId, setSubmissionId] = useState('')
   const {
-    data: testCaseRunCode,
+    data: testCaseRunCodeData,
     isRefetching,
     refetch: getTestCase,
   } = useGetTestCaseRunCode({
     submissionId,
   })
 
-  // useInterval(() => {
-
-  // },
-  //   preTestCaseLength !== testCaseRunCode
-  // )
-
   const { allowedLanguageIds, exerciseId, testCases } = exercise
 
   const preTestCaseLength = testCases.length
+
+  useEffect(() => {
+    if (
+      testCaseRunCodeData?.data.testCases.length === preTestCaseLength ||
+      ['IE', 'CE'].includes(String(testCaseRunCodeData?.data.status))
+    ) {
+      setIsRefetchingGetTestCase(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [testCaseRunCodeData])
+
+  useInterval(
+    () => {
+      getTestCase()
+    },
+    isRefetchingGetTestCase &&
+      preTestCaseLength !== testCaseRunCodeData?.data.testCases.length
+      ? 500
+      : null,
+  )
 
   const languages =
     allowedLanguageIds.map(id =>
@@ -136,16 +152,14 @@ export const CodeConsole = ({ exercise }: Props) => {
 
     const input = {
       ...rest,
-      languageId: 'C',
+      languageId: language.key,
     }
 
     if (typeSubmit === 'run') {
       return runCode(input, {
         onSuccess: data => {
           setSubmissionId(data.data.submissionId)
-          setTimeout(() => {
-            getTestCase()
-          }, 3000)
+          setIsRefetchingGetTestCase(true)
         },
       })
     }
