@@ -154,8 +154,7 @@ export const CodeConsole = ({ exercise }: Props) => {
 
     const input = {
       ...rest,
-      // languageId: language.key,
-      languageId: 'PY3',
+      languageId: language.key,
     }
 
     if (typeSubmit === 'run') {
@@ -281,8 +280,8 @@ export const CodeConsole = ({ exercise }: Props) => {
         <div className="h-full">
           <FormCodeIDE name="source" />
         </div>
-        <div className="h-1/6">
-          <Console />
+        <div className="h-1/6 overflow-auto">
+          <Console errorMessage={testCaseRunCodeData?.data.message} />
         </div>
       </div>
     </Form>
