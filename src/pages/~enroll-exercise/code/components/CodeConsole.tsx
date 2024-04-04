@@ -139,7 +139,7 @@ export const CodeConsole = ({ exercise }: Props) => {
     defaultValues: {
       studentId: user?.userId || '',
       exerciseId,
-      source: '#include <stdio.h>\r\n\r\nint main() {\r\n    return 0;\r\n}',
+      source: 'a = int(input())\nb = int(input())\nprint(a + b)',
       language: languages[0],
       languageId: '',
     },
@@ -152,7 +152,8 @@ export const CodeConsole = ({ exercise }: Props) => {
 
     const input = {
       ...rest,
-      languageId: language.key,
+      // languageId: language.key,
+      languageId: 'PY3',
     }
 
     if (typeSubmit === 'run') {
