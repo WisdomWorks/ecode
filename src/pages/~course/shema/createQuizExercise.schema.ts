@@ -10,6 +10,9 @@ export const CreateQuizExerciseSchema = z
     endDate: z.date(),
     durationObj: z.date(),
     key: z.string().min(1, { message: 'Enrollment key is required' }),
+    reAttempt: z.any().refine(value => +value >= 1, {
+      message: 'Attempt limit must be greater than 0',
+    }),
     questions: z.array(
       z.object({
         questionId: z.string().optional(),

@@ -76,6 +76,7 @@ export const CreateQuizExercise = ({
       topicId,
       startTime: '',
       endTime: '',
+      reAttempt: exercise?.reAttempt || 1,
       key: exercise?.key || '',
       exerciseName: exercise?.exerciseName || '',
       durationTime: exercise?.durationTime || 0,
@@ -102,7 +103,8 @@ export const CreateQuizExercise = ({
   // console.log(form.formState.errors)
 
   const onSubmit: SubmitHandler<TCreateQuiz> = data => {
-    const { durationObj, endDate, questions, startDate, ...rest } = data
+    const { durationObj, endDate, questions, reAttempt, startDate, ...rest } =
+      data
 
     const questionDoNotHaveTitle = questions.findIndex(
       question => !question.title,
@@ -143,6 +145,7 @@ export const CreateQuizExercise = ({
       updateExercise(
         {
           ...rest,
+          reAttempt: Number(reAttempt),
           durationTime,
           startTime,
           endTime,

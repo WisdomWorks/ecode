@@ -10,6 +10,9 @@ export const CreateEssayExerciseSchema = z
     startDate: z.date(),
     endDate: z.date(),
     durationObj: z.date(),
+    reAttempt: z.any().refine(value => +value >= 1, {
+      message: 'Attempt limit must be greater than 0',
+    }),
     key: z.string().min(1, { message: 'Enrollment key is required' }),
   })
   .superRefine(({ endDate, startDate }, ctx) => {

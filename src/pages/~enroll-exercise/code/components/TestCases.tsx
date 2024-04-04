@@ -14,7 +14,6 @@ export const TestCases = ({ testCases }: Props) => {
   const [currentOutput, setCurrentOutput] = useState(testCases[0].output)
   const [currentCase, setCurrentCase] = useState(0)
 
-  console.log(currentInput)
   const handleChangeTestcase = (index: number) => {
     setCurrentCase(index)
     setCurrentInput(testCases[index].input)
@@ -46,13 +45,13 @@ export const TestCases = ({ testCases }: Props) => {
 
       <div className=" m-4 flex-col">
         <p className=" font-bold">Input</p>
-        <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2 whitespace-pre-line">
+        <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
           {currentInput}
         </div>
       </div>
       <div className=" m-4 flex-col">
         <p className=" font-bold">Output</p>
-        <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2 whitespace-pre-line">
+        <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
           {currentOutput}
         </div>
       </div>

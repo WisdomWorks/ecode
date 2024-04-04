@@ -38,6 +38,9 @@ export interface paths {
   "/courses/students": {
     put: operations["updateStudentsInCourse"];
   };
+  "/auth/change-password": {
+    put: operations["updateUserPassword"];
+  };
   "/users": {
     get: operations["getUsersByRoleOrAll"];
     post: operations["createUser"];
@@ -108,6 +111,9 @@ export interface paths {
   "/auth/login/admin": {
     post: operations["signInAdmin"];
   };
+  "/auth/check-otp": {
+    post: operations["checkOTP"];
+  };
   "/users/{userId}": {
     get: operations["getById"];
     delete: operations["deleteById"];
@@ -166,6 +172,9 @@ export interface paths {
   };
   "/courses/user/{userId}": {
     get: operations["getCourseByUserId"];
+  };
+  "/auth/send-otp": {
+    get: operations["sendOTP"];
   };
   "/auth/check-session/user": {
     get: operations["checkSessionUser"];
@@ -284,6 +293,10 @@ export interface components {
     UpdateStudentsToCourseRequest: {
       courseId: string;
       studentIds?: string[];
+    };
+    ChangePasswordRequest: {
+      userId?: string;
+      password?: string;
     };
     CreateUserRequest: {
       name: string;
@@ -811,6 +824,27 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["UpdateStudentsToCourseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateUserPassword: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangePasswordRequest"];
       };
     };
     responses: {
@@ -1418,6 +1452,27 @@ export interface operations {
       };
     };
   };
+  checkOTP: {
+    parameters: {
+      query: {
+        OTP: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getById: {
     parameters: {
       path: {
@@ -1906,6 +1961,27 @@ export interface operations {
     parameters: {
       path: {
         userId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  sendOTP: {
+    parameters: {
+      query: {
+        userName: string;
       };
     };
     responses: {

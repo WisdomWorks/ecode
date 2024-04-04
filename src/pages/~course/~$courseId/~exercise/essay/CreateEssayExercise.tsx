@@ -49,6 +49,7 @@ export const CreateEssayExercise = ({
       topicId,
       startTime: '',
       endTime: '',
+      reAttempt: exercise?.reAttempt || 1,
       key: exercise?.key || '',
       exerciseName: exercise?.exerciseName || '',
       durationTime: exercise?.durationTime || 0,
@@ -72,7 +73,7 @@ export const CreateEssayExercise = ({
   })
 
   const onSubmit: SubmitHandler<TCreateEssay> = data => {
-    const { durationObj, endDate, startDate, ...rest } = data
+    const { durationObj, endDate, reAttempt, startDate, ...rest } = data
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
     const startTime = startDate.toISOString()
@@ -82,6 +83,7 @@ export const CreateEssayExercise = ({
       updateEssay(
         {
           ...rest,
+          reAttempt: Number(reAttempt),
           durationTime,
           startTime,
           endTime,
@@ -98,6 +100,7 @@ export const CreateEssayExercise = ({
     createEssay(
       {
         ...rest,
+        reAttempt: Number(reAttempt),
         durationTime,
         startTime,
         endTime,

@@ -7,7 +7,7 @@ import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
 
-import { ModalViewDetailSubmission } from '../../components/ModalViewDetailSubmission'
+import { ModalViewDetailSubmission } from '../../components/submission/ModalViewDetailSubmission'
 import { DetailPanelSubmission } from './DetailPanelSubmission'
 import { Chip } from '@mui/material'
 import { useParams } from '@tanstack/react-router'

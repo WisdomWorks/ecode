@@ -6,6 +6,7 @@ import {
   useGetSubmissionByExerciseId,
 } from '@/apis'
 import { ButtonTooltip, Table } from '@/components/common'
+import { ExerciseType } from '@/constants'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
@@ -65,8 +66,6 @@ export const DetailPanelSubmission = ({
     },
   ]
 
-  const onGradingSubmission = () => {}
-
   return (
     <div>
       <h3>All submissions</h3>
@@ -79,28 +78,38 @@ export const DetailPanelSubmission = ({
         positionActionsColumn="last"
         renderRowActions={({ row: { original } }) => (
           <div className="flex">
-            <ButtonTooltip
-              iconButtonProps={{
-                children: <RemoveRedEyeOutlined className="text-warning-500" />,
-                onClick: () => {
-                  setModalState({
-                    submissionId: original.submissions.submissionId,
-                    type,
-                    exercise: row.original,
-                  })
-                  toggleModalDetail()
-                },
-              }}
-              isIconButton
-              tooltipProps={{
-                title: 'View submission',
-              }}
-            />
-            {original.submissions.score === -1 && (
+            {type !== ExerciseType.ESSAY ? (
+              <ButtonTooltip
+                iconButtonProps={{
+                  children: (
+                    <RemoveRedEyeOutlined className="text-warning-500" />
+                  ),
+                  onClick: () => {
+                    setModalState({
+                      submissionId: original.submissions.submissionId,
+                      type,
+                      exercise: row.original,
+                    })
+                    toggleModalDetail()
+                  },
+                }}
+                isIconButton
+                tooltipProps={{
+                  title: 'View submission',
+                }}
+              />
+            ) : (
               <ButtonTooltip
                 iconButtonProps={{
                   children: <GradingOutlined className="text-success-500" />,
-                  onClick: onGradingSubmission,
+                  onClick: () => {
+                    setModalState({
+                      submissionId: original.submissions.submissionId,
+                      type,
+                      exercise: row.original,
+                    })
+                    toggleModalDetail()
+                  },
                 }}
                 isIconButton
                 tooltipProps={{

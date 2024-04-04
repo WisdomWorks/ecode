@@ -45,6 +45,14 @@ export const CreateExerciseInformation = <T extends FieldValues>({
           name={'key' as Path<T> & (string | undefined)}
           required
         />
+        <FormInput
+          className="col-span-2"
+          control={control}
+          label="Attempt Limit"
+          name={'reAttempt' as Path<T> & (string | undefined)}
+          required
+          type="number"
+        />
 
         <DateTimeExercise className="col-span-8" control={control} />
         <FormTimePicker

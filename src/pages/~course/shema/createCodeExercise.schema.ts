@@ -12,6 +12,9 @@ export const CreateCodeExerciseSchema = z
     key: z.string().min(1, { message: 'Enrollment key is required' }),
     points: z.number(),
     description: z.string().min(1, { message: 'Topic is required' }),
+    reAttempt: z.any().refine(value => +value >= 1, {
+      message: 'Attempt limit must be greater than 0',
+    }),
     allowedLanguageIds: z
       .array(z.object({ key: z.string() }))
       .nonempty({ message: 'Language is required' }),

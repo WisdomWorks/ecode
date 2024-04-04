@@ -14,6 +14,7 @@ import { useInterval, useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
+import { Console } from './Console'
 import {
   BackupOutlined,
   KeyboardArrowDownOutlined,
@@ -106,7 +107,7 @@ export const CodeConsole = ({ exercise }: Props) => {
     submissionId,
   })
 
-  const { allowedLanguageIds, exerciseId, testCases } = exercise
+  const { exerciseId, languageTemplate, testCases } = exercise
 
   const preTestCaseLength = testCases.length
 
@@ -130,22 +131,23 @@ export const CodeConsole = ({ exercise }: Props) => {
       : null,
   )
 
-  const languages =
-    allowedLanguageIds.map(id =>
-      programmingLanguages.find(pr => pr.key === id),
-    ) || []
+  const languages = Object.keys(languageTemplate as object).map(id =>
+    programmingLanguages.find(pr => pr.key === id),
+  )
+
+  console.log()
 
   const form = useForm<TForm>({
     defaultValues: {
       studentId: user?.userId || '',
       exerciseId,
-      source: 'a = int(input())\nb = int(input())\nprint(a + b)',
+      source: languageTemplate?.[String(languages[0]?.key)] || '',
       language: languages[0],
       languageId: '',
     },
   })
 
-  const { setValue } = form
+  const { setValue, watch } = form
 
   const handleSubmitForm: SubmitHandler<TForm> = data => {
     const { language, typeSubmit, ...rest } = data
@@ -177,6 +179,13 @@ export const CodeConsole = ({ exercise }: Props) => {
     })
   }
 
+  const languageSelected = watch('language')
+
+  useEffect(() => {
+    setValue('source', languageTemplate?.[String(languageSelected?.key)] || '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [languageSelected])
+
   return (
     <Form
       className="flex h-full flex-col rounded-md border border-gray-300 bg-white"
@@ -187,30 +196,31 @@ export const CodeConsole = ({ exercise }: Props) => {
         <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
         <p className="mb-3 text-base font-bold capitalize">Code</p>
       </div>
-      <div className="grid grid-cols-3 p-2">
-        <FormSelector
-          className="text-white"
-          classes={{
-            root: 'bg-white rounded-lg',
-          }}
-          filterSelectedOptions
-          getOptionKey={option =>
-            typeof option === 'object' ? option?.ID : (option as string)
-          }
-          getOptionLabel={option =>
-            typeof option === 'object' && 'name' in option
-              ? option.name
-              : (option as string)
-          }
-          isOptionEqualToValue={(option, value) => option?.ID === value?.ID}
-          label="Language"
-          name="language"
-          options={languages}
-          renderOption={(props, option) => <li {...props}>{option?.name}</li>}
-          required
-        />
-      </div>
+
       <div className=" flex justify-between">
+        <div className="">
+          <FormSelector
+            className="text-white"
+            classes={{
+              root: 'bg-white rounded-lg',
+            }}
+            filterSelectedOptions
+            getOptionKey={option =>
+              typeof option === 'object' ? option?.ID : (option as string)
+            }
+            getOptionLabel={option =>
+              typeof option === 'object' && 'name' in option
+                ? option.name
+                : (option as string)
+            }
+            isOptionEqualToValue={(option, value) => option?.ID === value?.ID}
+            label="Language"
+            name="language"
+            options={languages}
+            renderOption={(props, option) => <li {...props}>{option?.name}</li>}
+            required
+          />
+        </div>
         {/* <Button
           aria-controls={open ? 'demo-customized-menu' : undefined}
           aria-expanded={open ? 'true' : undefined}
@@ -266,7 +276,15 @@ export const CodeConsole = ({ exercise }: Props) => {
         </div>
       </div>
       <Divider className="bg-gray-100" />
-      <FormCodeIDE name="source" />
+
+      <div className="flex h-full flex-col">
+        <div className="h-full">
+          <FormCodeIDE name="source" />
+        </div>
+        <div className="h-1/6">
+          <Console />
+        </div>
+      </div>
     </Form>
   )
 }

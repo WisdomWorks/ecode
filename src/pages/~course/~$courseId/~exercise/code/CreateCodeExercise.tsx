@@ -69,6 +69,7 @@ export const CreateCodeExercise = ({
       topicId,
       startTime: '',
       endTime: '',
+      reAttempt: exercise?.reAttempt || 1,
       key: exercise?.key || '',
       exerciseName: exercise?.exerciseName || '',
       durationTime: exercise?.durationTime || 0,
@@ -86,7 +87,10 @@ export const CreateCodeExercise = ({
           programmingLanguages.find(pr => pr.key === item),
         ) || [],
       description: exercise?.description || '',
-      testCases: exercise?.testCases || [
+      testCases: exercise?.testCases.map(tc => ({
+        ...tc,
+        isPretest: tc.points === 0,
+      })) || [
         {
           input: '',
           output: '',
@@ -125,10 +129,25 @@ export const CreateCodeExercise = ({
       allowedLanguageIds,
       durationObj,
       endDate,
+      reAttempt,
       startDate,
       testCases,
       ...rest
     } = data
+
+    const atLeastOnePretest = testCases.some(tc => tc.points === 0)
+
+    if (!atLeastOnePretest) {
+      setErrorMessage('At least one pretest must be set')
+      return
+    }
+
+    const isAllPretest = testCases.every(tc => tc.points === 0)
+
+    if (isAllPretest) {
+      setErrorMessage('At least one test case to grade')
+      return
+    }
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
     const startTime = startDate.toISOString()
@@ -145,6 +164,7 @@ export const CreateCodeExercise = ({
 
     const input = {
       ...rest,
+      reAttempt: Number(reAttempt),
       allowedLanguageIds: allowedLanguageIdsInput,
       testCases: testCaseListInput,
       durationTime,

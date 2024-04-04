@@ -1,8 +1,10 @@
 import { GetDetailSubmissionProps, useGetDetailSubmission } from '@/apis'
-import { Dialog } from '@/components/common'
+import { Dialog, Loading } from '@/components/common'
+import { ExerciseType } from '@/constants'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { cn, formatDDMMyyyyHHmm } from '@/utils'
 
+import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
 import { Button, Chip } from '@mui/material'
 
 interface Props {
@@ -18,7 +20,7 @@ export const ModalViewDetailSubmission = ({
   state,
   toggleModal,
 }: Props) => {
-  const { data } = useGetDetailSubmission(state)
+  const { data, isLoading, isRefetching } = useGetDetailSubmission(state)
 
   const submission = data?.data
 
@@ -26,7 +28,9 @@ export const ModalViewDetailSubmission = ({
 
   const { exercise, type } = state
   const { durationTime, endTime, exerciseName, startTime } = exercise
-  const { score } = submission
+  const { score, submissionId } = submission
+
+  if (isLoading || isRefetching) return <Loading />
 
   return (
     <Dialog
@@ -34,7 +38,7 @@ export const ModalViewDetailSubmission = ({
       onClose={toggleModal}
       open={open}
     >
-      <div className="flex h-full flex-col justify-between gap-2">
+      <div className="flex h-full flex-col gap-8">
         <div className="grid grid-cols-12">
           <div className="col-span-12 flex flex-col gap-2">
             <div className="mb-2 flex items-center gap-4">
@@ -93,11 +97,23 @@ export const ModalViewDetailSubmission = ({
           </div>
         </div>
 
-        <div className="flex h-fit justify-end">
-          <Button className="clearBtn" onClick={toggleModal}>
-            Close
-          </Button>
+        <div>
+          {type === ExerciseType.ESSAY && (
+            <DetailEssay
+              essaySubmissionId={submissionId}
+              score={score}
+              submission={submission.submission}
+            />
+          )}
         </div>
+
+        {type !== ExerciseType.ESSAY && (
+          <div className="flex h-fit justify-end">
+            <Button className="clearBtn" onClick={toggleModal}>
+              Close
+            </Button>
+          </div>
+        )}
       </div>
     </Dialog>
   )
