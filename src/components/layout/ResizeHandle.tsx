@@ -15,7 +15,7 @@ export const ResizeHandle = ({
     <PanelResizeHandle>
       <div
         className={cn(
-          'flex items-center justify-center bg-[#454950]',
+          'flex items-center justify-center bg-[#F0F0F0]',
           {
             'cursor-col-resize h-full w-2': direction === 'horizontal',
             'cursor-row-resize w-full h-2': direction === 'vertical',

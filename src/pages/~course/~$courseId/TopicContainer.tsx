@@ -113,13 +113,14 @@ export const TopicContainer = ({
                       <div>No exercises in this topic.</div>
                     ) : (
                       <div className="flex w-full flex-col gap-2">
-                        {exercises.map(exercise => {
+                        {exercises.map((exercise, index) => {
                           const { exerciseId } = exercise
 
                           return (
                             <ExerciseDetail
                               exercise={exercise}
                               key={exerciseId}
+                              index={index}
                             />
                           )
                         })}

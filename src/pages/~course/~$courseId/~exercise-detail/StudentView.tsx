@@ -9,9 +9,16 @@ import { useToastMessage } from '@/hooks'
 import { formatDDMMyyyyHHmm } from '@/utils'
 import { checkIsOnGoing } from '@/utils/course.utils'
 
-import { ArrowBackIos } from '@mui/icons-material'
-import { Alert, Button, Chip } from '@mui/material'
+import {
+  ArrowBackIos,
+  QuizRounded,
+  CodeRounded,
+  MenuBookRounded,
+  LinkOutlined,
+} from '@mui/icons-material'
+import { Alert, Button, Divider } from '@mui/material'
 import { useNavigate, useParams } from '@tanstack/react-router'
+import { ExerciseType } from '@/constants'
 
 interface Props {
   exerciseId: string
@@ -83,6 +90,19 @@ export const StudentView = ({ exerciseId }: Props) => {
 
   const isOnGoing = checkIsOnGoing(startTime, endTime)
 
+  const Icon = () => {
+    switch (type) {
+      case ExerciseType.QUIZ:
+        return <QuizRounded className="mt-1 size-6" />
+      case ExerciseType.CODE:
+        return <CodeRounded className="mt-1 size-6" />
+      case ExerciseType.ESSAY:
+        return <MenuBookRounded className="mt-1 size-6" />
+      default:
+        return <LinkOutlined className="mt-1 size-6" />
+    }
+  }
+
   return (
     <>
       <div className="flex w-full justify-start">
@@ -94,68 +114,71 @@ export const StudentView = ({ exerciseId }: Props) => {
       <div className="flex flex-col gap-8">
         <div className="mt-4 flex flex-col gap-2">
           <div className="mb-2 flex items-center gap-4">
-            <Chip
-              className="capitalize"
-              color="primary"
-              label={type}
-              variant="outlined"
-            />
+            <Icon />
             <h3 className="text-2xl text-neutral-900">{exerciseName}</h3>
           </div>
 
+          <Divider />
+
+          <div className="mb-2 flex items-center gap-4">
+            <Alert
+              severity={!available ? 'error' : isOnGoing ? 'info' : 'warning'}
+              className=" w-full"
+            >
+              {!available
+                ? 'You have attempted more than the allowed number of times'
+                : isOnGoing
+                  ? 'Enter the key to start the exercise'
+                  : 'The exercise is not available now'}
+            </Alert>
+          </div>
+
           <div className="flex items-end gap-4">
-            <span className="w-[6rem] text-lg font-bold">Start time:</span>
-            <span className="font-medium text-neutral-800">
+            <span className="w-[5rem] text-base font-bold">Start time:</span>
+            <span className=" text-sm text-neutral-600">
               {formatDDMMyyyyHHmm(new Date(startTime))}
             </span>
           </div>
 
           <div className="flex items-end gap-4">
-            <span className="w-[6rem] text-lg font-bold">End time:</span>
-            <span className="font-medium text-neutral-800">
+            <span className="w-[5rem] text-base font-bold">End time:</span>
+            <span className=" text-sm text-neutral-600">
               {formatDDMMyyyyHHmm(new Date(endTime))}
             </span>
           </div>
 
-          <div className="flex items-end gap-4">
-            <span className="w-[6rem] text-lg font-bold">Duration:</span>
-            <span className="font-medium text-neutral-800">
+          {/* <div className="flex items-end gap-4">
+            <span className="w-[5rem] text-base font-bold">Duration:</span>
+            <span className=" text-sm text-neutral-600">
               {durationTime} minutes
             </span>
-          </div>
+          </div> */}
         </div>
 
         <Form
-          className="flex w-1/2 flex-col gap-2"
+          className="flex w-full flex-col justify-center items-center mt-3"
           form={form}
           onSubmit={handleSubmit}
         >
           <h3 className="mb-2">Attempt the exercise</h3>
+          <span className=" text-sm text-neutral-400">
+            {durationTime} minutes
+          </span>
 
-          <Alert
-            severity={!available ? 'error' : isOnGoing ? 'info' : 'warning'}
-          >
-            {!available
-              ? 'You have attempted more than the allowed number of times'
-              : isOnGoing
-                ? 'Enter the key to start the exercise'
-                : 'The exercise is not available now'}
-          </Alert>
           <FormInputPassword
             control={control}
             disabled={!isOnGoing || isPending || !available}
             label="Enter the enrollment key"
             name="key"
+            className="w-1/2 my-5"
           />
-          <div className="flex justify-end">
-            <Button
-              className="submitBtn"
-              disabled={!isOnGoing || isPending || !watch('key') || !available}
-              type="submit"
-            >
-              Attempt
-            </Button>
-          </div>
+          <Button
+            className="submitBtn w-1/2"
+            disabled={!isOnGoing || isPending || !watch('key') || !available}
+            type="submit"
+          >
+            Attempt
+          </Button>
         </Form>
       </div>
     </>

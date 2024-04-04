@@ -15,8 +15,11 @@ import { cn, formatDDMMyyyyHHmm, parseTimeToMilliseconds } from '@/utils'
 import { CodeExercise } from './code/CodeExercise'
 import { Essay } from './essay/Essay'
 import { Quiz } from './quiz/Quiz'
-import { Chip } from '@mui/material'
+import { Divider } from '@mui/material'
+import { CodeOutlined } from '@mui/icons-material'
 import { createFileRoute, useParams } from '@tanstack/react-router'
+
+import Logo from '@/assets/logo.png'
 
 export const EnrollExercise = () => {
   const { location, navigate } = useRoute()
@@ -64,36 +67,41 @@ export const EnrollExercise = () => {
         'gap-4': type !== ExerciseType.CODE,
       })}
     >
-      <div className="row-span-2 flex justify-between overflow-auto rounded-lg p-4 shadow-lg">
+      <div
+        className="py-2 px-5 h-12 border border-gray-300"
+        style={{ backgroundColor: '#F0F0F0' }}
+      >
+        <div className="mb-2 flex items-center gap-4">
+          <img
+            alt="Logo"
+            className="h-7 w-7 object-contain rounded-full"
+            src={Logo}
+          />
+          <Divider orientation="vertical" className=" bg-white" />
+          <CodeOutlined className=" text-gray-400" />
+          <p className="text-lg text-gray-900">{exerciseName}</p>
+        </div>
+      </div>
+      <div className="row-span-2 h-3/4 flex justify-between overflow-auto rounded-lg px-7 shadow-lg items-center">
         <div className="flex flex-col gap-2">
-          <div className="mb-2 flex items-center gap-4">
-            <Chip
-              className="capitalize"
-              color="primary"
-              label={type}
-              variant="outlined"
-            />
-            <h3 className="text-2xl text-neutral-900">{exerciseName}</h3>
-          </div>
-
           <div className="">
             <div className="flex items-end gap-4">
-              <span className="w-[6rem] text-lg font-bold">Start time:</span>
-              <span className="font-medium text-neutral-800">
+              <span className="w-[5rem] text-base font-bold">Start time</span>
+              <span className=" text-sm text-neutral-500">
                 {formatDDMMyyyyHHmm(new Date(startTime))}
               </span>
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[6rem] text-lg font-bold">End time:</span>
-              <span className="font-medium text-neutral-800">
+              <span className="w-[5rem] text-base font-bold">End time</span>
+              <span className=" text-sm text-neutral-500">
                 {formatDDMMyyyyHHmm(new Date(endTime))}
               </span>
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[6rem] text-lg font-bold">Duration:</span>
-              <span className="font-medium text-neutral-800">
+              <span className="w-[5rem] text-base font-bold">Duration</span>
+              <span className=" text-sm text-neutral-500">
                 {durationTime} minutes
               </span>
             </div>

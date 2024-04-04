@@ -24,6 +24,7 @@ import { Link, useParams } from '@tanstack/react-router'
 
 interface Props {
   exercise: ExerciseSchema
+  index: number
 }
 
 const LinkToExerciseDetail = ({
@@ -52,7 +53,7 @@ const LinkToExerciseDetail = ({
   )
 }
 
-export const ExerciseDetail = ({ exercise }: Props) => {
+export const ExerciseDetail = ({ exercise, index }: Props) => {
   const { refetchTopics } = useCourseContext()
   const { isTeacher } = useCheckRole()
 
@@ -95,21 +96,32 @@ export const ExerciseDetail = ({ exercise }: Props) => {
   const ContainerComponent = isTeacher ? 'div' : LinkToExerciseDetail
 
   return (
-    <div className="flex w-full items-center gap-4 ">
+    <div
+      className={`flex w-full items-center gap-4 rounded-lg ${
+        index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+      }`}
+    >
       <ContainerComponent
-        className="flex w-2/3 cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:outline hover:outline-primary-500"
+        className="flex w-full cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:bg-primary-350 hover:text-white"
         exerciseId={exerciseId}
       >
         <Icon className="mt-1 size-6" />
         <div>
-          <p className="text-lg capitalize">{exerciseName}</p>
-          <div className="flex gap-2 font-light capitalize italic tracking-wider">
+          <div className=" flex items-center">
+            <p className="text-lg capitalize">{exerciseName}</p>
             <Chip
-              className="border-primary-500 text-primary-500"
-              label={type}
               variant="outlined"
+              size="small"
+              sx={{
+                fontSize: '0.6rem',
+              }}
+              color={exerciseLabel.color}
+              label={exerciseLabel.label}
+              className="ml-3"
             />
-            <Chip color={exerciseLabel.color} label={exerciseLabel.label} />
+          </div>
+          <div className="flex gap-2 font-light capitalize italic tracking-wider mt-1">
+            <p className=" text-sm">{type} exercise</p>
           </div>
         </div>
       </ContainerComponent>

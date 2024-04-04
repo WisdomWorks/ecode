@@ -1,6 +1,6 @@
 import { format, isValid, parseISO } from 'date-fns'
 
-export const ddMMyyyyHHmm = 'dd/MM/yyyy HH:mm'
+export const ddMMyyyyHHmm = 'dd-MM-yyyy HH:mm'
 
 export const HHmmss = 'HH:mm:ss'
 
