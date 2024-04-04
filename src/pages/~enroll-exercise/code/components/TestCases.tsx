@@ -14,6 +14,7 @@ export const TestCases = ({ testCases }: Props) => {
   const [currentOutput, setCurrentOutput] = useState(testCases[0].output)
   const [currentCase, setCurrentCase] = useState(0)
 
+  console.log(currentInput)
   const handleChangeTestcase = (index: number) => {
     setCurrentCase(index)
     setCurrentInput(testCases[index].input)
@@ -28,32 +29,33 @@ export const TestCases = ({ testCases }: Props) => {
           {testCases.length} Pre Test Case
         </p>
       </div>
-      {testCases.map((testCase, index) => (
-        <div key={index}>
-          <div className="m-3">
+      <div className="flex">
+        {testCases.map((testCase, index) => (
+          <div className="m-3" key={index}>
             <Button
               className="rounded-lg px-3 py-1"
               color="success"
               onClick={() => handleChangeTestcase(index)}
-              variant={currentCase === index ? 'outlined' : 'outlined'}
+              variant={currentCase == index ? 'outlined' : 'text'}
             >
               Case {index + 1}
             </Button>
           </div>
-          <div className=" m-4 flex-col">
-            <p className=" font-bold">Input</p>
-            <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2">
-              {currentInput}
-            </div>
-          </div>
-          <div className=" m-4 flex-col">
-            <p className=" font-bold">Output</p>
-            <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2">
-              {currentOutput}
-            </div>
-          </div>
+        ))}
+      </div>
+
+      <div className=" m-4 flex-col">
+        <p className=" font-bold">Input</p>
+        <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2 whitespace-pre-line">
+          {currentInput}
         </div>
-      ))}
+      </div>
+      <div className=" m-4 flex-col">
+        <p className=" font-bold">Output</p>
+        <div className=" my-2 rounded-lg bg-gray-100 px-3 py-2 whitespace-pre-line">
+          {currentOutput}
+        </div>
+      </div>
     </div>
   )
 }
