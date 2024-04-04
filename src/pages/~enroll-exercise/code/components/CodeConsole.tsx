@@ -9,11 +9,12 @@ import {
 import { Form, FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
-import { useInterval } from '@/hooks'
+import { useInterval, useToastMessage } from '@/hooks'
 import { Schema } from '@/types'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
 import { Button, Divider } from '@mui/material'
+import { useNavigate } from '@tanstack/react-router'
 interface Props {
   exercise: CodeExerciseSchema
 }
@@ -25,6 +26,9 @@ type TForm = Schema['SubmitCodeExerciseRequest'] & {
 
 export const CodeConsole = ({ exercise }: Props) => {
   const user = useAppStore(state => state.user)
+
+  const navigate = useNavigate()
+  const { setErrorMessage } = useToastMessage()
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
   const { isPending: isPendingSubmit, mutate: submitExercise } =
@@ -84,6 +88,17 @@ export const CodeConsole = ({ exercise }: Props) => {
         },
       })
     }
+
+    submitExercise(input, {
+      onSuccess: () => {
+        navigate({ to: '/' })
+      },
+      onError: error => {
+        setErrorMessage(
+          error.response?.data.message || 'Submit failed. Try again',
+        )
+      },
+    })
   }
 
   return (
