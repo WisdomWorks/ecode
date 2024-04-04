@@ -6,7 +6,7 @@ import {
   useRunCode,
   useSubmitCodeExercise,
 } from '@/apis'
-import { Form, FormCodeIDE } from '@/components/form'
+import { Form, FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
 // import { useInterval } from '@/hooks'
@@ -88,14 +88,12 @@ export const CodeConsole = ({ exercise }: Props) => {
   }
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
-  const {
-    isPending: isPendingSubmit,
-    // mutate: submitExercise
-  } = useSubmitCodeExercise()
+  const { isPending: isPendingSubmit, mutate: submitExercise } =
+    useSubmitCodeExercise()
 
   const [submissionId, setSubmissionId] = useState('')
   const {
-    // data: testCaseRunCode,
+    data: testCaseRunCode,
     isRefetching,
     refetch: getTestCase,
   } = useGetTestCaseRunCode({
@@ -110,7 +108,7 @@ export const CodeConsole = ({ exercise }: Props) => {
 
   const { allowedLanguageIds, exerciseId, testCases } = exercise
 
-  // const preTestCaseLength = testCases.length
+  const preTestCaseLength = testCases.length
 
   const languages =
     allowedLanguageIds.map(id =>
