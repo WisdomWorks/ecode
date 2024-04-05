@@ -47,3 +47,17 @@ export const programmingLanguages = languagesJSON.map(item => {
     ...rest,
   }
 })
+
+export const testcaseStatus = {
+  AC: 'Accepted',
+  WA: 'Wrong Answer',
+  TLE: 'Time Limit Exceeded',
+  MLE: 'Memory Limit Exceeded',
+  OLE: 'Output Limit Exceeded',
+  IR: 'Invalid Return',
+  RTE: 'Runtime Error',
+  CE: 'Compile Error',
+  IE: 'Internal Error',
+  SC: 'Short Circuited',
+  AB: 'Aborted',
+}

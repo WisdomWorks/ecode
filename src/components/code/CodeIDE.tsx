@@ -22,7 +22,7 @@ export const CodeIDE = ({ className, onChange, value, ...rest }: Props) => {
         className={cn('h-full overflow-auto text-sm', className)}
         extensions={extensions}
         onChange={onChange}
-        theme="dark"
+        theme="light"
         value={value}
       />
     </>

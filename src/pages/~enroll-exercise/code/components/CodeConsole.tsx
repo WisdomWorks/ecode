@@ -25,6 +25,7 @@ import { Button, Divider, MenuItem } from '@mui/material'
 import Menu, { MenuProps } from '@mui/material/Menu'
 import { alpha, styled } from '@mui/material/styles'
 import { useNavigate } from '@tanstack/react-router'
+import { ResizeHandle } from '@/components/layout'
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -71,6 +72,8 @@ const StyledMenu = styled((props: MenuProps) => (
 
 interface Props {
   exercise: CodeExerciseSchema
+  getTestResult: (result: any) => void
+  setCurrentTab: (index: number) => void
 }
 
 type TForm = Schema['SubmitCodeExerciseRequest'] & {
@@ -78,7 +81,11 @@ type TForm = Schema['SubmitCodeExerciseRequest'] & {
   typeSubmit: 'run' | 'submit'
 }
 
-export const CodeConsole = ({ exercise }: Props) => {
+export const CodeConsole = ({
+  exercise,
+  getTestResult,
+  setCurrentTab,
+}: Props) => {
   const user = useAppStore(state => state.user)
 
   const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
@@ -117,6 +124,7 @@ export const CodeConsole = ({ exercise }: Props) => {
       ['IE', 'CE'].includes(String(testCaseRunCodeData?.data.status))
     ) {
       setIsRefetchingGetTestCase(false)
+      getTestResult(testCaseRunCodeData?.data)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testCaseRunCodeData])
@@ -199,7 +207,7 @@ export const CodeConsole = ({ exercise }: Props) => {
       <div className=" flex justify-between">
         <div className="">
           <FormSelector
-            className="text-white"
+            className="w-36 ml-3 my-1"
             classes={{
               root: 'bg-white rounded-lg',
             }}
@@ -218,6 +226,7 @@ export const CodeConsole = ({ exercise }: Props) => {
             options={languages}
             renderOption={(props, option) => <li {...props}>{option?.name}</li>}
             required
+            size="small"
           />
         </div>
         {/* <Button
@@ -250,11 +259,14 @@ export const CodeConsole = ({ exercise }: Props) => {
           ))}
         </StyledMenu> */}
 
-        <div className="flex justify-end gap-2 p-2">
+        <div className="flex justify-end gap-2 p-2 h-16">
           <Button
             color="success"
             disabled={isPendingRunCode || isPendingSubmit || isRefetching}
-            onClick={() => setValue('typeSubmit', 'run')}
+            onClick={() => {
+              setValue('typeSubmit', 'run')
+              setCurrentTab(1)
+            }}
             startIcon={<PlayArrow />}
             type="submit"
             variant="text"
@@ -274,15 +286,20 @@ export const CodeConsole = ({ exercise }: Props) => {
           </Button>
         </div>
       </div>
-      <Divider className="bg-gray-100" />
 
+      <Divider className="bg-gray-100" />
       <div className="flex h-full flex-col">
-        <div className="h-full">
+        <div className=" h-full">
           <FormCodeIDE name="source" />
         </div>
+        {/* <ResizeHandle direction="vertical" />
         <div className="h-1/6 overflow-auto">
+          <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
+            <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
+            <p className="mb-3 text-base font-bold capitalize">Code</p>
+          </div>
           <Console errorMessage={testCaseRunCodeData?.data.message} />
-        </div>
+        </div> */}
       </div>
     </Form>
   )
