@@ -125,14 +125,14 @@ export const TestCases = ({
             </div>
           </div>
           <div className=" m-4 flex-col">
-            <p className=" font-bold">Output</p>
+            <p className=" font-bold">Expected</p>
             <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
               {currentOutput}
             </div>
           </div>
           {currentTab != 0 && (
             <div className=" m-4 flex-col">
-              <p className=" font-bold">Expected</p>
+              <p className=" font-bold">Output</p>
               <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2 min-h-9">
                 {testResult[currentCase]?.output}
               </div>
