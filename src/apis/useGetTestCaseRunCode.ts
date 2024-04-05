@@ -9,7 +9,19 @@ interface Props {
 type TResponse = {
   message: string
   status: string
-  testCases: []
+  testCases: {
+    extendedFeedback: string
+    feedback: string
+    id: string
+    memory: number
+    output: string
+    points: number
+    status: string
+    submissionId: string
+    testCaseId: number
+    time: number
+    total: number
+  }[]
 }
 
 export const useGetTestCaseRunCode = ({ submissionId }: Props) => {
