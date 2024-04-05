@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { IEnrollExercise, useEnrollExercise, usePreviewExercise } from '@/apis'
 import { Loading } from '@/components/common'
 import { Form, FormInputPassword } from '@/components/form'
+import { ExerciseType } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage } from '@/hooks'
 import { formatDDMMyyyyHHmm } from '@/utils'
@@ -11,14 +12,13 @@ import { checkIsOnGoing } from '@/utils/course.utils'
 
 import {
   ArrowBackIos,
-  QuizRounded,
   CodeRounded,
-  MenuBookRounded,
   LinkOutlined,
+  MenuBookRounded,
+  QuizRounded,
 } from '@mui/icons-material'
 import { Alert, Button, Divider } from '@mui/material'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { ExerciseType } from '@/constants'
 
 interface Props {
   exerciseId: string
@@ -122,8 +122,8 @@ export const StudentView = ({ exerciseId }: Props) => {
 
           <div className="mb-2 flex items-center gap-4">
             <Alert
+              className="w-full"
               severity={!available ? 'error' : isOnGoing ? 'info' : 'warning'}
-              className=" w-full"
             >
               {!available
                 ? 'You have attempted more than the allowed number of times'
@@ -146,17 +146,10 @@ export const StudentView = ({ exerciseId }: Props) => {
               {formatDDMMyyyyHHmm(new Date(endTime))}
             </span>
           </div>
-
-          {/* <div className="flex items-end gap-4">
-            <span className="w-[5rem] text-base font-bold">Duration:</span>
-            <span className=" text-sm text-neutral-600">
-              {durationTime} minutes
-            </span>
-          </div> */}
         </div>
 
         <Form
-          className="flex w-full flex-col justify-center items-center mt-3"
+          className="mt-3 flex w-full flex-col items-center justify-center"
           form={form}
           onSubmit={handleSubmit}
         >
@@ -166,11 +159,11 @@ export const StudentView = ({ exerciseId }: Props) => {
           </span>
 
           <FormInputPassword
+            className="my-5 w-1/2"
             control={control}
             disabled={!isOnGoing || isPending || !available}
             label="Enter the enrollment key"
             name="key"
-            className="w-1/2 my-5"
           />
           <Button
             className="submitBtn w-1/2"

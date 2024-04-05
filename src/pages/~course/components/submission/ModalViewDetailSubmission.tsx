@@ -22,13 +22,16 @@ export const ModalViewDetailSubmission = ({
 }: Props) => {
   const { data, isLoading, isRefetching } = useGetDetailSubmission(state)
 
-  const submission = data?.data
+  const submissionData = data?.data
 
-  if (!submission) return null
+  if (!submissionData) return null
 
   const { exercise, type } = state
   const { durationTime, endTime, exerciseName, startTime } = exercise
-  const { score, submissionId } = submission
+  const {
+    exercise: { question },
+    submissions: { score, submission, submissionId },
+  } = submissionData
 
   if (isLoading || isRefetching) return <Loading />
 
@@ -101,8 +104,9 @@ export const ModalViewDetailSubmission = ({
           {type === ExerciseType.ESSAY && (
             <DetailEssay
               essaySubmissionId={submissionId}
+              question={question}
               score={score}
-              submission={submission.submission}
+              submission={submission}
             />
           )}
         </div>

@@ -10,16 +10,19 @@ import { Button } from '@mui/material'
 
 interface Props {
   essaySubmissionId: string
+  question: string
   score?: number
   submission: string
 }
 
 type TForm = GradeEssayParams & {
+  question: string
   submission: string
 }
 
 export const DetailEssay = ({
   essaySubmissionId,
+  question,
   score,
   submission,
 }: Props) => {
@@ -32,8 +35,9 @@ export const DetailEssay = ({
       essaySubmissionId,
       score: score === -1 ? undefined : score,
       submission,
+      topic: question,
     }),
-    [essaySubmissionId, score, submission],
+    [essaySubmissionId, question, score, submission],
   )
 
   const form = useForm<TForm>({

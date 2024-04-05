@@ -12,6 +12,7 @@ export type OptionSelectProps<T> = Omit<
   'renderInput'
 > & {
   error?: boolean
+  extraOnChange?: () => void
   helperText?: string
   label?: string
   placeholder?: string
@@ -24,6 +25,7 @@ export const OptionSelector = <T,>({
   className,
   defaultValue,
   error,
+  extraOnChange,
   helperText,
   label = 'Select Option',
   multiple = false,
@@ -35,6 +37,11 @@ export const OptionSelector = <T,>({
   value,
   ...props
 }: OptionSelectProps<T>) => {
+  const handleChange = (...rest: unknown[]) => {
+    onChange?.(...(rest as Parameters<typeof onChange>))
+    extraOnChange?.()
+  }
+
   return (
     <div
       className={cn(
@@ -55,7 +62,7 @@ export const OptionSelector = <T,>({
         fullWidth
         multiple={multiple}
         onBlur={onBlur}
-        onChange={onChange}
+        onChange={handleChange}
         options={options}
         renderInput={params => (
           <TextField

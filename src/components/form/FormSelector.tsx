@@ -3,7 +3,9 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { OptionSelector, OptionSelectProps } from '../selector/OptionSelector'
 
 type Props<TForm extends FieldValues, TData> = OptionSelectProps<TData> &
-  UseControllerProps<TForm>
+  UseControllerProps<TForm> & {
+    extraOnChange?: () => void
+  }
 
 export const FormSelector = <TForm extends FieldValues, TData>({
   className,

@@ -1,120 +1,47 @@
-import { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { Dispatch, SetStateAction, useEffect } from 'react'
+import { useFormContext } from 'react-hook-form'
 
-import {
-  useGetTestCaseRunCode,
-  useRunCode,
-  useSubmitCodeExercise,
-} from '@/apis'
-import { Form, FormCodeIDE, FormSelector } from '@/components/form'
+import { TGetTestCaseRunCode, useGetTestCaseRunCode } from '@/apis'
+import { FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
-import { useAppStore } from '@/context/useAppStore'
-import { useInterval, useToastMessage } from '@/hooks'
-// import { useInterval } from '@/hooks'
-import { Schema } from '@/types'
+import { useInterval } from '@/hooks'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
-import { Console } from './Console'
+import { TFormCodeExercise } from '../CodeExercise'
 import {
   BackupOutlined,
-  KeyboardArrowDownOutlined,
   PlayArrow,
   TerminalOutlined,
 } from '@mui/icons-material'
-import { Button, Divider, MenuItem } from '@mui/material'
-import Menu, { MenuProps } from '@mui/material/Menu'
-import { alpha, styled } from '@mui/material/styles'
-import { useNavigate } from '@tanstack/react-router'
-import { ResizeHandle } from '@/components/layout'
-
-const StyledMenu = styled((props: MenuProps) => (
-  <Menu
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
-    }}
-    elevation={0}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
-    }}
-    {...props}
-  />
-))(({ theme }) => ({
-  '& .MuiPaper-root': {
-    borderRadius: 6,
-    marginTop: theme.spacing(1),
-    minWidth: 180,
-    color:
-      theme.palette.mode === 'light'
-        ? 'rgb(55, 65, 81)'
-        : theme.palette.grey[300],
-    boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
-    },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
-        fontSize: 18,
-        color: theme.palette.text.secondary,
-        marginRight: theme.spacing(1.5),
-      },
-      '&:active': {
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
-        ),
-      },
-    },
-  },
-}))
+import { Button, Divider } from '@mui/material'
 
 interface Props {
   exercise: CodeExerciseSchema
-  getTestResult: (result: any) => void
+  isRefetchingGetTestCase: boolean
+  loading: boolean
   setCurrentTab: (index: number) => void
-}
-
-type TForm = Schema['SubmitCodeExerciseRequest'] & {
-  language: (typeof programmingLanguages)[number]
-  typeSubmit: 'run' | 'submit'
+  setIsRefetchingGetTestCase: Dispatch<SetStateAction<boolean>>
+  setTestResult: Dispatch<SetStateAction<TGetTestCaseRunCode | null>>
+  submissionId: string
 }
 
 export const CodeConsole = ({
   exercise,
-  getTestResult,
+  isRefetchingGetTestCase,
+  loading,
   setCurrentTab,
+  setIsRefetchingGetTestCase,
+  setTestResult,
+  submissionId,
 }: Props) => {
-  const user = useAppStore(state => state.user)
+  const { control, setValue, watch } = useFormContext<TFormCodeExercise>()
 
-  const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
+  const { data: testCaseRunCodeData, refetch: getTestCase } =
+    useGetTestCaseRunCode({
+      submissionId,
+    })
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-  const open = Boolean(anchorEl)
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-  const navigate = useNavigate()
-  const { setErrorMessage } = useToastMessage()
-
-  const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
-  const { isPending: isPendingSubmit, mutate: submitExercise } =
-    useSubmitCodeExercise()
-
-  const [submissionId, setSubmissionId] = useState('')
-  const {
-    data: testCaseRunCodeData,
-    isRefetching,
-    refetch: getTestCase,
-  } = useGetTestCaseRunCode({
-    submissionId,
-  })
-
-  const { exerciseId, languageTemplate, testCases } = exercise
+  const { languageTemplate, testCases } = exercise
 
   const preTestCaseLength = testCases.length
 
@@ -124,7 +51,7 @@ export const CodeConsole = ({
       ['IE', 'CE'].includes(String(testCaseRunCodeData?.data.status))
     ) {
       setIsRefetchingGetTestCase(false)
-      getTestResult(testCaseRunCodeData?.data)
+      setTestResult(testCaseRunCodeData?.data || null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testCaseRunCodeData])
@@ -143,62 +70,8 @@ export const CodeConsole = ({
     programmingLanguages.find(pr => pr.key === id),
   )
 
-  console.log()
-
-  const form = useForm<TForm>({
-    defaultValues: {
-      studentId: user?.userId || '',
-      exerciseId,
-      source: languageTemplate?.[String(languages[0]?.key)] || '',
-      language: languages[0],
-      languageId: '',
-    },
-  })
-
-  const { setValue, watch } = form
-
-  const handleSubmitForm: SubmitHandler<TForm> = data => {
-    const { language, typeSubmit, ...rest } = data
-
-    const input = {
-      ...rest,
-      languageId: language.key,
-    }
-
-    if (typeSubmit === 'run') {
-      return runCode(input, {
-        onSuccess: data => {
-          setSubmissionId(data.data.submissionId)
-          setIsRefetchingGetTestCase(true)
-        },
-      })
-    }
-
-    submitExercise(input, {
-      onSuccess: () => {
-        navigate({ to: '/' })
-      },
-      onError: error => {
-        setErrorMessage(
-          error.response?.data.message || 'Submit failed. Try again',
-        )
-      },
-    })
-  }
-
-  const languageSelected = watch('language')
-
-  useEffect(() => {
-    setValue('source', languageTemplate?.[String(languageSelected?.key)] || '')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [languageSelected])
-
   return (
-    <Form
-      className="flex h-full flex-col rounded-md border border-gray-300 bg-white"
-      form={form}
-      onSubmit={handleSubmitForm}
-    >
+    <div className="flex h-full flex-col rounded-md border border-gray-300 bg-white">
       <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
         <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
         <p className="mb-3 text-base font-bold capitalize">Code</p>
@@ -207,13 +80,21 @@ export const CodeConsole = ({
       <div className=" flex justify-between">
         <div className="">
           <FormSelector
-            className="w-36 ml-3 my-1"
+            className="my-1 ml-3 w-36"
             classes={{
               root: 'bg-white rounded-lg',
             }}
+            control={control}
+            disableClearable
+            extraOnChange={() =>
+              setValue(
+                'source',
+                languageTemplate?.[String(watch('language').key)] || '',
+              )
+            }
             filterSelectedOptions
             getOptionKey={option =>
-              typeof option === 'object' ? option?.ID : (option as string)
+              typeof option === 'object' ? option.ID : (option as string)
             }
             getOptionLabel={option =>
               typeof option === 'object' && 'name' in option
@@ -229,40 +110,11 @@ export const CodeConsole = ({
             size="small"
           />
         </div>
-        {/* <Button
-          aria-controls={open ? 'demo-customized-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-haspopup="true"
-          className="m-1"
-          color="success"
-          disableElevation
-          endIcon={<KeyboardArrowDownOutlined />}
-          id="demo-customized-button"
-          onClick={handleClick}
-          variant="text"
-        >
-          Options
-        </Button>
-        <StyledMenu
-          MenuListProps={{
-            'aria-labelledby': 'demo-customized-button',
-          }}
-          anchorEl={anchorEl}
-          id="demo-customized-menu"
-          onClose={handleClose}
-          open={open}
-        >
-          {languages.map((option, index) => (
-            <MenuItem disableRipple key={index} onClick={handleClose}>
-              {option?.name}
-            </MenuItem>
-          ))}
-        </StyledMenu> */}
 
-        <div className="flex justify-end gap-2 p-2 h-16">
+        <div className="flex h-16 justify-end gap-2 p-2">
           <Button
             color="success"
-            disabled={isPendingRunCode || isPendingSubmit || isRefetching}
+            disabled={loading}
             onClick={() => {
               setValue('typeSubmit', 'run')
               setCurrentTab(1)
@@ -276,7 +128,7 @@ export const CodeConsole = ({
           <Divider className="bg-gray-100" orientation="vertical" />
           <Button
             color="primary"
-            disabled={isPendingRunCode || isPendingSubmit || isRefetching}
+            disabled={loading}
             onClick={() => setValue('typeSubmit', 'submit')}
             startIcon={<BackupOutlined />}
             type="submit"
@@ -288,19 +140,7 @@ export const CodeConsole = ({
       </div>
 
       <Divider className="bg-gray-100" />
-      <div className="flex h-full flex-col">
-        <div className=" h-full">
-          <FormCodeIDE name="source" />
-        </div>
-        {/* <ResizeHandle direction="vertical" />
-        <div className="h-1/6 overflow-auto">
-          <div className="flex h-8 rounded-md bg-gray-100 px-3 pt-1">
-            <TerminalOutlined className=" mr-2 mt-1 text-lg text-green-500" />
-            <p className="mb-3 text-base font-bold capitalize">Code</p>
-          </div>
-          <Console errorMessage={testCaseRunCodeData?.data.message} />
-        </div> */}
-      </div>
-    </Form>
+      <FormCodeIDE control={control} name="source" />
+    </div>
   )
 }

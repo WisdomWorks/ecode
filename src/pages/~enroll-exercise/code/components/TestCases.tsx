@@ -1,30 +1,31 @@
 import { useState } from 'react'
 
-import { CodeExerciseSchema } from '@/types/exercise.types'
+import { TGetTestCaseRunCode } from '@/apis'
 import { testcaseStatus } from '@/constants'
+import { CodeExerciseSchema } from '@/types/exercise.types'
 
+import { Check, Clear, DoubleArrowOutlined } from '@mui/icons-material'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
-import { Button, Divider } from '@mui/material'
-import { DoubleArrowOutlined, Check, Clear } from '@mui/icons-material'
-import { Loading } from '@/components/common'
+import { Button, CircularProgress, Divider } from '@mui/material'
 
 interface Props {
-  testCases: CodeExerciseSchema['testCases']
-  testResult: any
   currentTab: number
+  loading: boolean
   setCurrentTab: (index: number) => void
+  testCases: CodeExerciseSchema['testCases']
+  testResult: TGetTestCaseRunCode | null
 }
 
 export const TestCases = ({
+  currentTab,
+  loading,
+  setCurrentTab,
   testCases,
   testResult,
-  currentTab,
-  setCurrentTab,
 }: Props) => {
   const [currentInput, setCurrentInput] = useState(testCases[0].input)
   const [currentOutput, setCurrentOutput] = useState(testCases[0].output)
   const [currentCase, setCurrentCase] = useState(0)
-  // const [currentTab, setCurrentTab] = useState(0)
 
   const handleChangeTestcase = (index: number) => {
     setCurrentCase(index)
@@ -33,31 +34,37 @@ export const TestCases = ({
   }
 
   console.log(testResult)
+
   return (
     <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
-      <div className="flex h-8 rounded-md bg-gray-100 px-3 py-1">
+      <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1">
         <Button
-          variant="text"
           color="success"
-          startIcon={<VerifiedUserOutlinedIcon className="text-green-500" />}
           onClick={() => setCurrentTab(0)}
+          startIcon={<VerifiedUserOutlinedIcon className="text-green-500" />}
+          variant="text"
         >
           Test Case
         </Button>
-        <Divider className="bg-gray-100 mx-3" orientation="vertical" />
+        <Divider className="mx-3 bg-gray-100" orientation="vertical" />
         <Button
-          variant="text"
           color="success"
-          startIcon={<DoubleArrowOutlined className="text-green-500" />}
           onClick={() => setCurrentTab(1)}
+          startIcon={<DoubleArrowOutlined className="text-green-500" />}
+          variant="text"
         >
           Test result
         </Button>
+        {loading && (
+          <div className="ml-3 flex items-center">
+            <CircularProgress color="inherit" size={15} />
+          </div>
+        )}
       </div>
 
       {!testResult && currentTab == 1 ? (
         <>
-          <div className="flex w-full h-full justify-center pt-5 text-gray-500">
+          <div className="flex size-full justify-center pt-5 text-gray-500">
             <p>You must run code first</p>
           </div>
         </>
@@ -66,24 +73,24 @@ export const TestCases = ({
           {currentTab != 0 && (
             <div className="ml-3 mt-3">
               <p
-                className={`font-bold text-lg ${
-                  testResult[currentCase]?.status == 'AC'
+                className={`text-lg font-bold ${
+                  testResult?.testCases[currentCase]?.status == 'AC'
                     ? 'text-green-500'
                     : ' text-red-500'
                 }`}
               >
                 {testResult?.status == 'IE' || testResult?.status == 'CE'
                   ? testcaseStatus[
-                      testResult?.status as keyof typeof testcaseStatus
+                      testResult.status as keyof typeof testcaseStatus
                     ]
                   : testcaseStatus[
-                      testResult[currentCase]
+                      testResult?.testCases[currentCase]
                         ?.status as keyof typeof testcaseStatus
                     ]}
               </p>
               {testResult?.message && (
-                <div className="whitespace-pre-line text-red-500 bg-red-50 text-sm rounded-sm p-2 mr-3 my-3">
-                  {testResult?.message}
+                <div className="my-3 mr-3 whitespace-pre-line rounded-sm bg-red-50 p-2 text-sm text-red-500">
+                  {testResult.message}
                 </div>
               )}
             </div>
@@ -97,19 +104,19 @@ export const TestCases = ({
                   color={
                     currentTab == 0
                       ? 'success'
-                      : testResult[currentCase]?.status == 'AC'
+                      : testResult?.testCases[currentCase]?.status == 'AC'
                         ? 'success'
                         : 'error'
                   }
+                  onClick={() => handleChangeTestcase(index)}
                   startIcon={
                     currentTab != 0 &&
-                    (testResult[currentCase]?.status == 'AC' ? (
+                    (testResult?.testCases[currentCase]?.status == 'AC' ? (
                       <Check />
                     ) : (
                       <Clear />
                     ))
                   }
-                  onClick={() => handleChangeTestcase(index)}
                   variant={currentCase == index ? 'outlined' : 'text'}
                 >
                   Case {index + 1}
@@ -131,12 +138,14 @@ export const TestCases = ({
             </div>
           </div>
           {currentTab != 0 && (
-            <div className=" m-4 flex-col">
-              <p className=" font-bold">Output</p>
-              <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2 min-h-9">
-                {testResult[currentCase]?.output}
+            <>
+              <div className=" m-4 flex-col">
+                <p className=" font-bold">Output</p>
+                <div className=" my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
+                  {testResult?.testCases[currentCase]?.output}
+                </div>
               </div>
-            </div>
+            </>
           )}
         </>
       )}

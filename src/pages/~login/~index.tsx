@@ -12,7 +12,7 @@ import { Schema } from '@/types'
 import { LoginRequestSchema } from './login.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@mui/material'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 type TLogin = Schema['LoginRequest']
 
@@ -123,12 +123,12 @@ export const Login = () => {
               >
                 Sign In
               </Button>
-              <Link
+              <a
                 className="mt-2 text-center text-xs text-primary-450 hover:text-primary-550"
-                to="/forget-password"
+                href="/forget-password"
               >
                 Forgot Password?
-              </Link>
+              </a>
             </div>
           </div>
         </div>

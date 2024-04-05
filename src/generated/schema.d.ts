@@ -5,6 +5,9 @@
 
 
 export interface paths {
+  "/users/change-password": {
+    put: operations["changePassword"];
+  };
   "/topics": {
     get: operations["getAllTopicsByCourseId"];
     put: operations["updateTopic"];
@@ -194,6 +197,11 @@ export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    ChangePasswordRequest: {
+      userId?: string;
+      oldPassword?: string;
+      newPassword?: string;
+    };
     UpdateTopicRequest: {
       topicId: string;
       topicName: string;
@@ -294,7 +302,7 @@ export interface components {
       courseId: string;
       studentIds?: string[];
     };
-    ChangePasswordRequest: {
+    forgetPasswordRequest: {
       userId?: string;
       password?: string;
     };
@@ -483,6 +491,27 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  changePassword: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ChangePasswordRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getAllTopicsByCourseId: {
     parameters: {
       query: {
@@ -844,7 +873,7 @@ export interface operations {
   updateUserPassword: {
     requestBody: {
       content: {
-        "application/json": components["schemas"]["ChangePasswordRequest"];
+        "application/json": components["schemas"]["forgetPasswordRequest"];
       };
     };
     responses: {

@@ -7,6 +7,7 @@ import {
   Logout,
 } from '@mui/icons-material'
 import { Avatar, MenuItem } from '@mui/material'
+import { Link } from '@tanstack/react-router'
 import {
   bindHover,
   bindMenu,
@@ -56,8 +57,10 @@ export const NavbarProfile = () => {
         {...bindMenu(popupState)}
       >
         <MenuItem className="cursor-pointer rounded-md text-sm">
-          <AssignmentIndOutlined className="mr-4" />
-          View Details
+          <Link to="/profile">
+            <AssignmentIndOutlined className="mr-4" />
+            View Details
+          </Link>
         </MenuItem>
         <MenuItem
           className="mt-2 cursor-pointer rounded-md text-sm transition-all hover:bg-red-100"

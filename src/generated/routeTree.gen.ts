@@ -18,6 +18,7 @@ import { Route as EnrollExerciseExerciseIdImport } from './../pages/~enroll-exer
 import { Route as CourseCourseImport } from './../pages/~course/~_course'
 import { Route as TextEditorIndexImport } from './../pages/~text-editor/~index'
 import { Route as SandpackIndexImport } from './../pages/~sandpack/~index'
+import { Route as ProfileIndexImport } from './../pages/~profile/~index'
 import { Route as LoginIndexImport } from './../pages/~login/~index'
 import { Route as ForgetPasswordIndexImport } from './../pages/~forget-password/~index'
 import { Route as EnrollCourseIndexImport } from './../pages/~enroll-course/~index'
@@ -59,6 +60,11 @@ const TextEditorIndexRoute = TextEditorIndexImport.update({
 
 const SandpackIndexRoute = SandpackIndexImport.update({
   path: '/sandpack/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProfileIndexRoute = ProfileIndexImport.update({
+  path: '/profile/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -122,6 +128,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
+    '/profile/': {
+      preLoaderRoute: typeof ProfileIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/sandpack/': {
       preLoaderRoute: typeof SandpackIndexImport
       parentRoute: typeof rootRoute
@@ -168,6 +178,7 @@ export const routeTree = rootRoute.addChildren([
   EnrollCourseIndexRoute,
   ForgetPasswordIndexRoute,
   LoginIndexRoute,
+  ProfileIndexRoute,
   SandpackIndexRoute,
   TextEditorIndexRoute,
 ])

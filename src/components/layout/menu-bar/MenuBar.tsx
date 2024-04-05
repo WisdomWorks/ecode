@@ -1,12 +1,15 @@
-// import Logo from '@/assets/logo.png'
-
 import { TRouterPath } from '@/types'
 
 import { CourseMenuBar } from './CourseMenuBar'
 import { StaticMenuBar } from './StaticMenuBar'
+import { SvgIconTypeMap } from '@mui/material'
+import { OverridableComponent } from '@mui/material/OverridableComponent'
 
 export type TMenu = {
   ID?: string
+  Icon?: OverridableComponent<SvgIconTypeMap<object, 'svg'>> & {
+    muiName: string
+  }
   label: string
   to?: TRouterPath
 }

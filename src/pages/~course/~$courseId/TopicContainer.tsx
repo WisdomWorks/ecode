@@ -119,8 +119,8 @@ export const TopicContainer = ({
                           return (
                             <ExerciseDetail
                               exercise={exercise}
-                              key={exerciseId}
                               index={index}
+                              key={exerciseId}
                             />
                           )
                         })}

@@ -6,7 +6,7 @@ interface Props {
   submissionId: string
 }
 
-type TResponse = {
+export type TGetTestCaseRunCode = {
   message: string
   status: string
   testCases: {
@@ -25,7 +25,10 @@ type TResponse = {
 }
 
 export const useGetTestCaseRunCode = ({ submissionId }: Props) => {
-  return useQuery<AxiosResponse<TResponse>, AxiosError<AxiosResponseError>>({
+  return useQuery<
+    AxiosResponse<TGetTestCaseRunCode>,
+    AxiosError<AxiosResponseError>
+  >({
     queryKey: ['run-code', submissionId],
     queryFn: async () => {
       return await callAPI(`/exercises/code/run/${submissionId}` as Path, 'get')

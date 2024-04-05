@@ -1,8 +1,10 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { useCheckOTPResetPW, useGetOTPResetPW, useResetPW } from '@/apis'
 import { Form, FormInput, FormInputPassword } from '@/components/form'
-import { useBoolean } from '@/hooks'
+import { useBoolean, useToastMessage } from '@/hooks'
 
+import { Decorator } from './Decorator'
 import { ForgetPasswordSchema } from './forgetPassword.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -10,31 +12,46 @@ import {
   CheckCircleRounded,
   DangerousRounded,
 } from '@mui/icons-material'
-import { Alert, Button, Step, StepButton, Stepper } from '@mui/material'
+import {
+  Alert,
+  Button,
+  CircularProgress,
+  Step,
+  StepButton,
+  Stepper,
+} from '@mui/material'
 import { createFileRoute, Link } from '@tanstack/react-router'
 
 type TForgetPassword = {
   activeStep: number
   confirmPassword: string
-  email: string
   newPassword: string
   otp: string
+  userName: string
 }
 
 const steps = [
-  'Enter your email',
+  'Enter your username',
   'Enter OTP',
   'Reset Password',
   'Confirmation',
 ]
 
 export const Home = () => {
+  const { setErrorMessage } = useToastMessage()
   const { setValue: setVerifySuccess, value: isVerifySuccess } = useBoolean()
-  console.log(setVerifySuccess)
+
+  const { isPending: isPendingGetOTP, mutate: getOTP } = useGetOTPResetPW()
+  const {
+    data: checkOtpData,
+    isPending: isPendingCheckOTP,
+    mutate: checkOTP,
+  } = useCheckOTPResetPW()
+  const { isPending: isPendingResetPW, mutate: resetPW } = useResetPW()
 
   const form = useForm<TForgetPassword>({
     defaultValues: {
-      email: '',
+      userName: '',
       otp: '',
       newPassword: '',
       confirmPassword: '',
@@ -62,14 +79,14 @@ export const Home = () => {
         return (
           <>
             <Alert className="whitespace-nowrap p-0" severity="info">
-              Enter the email address associated with your account in the field
+              Enter the username associated with your account in the field
               below.
             </Alert>
             <FormInput
               control={control}
-              label="Email"
-              name="email"
-              placeholder="Enter your email"
+              label="Username"
+              name="userName"
+              placeholder="Enter your username"
               required
             />
           </>
@@ -151,9 +168,51 @@ export const Home = () => {
   }
 
   const onSubmitForm: SubmitHandler<TForgetPassword> = data => {
-    setValue('activeStep', activeStep + 1)
     console.log(data)
+
+    const { activeStep, newPassword, otp, userName } = data
+    switch (activeStep) {
+      case 0:
+        getOTP(
+          { userName },
+          {
+            onSuccess: () => setValue('activeStep', 1),
+            onError: err =>
+              setErrorMessage(err.response?.data.message || 'Get OTP failed'),
+          },
+        )
+        break
+      case 1:
+        checkOTP(
+          { otp },
+          {
+            onSuccess: () => setValue('activeStep', 2),
+            onError: err =>
+              setErrorMessage(err.response?.data.message || 'Check OTP failed'),
+          },
+        )
+        break
+      case 2:
+        resetPW(
+          { password: newPassword, userId: checkOtpData?.data.userId || '' },
+          {
+            onSuccess: () => {
+              setVerifySuccess(true)
+              setValue('activeStep', 3)
+            },
+            onError: err =>
+              setErrorMessage(
+                err.response?.data.message || 'Reset password failed',
+              ),
+          },
+        )
+        break
+      default:
+        break
+    }
   }
+
+  const isPending = isPendingCheckOTP || isPendingGetOTP || isPendingResetPW
 
   return (
     <Form
@@ -161,21 +220,10 @@ export const Home = () => {
       form={form}
       onSubmit={onSubmitForm}
     >
-      <div
-        className="absolute left-[-10rem] top-[40rem] size-[41rem] rounded-full bg-primary-500"
-        id="circle"
-      ></div>
-      <div
-        className="absolute bottom-[-3rem] right-[-4rem] h-[20rem] w-[60rem] rounded-xl bg-primary-500"
-        id="rectangle"
-      ></div>
-      <div
-        className="absolute right-[-15rem] top-[-20rem] size-[50rem] rounded-full bg-primary-500"
-        id="oval"
-      ></div>
+      <Decorator />
 
       <div className="z-50 flex size-full justify-center py-[15rem]">
-        <div className="z-50 w-[35rem] rounded-xl bg-white px-8 py-16 shadow-l">
+        <div className="z-50 h-fit w-[35rem] rounded-xl bg-white px-8 py-12 shadow-l">
           {activeStep !== 4 && !isVerifySuccess && (
             <div className="mb-4 flex w-full justify-start">
               <Button variant="text">
@@ -202,17 +250,28 @@ export const Home = () => {
             </Stepper>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col  gap-4">
             {getStepComponent()}
 
             {activeStep !== 3 && (
-              <Button
-                className="rounded-lg py-2 text-lg"
-                type="submit"
-                variant="contained"
-              >
-                Submit
-              </Button>
+              <div className="flex justify-end">
+                <Button
+                  className="text-md rounded-lg py-2"
+                  disabled={isPending}
+                  endIcon={
+                    isPending ? (
+                      <CircularProgress
+                        className="text-primary-500"
+                        size={18}
+                      />
+                    ) : undefined
+                  }
+                  type="submit"
+                  variant="contained"
+                >
+                  Submit
+                </Button>
+              </div>
             )}
           </div>
         </div>

@@ -2,21 +2,21 @@ import { z } from 'zod'
 
 export const ForgetPasswordSchema = z
   .object({
-    email: z.string().email({ message: 'Email is not valid' }),
+    userName: z.string().min(1, { message: 'Username is required' }),
     otp: z.string(),
     newPassword: z.string(),
     confirmPassword: z.string(),
     activeStep: z.number(),
   })
   .superRefine(
-    ({ activeStep, confirmPassword, email, newPassword, otp }, ctx) => {
+    ({ activeStep, confirmPassword, newPassword, otp, userName }, ctx) => {
       switch (activeStep) {
         case 0:
-          if (!email) {
+          if (!userName) {
             return ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: 'Email is required',
-              path: ['email'],
+              message: 'Username is required',
+              path: ['userName'],
             })
           }
           return true
