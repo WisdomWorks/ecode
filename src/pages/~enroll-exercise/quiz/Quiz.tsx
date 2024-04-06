@@ -84,13 +84,14 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
   return (
     <FormProvider {...form}>
       <Form
-        className="flex h-full flex-col gap-4 overflow-hidden [&_.Mui-disabled]:disabled-text-neutral-900  [&_.MuiInputBase-root]:text-neutral-900"
+        className="flex h-full flex-col overflow-hidden [&_.Mui-disabled]:disabled-text-neutral-900  [&_.MuiInputBase-root]:text-neutral-900"
         form={form}
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-col">
-          <span className="text-lg font-semibold">
-            {questions.length} Questions
+        <div className="flex flex-col mt-5 ml-10">
+          <span className="text-lg font-semibold mb-3">
+            Total:
+            <span className="ml-3">{questions.length} questions</span>
           </span>
           <ButtonGroup className="flex flex-wrap">
             {questions.map((question, index) => {
@@ -115,7 +116,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
 
             return (
               <div
-                className="col-span-12 grid grid-cols-12 gap-2 rounded-lg border-2 border-solid border-gray-500 p-4 shadow-md lg:col-span-6"
+                className="col-span-12 grid grid-cols-12 gap-2 rounded-lg p-8 shadow-xl lg:col-span-12 my-4 mx-20 bg-white"
                 key={questionId}
               >
                 <div className="col-span-12 flex w-full items-center justify-between">
@@ -123,12 +124,13 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
                     Question {index + 1}
                   </span>
                 </div>
-                <TextField
+                <div className=" my-2 ml-3">{title}</div>
+                {/* <TextField
                   className="col-span-12"
                   disabled
                   fullWidth
                   value={title}
-                />
+                /> */}
                 <div className="col-span-12 flex flex-col gap-2">
                   {!isMultipleChoice && (
                     <SingleChoiceAnswer choices={choices} index={index} />
@@ -142,9 +144,9 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
           })}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end pb-3 py-2 pr-5 border border-solid border-gray-200 ">
           <Button className="submitBtn" onClick={toggleOpenModal}>
-            Submit
+            SUBMIT
           </Button>
         </div>
       </Form>

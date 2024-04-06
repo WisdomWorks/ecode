@@ -10,7 +10,11 @@ import { MaterialType } from '@/utils/course.utils'
 
 import { PermissionModal } from '../../components/PermissionModal'
 import { useCourseContext } from '../../context/course.context'
-import { Delete, LinkOutlined, RemoveRedEyeOutlined } from '@mui/icons-material'
+import {
+  DeleteOutline,
+  LinkOutlined,
+  RemoveRedEyeOutlined,
+} from '@mui/icons-material'
 
 interface Props {
   material: MaterialSchema
@@ -50,8 +54,8 @@ export const MaterialDetail = ({ material }: Props) => {
   }
 
   return (
-    <div className="flex w-full items-center gap-4 ">
-      <div className="flex w-2/3 items-center gap-4">
+    <div className="flex w-full items-center justify-between gap-4 ">
+      <div className="flex w-3/4 items-center gap-4">
         <Icon className="size-6" />
         <a
           className=" truncate text-blue-500"
@@ -68,7 +72,7 @@ export const MaterialDetail = ({ material }: Props) => {
           <ButtonTooltip
             iconButtonProps={{
               children: (
-                <RemoveRedEyeOutlined className="cursor-pointer text-warning-500" />
+                <RemoveRedEyeOutlined className="cursor-pointer text-black" />
               ),
               onClick: toggleSettingPermissionModal,
             }}
@@ -79,7 +83,9 @@ export const MaterialDetail = ({ material }: Props) => {
           />
           <ButtonTooltip
             iconButtonProps={{
-              children: <Delete className="cursor-pointer text-red-500" />,
+              children: (
+                <DeleteOutline className="cursor-pointer text-red-500" />
+              ),
               onClick: toggleModalDelete,
             }}
             isIconButton

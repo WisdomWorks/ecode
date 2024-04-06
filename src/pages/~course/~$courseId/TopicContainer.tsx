@@ -15,6 +15,8 @@ import { ExerciseDetail } from './~exercise/ExerciseDetail'
 import { CreateMaterialModal } from './material/CreateMaterialModal'
 import { MaterialDetail } from './material/MaterialDetail'
 
+import { Divider } from '@mui/material'
+
 interface Props {
   setExerciseType?: Dispatch<SetStateAction<ExerciseType | null>>
   setTopicIdForExercise?: Dispatch<SetStateAction<string>>
@@ -90,14 +92,16 @@ export const TopicContainer = ({
                       <div>No materials in this topic.</div>
                     ) : (
                       <div className="flex w-full flex-col gap-4">
-                        {materials.map(material => {
+                        {materials.map((material, index) => {
                           const { materialId } = material
 
                           return (
-                            <MaterialDetail
-                              key={materialId}
-                              material={material}
-                            />
+                            <div key={materialId}>
+                              <MaterialDetail material={material} />
+                              {index !== materials.length - 1 && (
+                                <Divider className=" mt-4" />
+                              )}
+                            </div>
                           )
                         })}
                       </div>
