@@ -54,12 +54,14 @@ export const SubmissionTab = () => {
       accessorFn: row => new Date(row.startTime),
       filterVariant: 'date',
       Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
+      enableColumnFilter: false,
     },
     {
       id: 'endTime',
       header: 'End Time',
       accessorFn: row => new Date(row.endTime),
       Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
+      enableColumnFilter: false,
     },
   ]
 

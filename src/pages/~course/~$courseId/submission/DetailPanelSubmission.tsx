@@ -58,7 +58,7 @@ export const DetailPanelSubmission = ({
     {
       accessorKey: 'submissions.score',
       header: 'Score',
-      filterVariant: 'range-slider',
+      enableColumnFilter: false,
       Cell: ({ cell, row }) =>
         row.original.submissions.score === -1
           ? 'Not graded'
