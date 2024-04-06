@@ -113,13 +113,13 @@ export const CodeExercise = ({ exercise, isTimeOut }: Props) => {
       <PanelGroup direction="horizontal">
         <Panel defaultSize={40}>
           <PanelGroup direction="vertical">
-            <Panel defaultSize={60} minSize={60}>
+            <Panel defaultSize={45} minSize={45}>
               <Topic topic={description} />
             </Panel>
 
             <ResizeHandle direction="vertical" />
 
-            <Panel defaultSize={40}>
+            <Panel defaultSize={55}>
               <TestCases
                 currentTab={currentTab}
                 loading={isRefetchingGetTestCase}
