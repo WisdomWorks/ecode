@@ -5,8 +5,8 @@ import { useCheckRole } from '@/hooks'
 import {
   Add,
   BookmarkBorderOutlined,
-  Delete,
-  Edit,
+  DeleteOutline,
+  EditOutlined,
   RemoveRedEyeOutlined,
   TuneOutlined,
 } from '@mui/icons-material'
@@ -85,22 +85,25 @@ export const Topic = ({
           className="flex items-center gap-2"
           onClick={toggleModalCreate}
         >
-          <Add className="text-success-450" />
+          <Add className=" text-black" />
           {isMaterial ? 'Create material' : 'Create exercise'}
         </MenuItem>
         <MenuItem
           className="flex items-center gap-2"
           onClick={toggleModalSettingPermission}
         >
-          <RemoveRedEyeOutlined className="text-warning-450" />
+          <RemoveRedEyeOutlined className="text-black" />
           Setting permission
         </MenuItem>
         <MenuItem className="flex items-center gap-2" onClick={onUpdateTopic}>
-          <Edit className="text-primary-450" />
+          <EditOutlined className="text-black" />
           Edit topic
         </MenuItem>
-        <MenuItem className="flex items-center gap-2" onClick={onDeleteTopic}>
-          <Delete className="text-danger-500" />
+        <MenuItem
+          className="flex items-center gap-2 text-danger-500"
+          onClick={onDeleteTopic}
+        >
+          <DeleteOutline className="text-danger-500" />
           Delete topic
         </MenuItem>
       </HoverMenu>

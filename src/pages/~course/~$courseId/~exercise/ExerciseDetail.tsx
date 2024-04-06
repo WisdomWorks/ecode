@@ -12,8 +12,8 @@ import { PermissionModal } from '../../components/PermissionModal'
 import { useCourseContext } from '../../context/course.context'
 import {
   CodeRounded,
-  Delete,
-  Edit,
+  DeleteOutline,
+  EditOutlined,
   LinkOutlined,
   MenuBookRounded,
   QuizRounded,
@@ -48,7 +48,7 @@ const LinkToExerciseDetail = ({
       to="/course/$courseId/exercise-detail/$exerciseId"
     >
       {children}
-      {isTeacher && <Edit className="cursor-pointer text-primary-500" />}
+      {isTeacher && <EditOutlined className="cursor-pointer text-black" />}
     </Link>
   )
 }
@@ -131,7 +131,7 @@ export const ExerciseDetail = ({ exercise, index }: Props) => {
           <ButtonTooltip
             iconButtonProps={{
               children: (
-                <RemoveRedEyeOutlined className="cursor-pointer text-warning-500" />
+                <RemoveRedEyeOutlined className="cursor-pointer text-black" />
               ),
               onClick: toggleSettingPermissionModal,
             }}
@@ -156,7 +156,9 @@ export const ExerciseDetail = ({ exercise, index }: Props) => {
 
           <ButtonTooltip
             iconButtonProps={{
-              children: <Delete className="cursor-pointer text-red-500" />,
+              children: (
+                <DeleteOutline className="cursor-pointer text-red-500" />
+              ),
               onClick: toggleModalDelete,
             }}
             isIconButton

@@ -72,7 +72,7 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
   return (
     <>
       <Form
-        className="flex h-full flex-col gap-4 overflow-auto"
+        className="flex h-full flex-col gap-6 overflow-auto px-16 mt-16"
         form={form}
         onSubmit={handleSubmit}
       >
@@ -92,9 +92,9 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
           />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-end  pb-3 py-2 pr-5">
           <Button className="submitBtn" onClick={toggleOpenModal}>
-            Submit
+            SUBMIT
           </Button>
         </div>
       </Form>
