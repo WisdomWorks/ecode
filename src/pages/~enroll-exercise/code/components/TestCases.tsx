@@ -104,14 +104,14 @@ export const TestCases = ({
                   color={
                     currentTab == 0
                       ? 'success'
-                      : testResult?.testCases[currentCase]?.status == 'AC'
+                      : testResult?.testCases[index]?.status == 'AC'
                         ? 'success'
                         : 'error'
                   }
                   onClick={() => handleChangeTestcase(index)}
                   startIcon={
                     currentTab != 0 &&
-                    (testResult?.testCases[currentCase]?.status == 'AC' ? (
+                    (testResult?.testCases[index]?.status == 'AC' ? (
                       <Check />
                     ) : (
                       <Clear />
