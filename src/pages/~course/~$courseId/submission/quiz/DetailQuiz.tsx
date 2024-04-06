@@ -41,9 +41,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
     },
   })
 
-  const handleSubmit: SubmitHandler<TForm> = data => {
-    console.log(data)
-  }
+  const handleSubmit: SubmitHandler<TForm> = _ => {}
 
   const questions = form.watch('questions')
 
@@ -66,7 +64,6 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
                   'bg-primary-500 text-white': isAnswered,
                 })}
                 key={question.questionId}
-                onClick={() => console.log(index)}
               >
                 {index + 1}
               </Button>

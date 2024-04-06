@@ -16,14 +16,7 @@ import { MRT_Row } from 'material-react-table'
 
 interface Props {
   row: MRT_Row<ExerciseSchema>
-  setModalState: Dispatch<
-    SetStateAction<
-      | (GetDetailSubmissionProps & {
-          exercise: ExerciseSchema
-        })
-      | null
-    >
-  >
+  setModalState: Dispatch<SetStateAction<GetDetailSubmissionProps | null>>
   toggleModalDetail: () => void
 }
 
@@ -88,7 +81,6 @@ export const DetailPanelSubmission = ({
                     setModalState({
                       submissionId: original.submissions.submissionId,
                       type,
-                      exercise: row.original,
                     })
                     toggleModalDetail()
                   },
@@ -106,7 +98,6 @@ export const DetailPanelSubmission = ({
                     setModalState({
                       submissionId: original.submissions.submissionId,
                       type,
-                      exercise: row.original,
                     })
                     toggleModalDetail()
                   },

@@ -79,7 +79,7 @@ export const EnrollExercise = () => {
             <p className="text-lg text-gray-900">{exerciseName}</p>
           </div>
         </div>
-        <div className=" col-span-12 flex items-center justify-between overflow-auto rounded-lg px-7 min-h-24 shadow-lg">
+        <div className=" col-span-12 flex min-h-24 items-center justify-between overflow-auto rounded-lg px-7 shadow-lg">
           <div className="flex flex-col gap-2">
             <div className="flex items-end gap-4">
               <span className="w-[5rem] text-base font-bold">Start time</span>

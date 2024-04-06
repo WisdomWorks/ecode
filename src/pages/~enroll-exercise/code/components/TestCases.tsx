@@ -33,8 +33,6 @@ export const TestCases = ({
     setCurrentOutput(testCases[index].output)
   }
 
-  console.log(testResult)
-
   return (
     <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
       <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1">
@@ -104,14 +102,14 @@ export const TestCases = ({
                   color={
                     currentTab == 0
                       ? 'success'
-                      : testResult?.testCases[index]?.status == 'AC'
+                      : testResult?.testCases[index].status == 'AC'
                         ? 'success'
                         : 'error'
                   }
                   onClick={() => handleChangeTestcase(index)}
                   startIcon={
                     currentTab != 0 &&
-                    (testResult?.testCases[index]?.status == 'AC' ? (
+                    (testResult?.testCases[index].status == 'AC' ? (
                       <Check />
                     ) : (
                       <Clear />

@@ -1,4 +1,5 @@
 import { isBefore, isPast } from 'date-fns'
+import { uniqBy } from 'lodash'
 import { z } from 'zod'
 
 export const CreateQuizExerciseSchema = z
@@ -18,12 +19,22 @@ export const CreateQuizExerciseSchema = z
         questionId: z.string().optional(),
         title: z.string().optional(),
         isMultipleChoice: z.boolean(),
-        choices: z.array(
-          z.object({
-            choiceId: z.string().optional(),
-            content: z.string().optional(),
-          }),
-        ),
+        choices: z
+          .array(
+            z.object({
+              choiceId: z.string().optional(),
+              content: z.string().optional(),
+            }),
+          )
+          .refine(
+            value => {
+              const choices = value.filter(item => item.content)
+              const uniqChoices = uniqBy(choices, 'content')
+
+              return choices.length === uniqChoices.length
+            },
+            { message: 'Choices must be unique answer' },
+          ),
         answers: z.array(
           z.object({
             choiceId: z.string().optional(),

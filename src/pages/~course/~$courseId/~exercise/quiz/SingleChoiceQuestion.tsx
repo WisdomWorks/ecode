@@ -21,9 +21,9 @@ export const SingleChoiceQuestion = ({ field, index }: Props) => {
     const value = e.target.value
     if (!value) return
 
-    const choiceId = watch('questions')
-      .at(index)
-      ?.choices.find(choice => choice.content === value)?.choiceId
+    const choices = watch('questions').at(index)?.choices
+
+    const choiceId = choices?.find(choice => choice.content === value)?.choiceId
 
     return setValue(`questions.${index}.answers.${0}`, {
       content: value,

@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 
 export const useConfirmTabClose = () => {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {}
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+    }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
 

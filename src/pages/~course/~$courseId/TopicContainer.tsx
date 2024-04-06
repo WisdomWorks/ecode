@@ -14,7 +14,6 @@ import { CreateExerciseOptionModal } from './~exercise/CreateExerciseOptionalMod
 import { ExerciseDetail } from './~exercise/ExerciseDetail'
 import { CreateMaterialModal } from './material/CreateMaterialModal'
 import { MaterialDetail } from './material/MaterialDetail'
-
 import { Divider } from '@mui/material'
 
 interface Props {

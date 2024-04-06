@@ -13,7 +13,12 @@ interface Props {
 }
 
 export const FormQuestion = ({ defaultQuestion }: Props) => {
-  const { control, setValue, watch } = useFormContext<TCreateQuiz>()
+  const {
+    control,
+    formState: { errors },
+    setValue,
+    watch,
+  } = useFormContext<TCreateQuiz>()
 
   const { append, fields, remove } = useFieldArray({
     control: control,
@@ -70,6 +75,11 @@ export const FormQuestion = ({ defaultQuestion }: Props) => {
                   <SingleChoiceQuestion field={field} index={index} />
                 ) : (
                   <MultiChoicesQuestion field={field} index={index} />
+                )}
+                {errors.questions && errors.questions[index]?.choices && (
+                  <span className="text-xs text-danger-500">
+                    {errors.questions[index]?.choices?.root?.message}
+                  </span>
                 )}
               </div>
             </div>

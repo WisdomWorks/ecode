@@ -3,20 +3,34 @@ import { useQuery } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
 interface Params {
-  CourseId: string
+  courseId: string
   userId: string
 }
 
-export const useGetGradeStudent = ({ CourseId, userId }: Params) => {
-  return useQuery<AxiosResponse, AxiosError<AxiosResponseError>>({
-    queryKey: ['grade', CourseId, userId],
+export type GradeStudent = {
+  dateGrade: string
+  dateSubmission: string
+  exerciseId: string
+  exerciseTitle: string
+  score: number
+  studentId: string
+  submissionId: string
+  type: string
+}
+
+export const useGetGradeStudent = ({ courseId, userId }: Params) => {
+  return useQuery<
+    AxiosResponse<GradeStudent[]>,
+    AxiosError<AxiosResponseError>
+  >({
+    queryKey: ['grade', courseId, userId],
     queryFn: async () => {
       return await callAPI(
         `/exercises/all-submission/user/${userId}` as Path,
         'get',
         {
           params: {
-            CourseId,
+            courseId,
           },
         },
       )

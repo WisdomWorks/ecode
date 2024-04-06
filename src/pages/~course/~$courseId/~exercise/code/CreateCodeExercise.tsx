@@ -224,6 +224,7 @@ export const CreateCodeExercise = ({
           <FormTipTap
             className="col-span-8"
             classNameEditor="min-h-[10rem] max-h-[10rem] overflow-y-auto"
+            control={control}
             label="Topic"
             name="description"
             required

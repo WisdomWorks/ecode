@@ -8,6 +8,7 @@ import { Form } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage, useToggle } from '@/hooks'
+import { useConfirmTabClose } from '@/hooks/useConfirmTabClose'
 import { EssayExerciseSchema } from '@/types/exercise.types'
 
 import { Button } from '@mui/material'
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export const Essay = ({ exercise, isTimeOut }: Props) => {
+  useConfirmTabClose()
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
   const { setErrorMessage } = useToastMessage()

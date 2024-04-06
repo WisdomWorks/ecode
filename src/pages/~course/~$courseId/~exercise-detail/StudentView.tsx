@@ -77,6 +77,7 @@ export const StudentView = ({ exerciseId }: Props) => {
               ...prev,
               keyExercise: dataForm.key,
             }),
+            replace: true,
           })
         },
       },

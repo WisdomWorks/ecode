@@ -146,7 +146,6 @@ export const ExerciseDetail = ({ exercise, index }: Props) => {
               children: (
                 <LinkToExerciseDetail exerciseId={exerciseId} isTeacher />
               ),
-              onClick: toggleSettingPermissionModal,
             }}
             isIconButton
             tooltipProps={{

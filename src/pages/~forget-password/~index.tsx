@@ -168,8 +168,6 @@ export const Home = () => {
   }
 
   const onSubmitForm: SubmitHandler<TForgetPassword> = data => {
-    console.log(data)
-
     const { activeStep, newPassword, otp, userName } = data
     switch (activeStep) {
       case 0:

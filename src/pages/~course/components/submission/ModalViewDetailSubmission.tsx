@@ -1,7 +1,6 @@
 import { GetDetailSubmissionProps, useGetDetailSubmission } from '@/apis'
 import { Dialog, Loading } from '@/components/common'
 import { ExerciseType } from '@/constants'
-import { ExerciseSchema } from '@/types/exercise.types'
 import { cn, formatDDMMyyyyHHmm } from '@/utils'
 
 import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
@@ -10,9 +9,7 @@ import { Chip } from '@mui/material'
 
 interface Props {
   open: boolean
-  state: GetDetailSubmissionProps & {
-    exercise: ExerciseSchema
-  }
+  state: GetDetailSubmissionProps
   toggleModal: () => void
 }
 
@@ -27,8 +24,9 @@ export const ModalViewDetailSubmission = ({
 
   if (!submissionData) return null
 
-  const { exercise, type } = state
-  const { durationTime, endTime, exerciseName, startTime } = exercise
+  const { type } = state
+  const { durationTime, endTime, exerciseName, startTime } =
+    submissionData.exercise
   const {
     exercise: { question },
     submissions: { score, submission, submissionId },

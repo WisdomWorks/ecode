@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { GradeEssayParams, useGradeEssay } from '@/apis'
 import { Form, FormInput } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
-import { useToastMessage } from '@/hooks'
+import { useCheckRole, useToastMessage } from '@/hooks'
 
 import { Button } from '@mui/material'
 
@@ -26,6 +26,7 @@ export const DetailEssay = ({
   score,
   submission,
 }: Props) => {
+  const { isTeacher } = useCheckRole()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
   const { isPending, mutate } = useGradeEssay()
@@ -68,27 +69,29 @@ export const DetailEssay = ({
   return (
     <>
       <Form
-        className="flex h-full flex-col gap-4 overflow-auto"
+        className="flex h-full flex-col gap-4"
         form={form}
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-col gap-4 overflow-auto">
+        <div className="flex flex-col gap-4">
           <div className="flex gap-4">
             <FormTipTap
-              classNameEditor="min-h-[8rem] max-h-[8rem] overflow-auto"
+              classNameEditor="min-h-[8rem] max-h-[8rem] overflow-y-auto"
               disabled
               editable={false}
               label="Topic"
               name="topic"
             />
 
-            <FormInput
-              className="w-fit"
-              label="Score"
-              name="score"
-              placeholder="Grade"
-              type="number"
-            />
+            {isTeacher && (
+              <FormInput
+                className="w-fit"
+                label="Score"
+                name="score"
+                placeholder="Grade"
+                type="number"
+              />
+            )}
           </div>
           <FormTipTap
             classNameEditor="min-h-[22rem]"
@@ -99,11 +102,13 @@ export const DetailEssay = ({
           />
         </div>
 
-        <div className="flex justify-end">
-          <Button className="submitBtn" disabled={isPending} type="submit">
-            Grade
-          </Button>
-        </div>
+        {isTeacher && (
+          <div className="flex justify-end">
+            <Button className="submitBtn" disabled={isPending} type="submit">
+              Grade
+            </Button>
+          </div>
+        )}
       </Form>
     </>
   )

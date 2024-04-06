@@ -16,7 +16,7 @@ import {
 
 import { FormQuestion } from './FormQuestion'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Typography } from '@mui/material'
+import { Alert, Button, Typography } from '@mui/material'
 import { getHours, getMinutes } from 'date-fns'
 
 export type TQuestion = Schema['QuizQuestion'] & {
@@ -96,11 +96,9 @@ export const CreateQuizExercise = ({
 
   const form = useForm<TCreateQuiz>({
     defaultValues,
-    mode: 'onChange',
+    mode: 'all',
     resolver: zodResolver(CreateQuizExerciseSchema),
   })
-
-  // console.log(form.formState.errors)
 
   const onSubmit: SubmitHandler<TCreateQuiz> = data => {
     const { durationObj, endDate, questions, reAttempt, startDate, ...rest } =
@@ -176,7 +174,10 @@ export const CreateQuizExercise = ({
     )
   }
 
-  const { control } = form
+  const {
+    control,
+    formState: { isValid },
+  } = form
 
   return (
     <FormProvider {...form}>
@@ -197,6 +198,12 @@ export const CreateQuizExercise = ({
         <FormQuestion defaultQuestion={defaultQuestion} />
 
         <div className="col-span-12 flex justify-end">
+          {!isValid && (
+            <Alert severity="error">
+              Something went wrong, please re-check the form
+            </Alert>
+          )}
+
           <Button
             className="submitBtn"
             disabled={isPendingCreate || isPendingUpdate}

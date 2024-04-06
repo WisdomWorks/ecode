@@ -102,7 +102,6 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
                     'bg-primary-500 text-white': isAnswered,
                   })}
                   key={question.questionId}
-                  onClick={() => console.log(index)}
                 >
                   {index + 1}
                 </Button>
