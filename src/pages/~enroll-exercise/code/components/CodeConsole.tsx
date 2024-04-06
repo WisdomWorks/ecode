@@ -23,6 +23,7 @@ interface Props {
   setIsRefetchingGetTestCase: Dispatch<SetStateAction<boolean>>
   setTestResult: Dispatch<SetStateAction<TGetTestCaseRunCode | null>>
   submissionId: string
+  toggleOpenModal: () => void
 }
 
 export const CodeConsole = ({
@@ -33,6 +34,7 @@ export const CodeConsole = ({
   setIsRefetchingGetTestCase,
   setTestResult,
   submissionId,
+  toggleOpenModal,
 }: Props) => {
   const { control, setValue, watch } = useFormContext<TFormCodeExercise>()
 
@@ -129,9 +131,8 @@ export const CodeConsole = ({
           <Button
             color="primary"
             disabled={loading}
-            onClick={() => setValue('typeSubmit', 'submit')}
+            onClick={toggleOpenModal}
             startIcon={<BackupOutlined />}
-            type="submit"
             variant="text"
           >
             Submit

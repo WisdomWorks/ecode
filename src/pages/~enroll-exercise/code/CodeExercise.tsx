@@ -149,6 +149,7 @@ export const CodeExercise = ({ exercise, isTimeOut }: Props) => {
                     setIsRefetchingGetTestCase={setIsRefetchingGetTestCase}
                     setTestResult={setTestResult}
                     submissionId={submissionId}
+                    toggleOpenModal={toggleOpenModal}
                   />
                 </Form>
               </FormProvider>
