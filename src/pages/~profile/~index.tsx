@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from 'react'
 
 import { TabPanel } from '@/components/common'
-import { a11yProps } from '@/utils'
+import { a11yProps, beforeLoadProtected } from '@/utils'
 
 import { CredentialTab } from './CredentialTab'
 import { ProfileTab } from './ProfileTab'
@@ -33,4 +33,5 @@ export const Profile = () => {
 
 export const Route = createFileRoute('/profile/')({
   component: Profile,
+  beforeLoad: beforeLoadProtected,
 })

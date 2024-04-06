@@ -13,18 +13,20 @@ export interface GetDetailSubmissionResponse {
 }
 
 interface Submissions {
-  answers: Answer[]
   dateGrade: string
   dateSubmit: string
   exerciseId: string
-  questionId: string
-  quizAnswerId: string
   reviewable: boolean
   score: number
   studentId: string
-  submission: string
+  submission: QuizSubmission[] | string
   submissionId: string
   teacherComment: string
+}
+export interface QuizSubmission {
+  answers: Answer[]
+  questionId: string
+  quizAnswerId: string
 }
 
 interface Answer {

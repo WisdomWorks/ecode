@@ -131,7 +131,7 @@ export const CreateEssayExercise = ({
       </Typography>
       <FormTipTap
         className="col-span-12"
-        classNameEditor="min-h-[12rem]"
+        classNameEditor="min-h-[12rem] max-h-[15rem] overflow-auto"
         control={control}
         label="Question"
         name="question"

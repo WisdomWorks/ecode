@@ -1,6 +1,9 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 
+import { useChangePW } from '@/apis'
 import { Form, FormInputPassword } from '@/components/form'
+import { useAppStore } from '@/context/useAppStore'
+import { useToastMessage } from '@/hooks'
 
 import { ChangePasswordSchema } from './schema/changePassword.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -13,6 +16,11 @@ type TForm = {
 }
 
 export const CredentialTab = () => {
+  const user = useAppStore(state => state.user)
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
+
+  const { isPending, mutate } = useChangePW()
+
   const form = useForm<TForm>({
     defaultValues: {
       oldPassword: '',
@@ -23,7 +31,24 @@ export const CredentialTab = () => {
   })
 
   const handleSubmit: SubmitHandler<TForm> = data => {
-    console.log(data)
+    const { newPassword, oldPassword } = data
+    mutate(
+      {
+        oldPassword,
+        newPassword,
+        userId: user?.userId || '',
+      },
+      {
+        onSuccess: () => {
+          setSuccessMessage('Password changed successfully')
+          form.reset()
+        },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Something went wrong',
+          ),
+      },
+    )
   }
 
   return (
@@ -55,7 +80,12 @@ export const CredentialTab = () => {
         type="password"
       />
       <div className="flex justify-end">
-        <Button className="submitBtn" type="submit" variant="contained">
+        <Button
+          className="submitBtn"
+          disabled={isPending}
+          type="submit"
+          variant="contained"
+        >
           Change Password
         </Button>
       </div>

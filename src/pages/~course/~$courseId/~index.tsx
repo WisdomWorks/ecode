@@ -9,6 +9,7 @@ import { beforeLoadProtected } from '@/utils'
 import { DetailTopicModal } from '../components/DetailTopicModal'
 import { CourseProvider } from '../context/course.context'
 import { Exercise } from './~exercise/Exercise'
+import { GradeTab } from './grade/GradeTab'
 import { Material } from './material/Material'
 import { Settings } from './settings/Settings'
 import { SubmissionTab } from './submission/SubmissionTab'
@@ -44,18 +45,18 @@ const tabs: TTabProps[] = [
     permission: [Role.TEACHER],
   },
   {
-    label: 'Grades',
-    icon: <GradingOutlined />,
-    value: 4,
-    component: SubmissionTab,
-    permission: [Role.STUDENT],
-  },
-  {
     label: 'Settings',
     icon: <SettingsOutlined />,
     value: 3,
     component: Settings,
     permission: [Role.TEACHER],
+  },
+  {
+    label: 'Grades',
+    icon: <GradingOutlined />,
+    value: 4,
+    component: GradeTab,
+    permission: [Role.STUDENT],
   },
 ]
 

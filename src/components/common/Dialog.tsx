@@ -1,23 +1,41 @@
 import { cn } from '@/utils'
 
-import { Modal, ModalProps } from '@mui/material'
+import { Close } from '@mui/icons-material'
+import { IconButton, Modal, ModalProps } from '@mui/material'
 
 interface Props extends ModalProps {
+  isShowCloseButton?: boolean
   variant?: 'confirm'
 }
 
-export const Dialog = ({ children, className, variant, ...rest }: Props) => {
+export const Dialog = ({
+  children,
+  className,
+  isShowCloseButton,
+  onClose,
+  variant,
+  ...rest
+}: Props) => {
   return (
-    <Modal {...rest}>
-      <div
-        className={cn(
-          'absolute left-1/2 top-1/2 flex w-1/2 -translate-x-1/2 -translate-y-1/2 flex-col gap-2 rounded-xl bg-white p-6 shadow-xl',
-          className,
-          { 'w-fit': variant === 'confirm' },
-        )}
-      >
-        {children}
-      </div>
+    <Modal {...rest} onClose={onClose}>
+      <>
+        <div
+          className={cn(
+            'absolute left-1/2 top-1/2 flex w-1/2 -translate-x-1/2 -translate-y-1/2 flex-col gap-2 rounded-xl bg-white p-6 shadow-xl',
+            className,
+            { 'w-fit': variant === 'confirm' },
+          )}
+        >
+          {isShowCloseButton && (
+            <div className="flex w-full justify-end">
+              <IconButton onClick={e => onClose?.(e, 'escapeKeyDown')}>
+                <Close />
+              </IconButton>
+            </div>
+          )}
+          {children}
+        </div>
+      </>
     </Modal>
   )
 }

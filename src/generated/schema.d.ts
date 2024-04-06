@@ -105,6 +105,9 @@ export interface paths {
   "/courses/enrollment": {
     post: operations["enrollUserToCourse"];
   };
+  "/auth/send-otp": {
+    post: operations["sendOTP"];
+  };
   "/auth/logout": {
     post: operations["Logout"];
   };
@@ -169,15 +172,15 @@ export interface paths {
   "/exercises/code/run/{submissionId}": {
     get: operations["runCodeExercise_1"];
   };
+  "/exercises/all-submission/user/{userId}": {
+    get: operations["getAllStudentSubmission"];
+  };
   "/courses/{courseId}": {
     get: operations["getById_2"];
     delete: operations["deleteById_2"];
   };
   "/courses/user/{userId}": {
     get: operations["getCourseByUserId"];
-  };
-  "/auth/send-otp": {
-    get: operations["sendOTP"];
   };
   "/auth/check-session/user": {
     get: operations["checkSessionUser"];
@@ -454,9 +457,15 @@ export interface components {
       studentId: string;
       enrollmentKey: string;
     };
+    SendOTPRequest: {
+      userName?: string;
+    };
     LoginRequest: {
       userName?: string;
       password?: string;
+    };
+    CheckOTPRequest: {
+      otp?: string;
     };
     UpdateUserRequest: {
       userId: string;
@@ -1423,6 +1432,27 @@ export interface operations {
       };
     };
   };
+  sendOTP: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SendOTPRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   Logout: {
     responses: {
       /** @description OK */
@@ -1482,9 +1512,9 @@ export interface operations {
     };
   };
   checkOTP: {
-    parameters: {
-      query: {
-        OTP: string;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CheckOTPRequest"];
       };
     };
     responses: {
@@ -1944,6 +1974,30 @@ export interface operations {
       };
     };
   };
+  getAllStudentSubmission: {
+    parameters: {
+      query: {
+        CourseId: string;
+      };
+      path: {
+        userId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   getById_2: {
     parameters: {
       path: {
@@ -1990,27 +2044,6 @@ export interface operations {
     parameters: {
       path: {
         userId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  sendOTP: {
-    parameters: {
-      query: {
-        userName: string;
       };
     };
     responses: {

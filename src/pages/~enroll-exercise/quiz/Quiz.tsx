@@ -13,7 +13,7 @@ import { cn } from '@/utils'
 
 import { MultipleChoiceAnswer } from './MultipleChoiceAnswer'
 import { SingleChoiceAnswer } from './SingleChoiceAnswer'
-import { Button, ButtonGroup, TextField } from '@mui/material'
+import { Button, ButtonGroup } from '@mui/material'
 import { useNavigate, useParams } from '@tanstack/react-router'
 
 interface Props {
@@ -88,8 +88,8 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
         form={form}
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-col mt-5 ml-10">
-          <span className="text-lg font-semibold mb-3">
+        <div className="ml-10 mt-5 flex flex-col">
+          <span className="mb-3 text-lg font-semibold">
             Total:
             <span className="ml-3">{questions.length} questions</span>
           </span>
@@ -116,7 +116,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
 
             return (
               <div
-                className="col-span-12 grid grid-cols-12 gap-2 rounded-lg p-8 shadow-xl lg:col-span-12 my-4 mx-20 bg-white"
+                className="col-span-12 mx-20 my-4 grid grid-cols-12 gap-2 rounded-lg bg-white p-8 shadow-xl lg:col-span-12"
                 key={questionId}
               >
                 <div className="col-span-12 flex w-full items-center justify-between">
@@ -125,12 +125,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
                   </span>
                 </div>
                 <div className=" my-2 ml-3">{title}</div>
-                {/* <TextField
-                  className="col-span-12"
-                  disabled
-                  fullWidth
-                  value={title}
-                /> */}
+
                 <div className="col-span-12 flex flex-col gap-2">
                   {!isMultipleChoice && (
                     <SingleChoiceAnswer choices={choices} index={index} />
@@ -144,7 +139,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
           })}
         </div>
 
-        <div className="flex justify-end pb-3 py-2 pr-5 border border-solid border-gray-200 ">
+        <div className="flex justify-end border border-solid border-gray-200 py-2 pb-3 pr-5 ">
           <Button className="submitBtn" onClick={toggleOpenModal}>
             SUBMIT
           </Button>

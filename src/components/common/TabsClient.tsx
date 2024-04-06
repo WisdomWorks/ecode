@@ -54,6 +54,7 @@ export const TabsClient = ({
               key={value}
               {...a11yProps(value)}
               component="div"
+              value={value}
             />
           )
         })}

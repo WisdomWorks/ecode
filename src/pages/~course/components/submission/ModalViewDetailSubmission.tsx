@@ -5,7 +5,8 @@ import { ExerciseSchema } from '@/types/exercise.types'
 import { cn, formatDDMMyyyyHHmm } from '@/utils'
 
 import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
-import { Button, Chip } from '@mui/material'
+import { DetailQuiz } from '../../~$courseId/submission/quiz/DetailQuiz'
+import { Chip } from '@mui/material'
 
 interface Props {
   open: boolean
@@ -38,6 +39,7 @@ export const ModalViewDetailSubmission = ({
   return (
     <Dialog
       className="size-4/5 overflow-auto"
+      isShowCloseButton
       onClose={toggleModal}
       open={open}
     >
@@ -106,18 +108,17 @@ export const ModalViewDetailSubmission = ({
               essaySubmissionId={submissionId}
               question={question}
               score={score}
-              submission={submission}
+              submission={submission as string}
+            />
+          )}
+
+          {type === ExerciseType.QUIZ && (
+            <DetailQuiz
+              exercise={data.data.exercise}
+              submissions={data.data.submissions}
             />
           )}
         </div>
-
-        {type !== ExerciseType.ESSAY && (
-          <div className="flex h-fit justify-end">
-            <Button className="clearBtn" onClick={toggleModal}>
-              Close
-            </Button>
-          </div>
-        )}
       </div>
     </Dialog>
   )
