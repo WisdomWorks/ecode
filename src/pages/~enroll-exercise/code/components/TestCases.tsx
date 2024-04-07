@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
 import { TGetTestCaseRunCode } from '@/apis'
-import { testcaseStatus } from '@/constants'
 import { CodeExerciseSchema } from '@/types/exercise.types'
+import { getTestCaseStatus } from '@/utils/course.utils'
 
 import { Check, Clear, DoubleArrowOutlined } from '@mui/icons-material'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
@@ -27,7 +27,7 @@ export const TestCases = ({
   const [currentOutput, setCurrentOutput] = useState(testCases[0].output)
   const [currentCase, setCurrentCase] = useState(0)
 
-  const handleChangeTestcase = (index: number) => {
+  const handleChangeTestCase = (index: number) => {
     setCurrentCase(index)
     setCurrentInput(testCases[index].input)
     setCurrentOutput(testCases[index].output)
@@ -68,23 +68,16 @@ export const TestCases = ({
         </>
       ) : (
         <>
-          {currentTab != 0 && (
+          {currentTab !== 0 && (
             <div className="ml-3 mt-3">
               <p
                 className={`text-lg font-bold ${
-                  testResult?.testCases[currentCase]?.status == 'AC'
+                  testResult?.testCases[currentCase]?.status === 'AC'
                     ? 'text-green-500'
                     : ' text-red-500'
                 }`}
               >
-                {testResult?.status == 'IE' || testResult?.status == 'CE'
-                  ? testcaseStatus[
-                      testResult.status as keyof typeof testcaseStatus
-                    ]
-                  : testcaseStatus[
-                      testResult?.testCases[currentCase]
-                        ?.status as keyof typeof testcaseStatus
-                    ]}
+                {getTestCaseStatus(testResult, currentCase)}
               </p>
               {testResult?.message && (
                 <div className="my-3 mr-3 whitespace-pre-line rounded-sm bg-red-50 p-2 text-sm text-red-500">
@@ -95,27 +88,27 @@ export const TestCases = ({
           )}
 
           <div className="flex">
-            {testCases.map((testCase, index) => (
+            {testCases.map((_, index) => (
               <div className="m-3" key={index}>
                 <Button
                   className="rounded-lg px-3 py-1"
                   color={
-                    currentTab == 0
+                    currentTab === 0
                       ? 'success'
-                      : testResult?.testCases[index].status == 'AC'
+                      : testResult?.testCases.at(index)?.status === 'AC'
                         ? 'success'
                         : 'error'
                   }
-                  onClick={() => handleChangeTestcase(index)}
+                  onClick={() => handleChangeTestCase(index)}
                   startIcon={
-                    currentTab != 0 &&
-                    (testResult?.testCases[index].status == 'AC' ? (
+                    currentTab !== 0 &&
+                    (testResult?.testCases.at(index)?.status === 'AC' ? (
                       <Check />
                     ) : (
                       <Clear />
                     ))
                   }
-                  variant={currentCase == index ? 'outlined' : 'text'}
+                  variant={currentCase === index ? 'outlined' : 'text'}
                 >
                   Case {index + 1}
                 </Button>
@@ -130,7 +123,7 @@ export const TestCases = ({
             </div>
           </div>
           <div className=" m-4 flex-col">
-            <p className=" font-bold">Expected</p>
+            <p className=" font-bold">Expected Ouput</p>
             <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
               {currentOutput}
             </div>
@@ -138,7 +131,7 @@ export const TestCases = ({
           {currentTab != 0 && (
             <>
               <div className=" m-4 flex-col">
-                <p className=" font-bold">Output</p>
+                <p className=" font-bold">Stdout</p>
                 <div className=" my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
                   {testResult?.testCases[currentCase]?.output}
                 </div>

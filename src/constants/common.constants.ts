@@ -48,7 +48,7 @@ export const programmingLanguages = languagesJSON.map(item => {
   }
 })
 
-export const testcaseStatus = {
+export const testCaseStatus = {
   AC: 'Accepted',
   WA: 'Wrong Answer',
   TLE: 'Time Limit Exceeded',

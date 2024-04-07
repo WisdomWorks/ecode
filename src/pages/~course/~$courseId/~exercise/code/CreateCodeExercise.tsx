@@ -170,7 +170,6 @@ export const CreateCodeExercise = ({
       durationTime,
       endTime,
       startTime,
-      publicGroupIds: [],
     }
 
     if (isUpdate) {

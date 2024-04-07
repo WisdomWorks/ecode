@@ -1,4 +1,5 @@
-import { ExerciseType } from '@/constants'
+import { TGetTestCaseRunCode } from '@/apis'
+import { ExerciseType, testCaseStatus } from '@/constants'
 
 import { TOptionCreateExercise } from '../types/exercise.types'
 import { CodeRounded, MenuBookRounded, QuizRounded } from '@mui/icons-material'
@@ -43,4 +44,22 @@ export const checkIsOnGoing = (startTime: string, endTime: string) => {
   const now = new Date()
 
   return isAfter(now, start) && isAfter(end, now)
+}
+
+export const getTestCaseStatus = (
+  testResult?: TGetTestCaseRunCode | null,
+  currentCase?: number,
+) => {
+  if (!testResult) return ''
+
+  if (['CE', 'IE'].includes(testResult.status)) {
+    return testCaseStatus[testResult.status]
+  }
+
+  if (currentCase) {
+    const status = testResult.testCases.at(currentCase)?.status
+    if (status) return testCaseStatus[status]
+  }
+
+  return ''
 }
