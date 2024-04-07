@@ -6,6 +6,7 @@ import {
   useGetSubmissionByExerciseId,
 } from '@/apis'
 import { ButtonTooltip, Table } from '@/components/common'
+import DoughnutChart from '@/components/common/GradeChart'
 import { ExerciseType } from '@/constants'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
@@ -25,7 +26,7 @@ export const DetailPanelSubmission = ({
   setModalState,
   toggleModalDetail,
 }: Props) => {
-  const { exerciseId, type } = row.original
+  const { exerciseId, exerciseName, type } = row.original
 
   const { data } = useGetSubmissionByExerciseId({
     exerciseId,
@@ -61,7 +62,33 @@ export const DetailPanelSubmission = ({
 
   return (
     <div>
-      <h3>All submissions</h3>
+      <div className=" px-30 flex justify-between">
+        <div className=" flex items-center pl-5">
+          <div className=" mt-4">
+            <div className="flex items-end gap-4">
+              <span className="w-[14rem] text-base font-bold">
+                Exercise Name
+              </span>
+              <span className=" text-base text-neutral-800">
+                {exerciseName}
+              </span>
+            </div>
+
+            <div className="my-2 flex items-end gap-4">
+              <span className="w-[14rem] text-base font-bold">
+                Exercise submission quantity:
+              </span>
+              <span className=" text-base text-neutral-800">10/20</span>
+            </div>
+          </div>
+        </div>
+        <div className="size-1/2 flex-col">
+          <h3 className=" text-center">Grade distribution</h3>
+          <div className="size-3/4 ">
+            <DoughnutChart between5And8={5} greaterThan8={6} lessThan5={2} />
+          </div>
+        </div>
+      </div>
       <Table
         columns={column}
         data={data?.data ?? []}
