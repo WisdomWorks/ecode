@@ -47,6 +47,10 @@ export type EssayExerciseSchema = ExerciseSchema & {
   question: string
 }
 
+export type FileExerciseSchema = ExerciseSchema & {
+  question: string
+}
+
 export type QuizExerciseSchema = Omit<
   Schema['CreateQuizExerciseRequest'],
   'questions'

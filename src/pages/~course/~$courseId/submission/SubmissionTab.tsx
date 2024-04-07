@@ -30,10 +30,15 @@ const columns: TColumn<ExerciseSchema>[] = [
         variant="outlined"
       />
     ),
+    size: 200,
+    muiFilterTextFieldProps: {
+      placeholder: 'Type',
+    },
   },
   {
     accessorKey: 'exerciseName',
     header: 'Exercise Name',
+    minSize: 400,
   },
   {
     header: 'Start Time',
@@ -41,6 +46,7 @@ const columns: TColumn<ExerciseSchema>[] = [
     filterVariant: 'date',
     Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
     enableColumnFilter: false,
+    minSize: 200,
   },
   {
     id: 'endTime',
@@ -48,6 +54,7 @@ const columns: TColumn<ExerciseSchema>[] = [
     accessorFn: row => new Date(row.endTime),
     Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
     enableColumnFilter: false,
+    minSize: 200,
   },
 ]
 
@@ -74,6 +81,7 @@ export const SubmissionTab = () => {
           <Table
             columns={columns}
             data={exercises ?? []}
+            enableColumnResizing
             muiTableBodyRowProps={({ row }) => ({
               onClick: () => setRowClicked(row),
               sx: {

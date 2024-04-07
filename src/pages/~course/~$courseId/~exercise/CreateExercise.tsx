@@ -4,11 +4,13 @@ import { ExerciseType } from '@/constants'
 import {
   CodeExerciseSchema,
   EssayExerciseSchema,
+  FileExerciseSchema,
   QuizExerciseSchema,
 } from '@/types/exercise.types'
 
 import { CreateCodeExercise } from './code/CreateCodeExercise'
 import { CreateEssayExercise } from './essay/CreateEssayExercise'
+import { CreateFileExercise } from './file/CreateFileExercise'
 import { CreateQuizExercise } from './quiz/CreateQuizExercise'
 import { ArrowBackIos } from '@mui/icons-material'
 import { Button } from '@mui/material'
@@ -16,7 +18,11 @@ import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 
 interface Props {
-  exercise?: CodeExerciseSchema | EssayExerciseSchema | QuizExerciseSchema
+  exercise?:
+    | CodeExerciseSchema
+    | EssayExerciseSchema
+    | FileExerciseSchema
+    | QuizExerciseSchema
   exerciseType: ExerciseType | string
   isUpdate?: boolean
   refetchTopics?: (
@@ -80,6 +86,13 @@ export const CreateExercise = ({
           <CreateQuizExercise
             {...commonProps}
             exercise={exercise as QuizExerciseSchema}
+          />
+        )
+      case ExerciseType.FILE:
+        return (
+          <CreateFileExercise
+            {...commonProps}
+            exercise={exercise as FileExerciseSchema}
           />
         )
       default:

@@ -22,6 +22,10 @@ export interface paths {
     put: operations["updateQuizExercise"];
     post: operations["createQuizExercise"];
   };
+  "/exercises/file": {
+    put: operations["updateFileExercise"];
+    post: operations["createFileExercise"];
+  };
   "/exercises/essay": {
     put: operations["updateEssayExercise"];
     post: operations["createEssayExercise"];
@@ -79,6 +83,9 @@ export interface paths {
   };
   "/exercises/quiz/submit": {
     post: operations["submitQuizExercise"];
+  };
+  "/exercises/file/submit": {
+    post: operations["submitFileExercise"];
   };
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
@@ -241,6 +248,22 @@ export interface components {
       exerciseDescription?: string;
       questions?: components["schemas"]["QuizQuestion"][];
     };
+    UpdateFileExerciseRequest: {
+      exerciseId: string;
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      exerciseDescription?: string;
+      question: string;
+    };
     UpdateEssayExerciseRequest: {
       exerciseId: string;
       topicId: string;
@@ -280,7 +303,6 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       type?: string;
-      publicGroupIds?: string[];
       description?: string;
       /** Format: double */
       timeLimit?: number;
@@ -291,7 +313,6 @@ export interface components {
       points?: number;
       template?: string;
       testCases?: components["schemas"]["TestCase"][];
-      showAll?: boolean;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -379,6 +400,26 @@ export interface components {
       questionId: string;
       answers: components["schemas"]["QuizChoice"][];
     };
+    CreateFileExerciseRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      exerciseDescription?: string;
+      question: string;
+    };
+    CreateFileSubmissionRequest: {
+      studentId: string;
+      exerciseId: string;
+      url?: string;
+    };
     CreateEssayExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -416,14 +457,12 @@ export interface components {
       durationTime: number;
       /** Format: int32 */
       reAttempt: number;
-      publicGroupIds: string[];
       description: string;
       allowedLanguageIds: string[];
       /** Format: double */
       points: number;
       testCases: components["schemas"]["TestCase"][];
       template?: string;
-      showAll?: boolean;
     };
     SubmitCodeExerciseRequest: {
       studentId: string;
@@ -677,6 +716,48 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateQuizExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  updateFileExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateFileExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createFileExercise: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateFileExerciseRequest"];
       };
     };
     responses: {
@@ -1223,6 +1304,31 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateQuizSubmissionRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  submitFileExercise: {
+    requestBody?: {
+      content: {
+        "multipart/form-data": {
+          request?: components["schemas"]["CreateFileSubmissionRequest"];
+          /** Format: binary */
+          file?: string;
+        };
       };
     };
     responses: {
@@ -1977,7 +2083,7 @@ export interface operations {
   getAllStudentSubmission: {
     parameters: {
       query: {
-        CourseId: string;
+        courseId: string;
       };
       path: {
         userId: string;
