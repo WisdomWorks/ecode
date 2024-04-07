@@ -80,7 +80,7 @@ export const GradeTab = () => {
         renderRowActions={({ row: { original } }) => (
           <ButtonTooltip
             iconButtonProps={{
-              children: <RemoveRedEyeOutlined className="text-warning-500" />,
+              children: <RemoveRedEyeOutlined className=" text-black" />,
               onClick: () => {
                 setModalState({
                   submissionId: original.submissionId,
