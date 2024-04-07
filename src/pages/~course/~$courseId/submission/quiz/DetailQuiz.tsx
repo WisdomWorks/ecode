@@ -52,10 +52,11 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col">
-        <span className="text-lg font-semibold">
-          {questions.length} Questions
+        <span className="mb-3 text-lg font-semibold">
+          Total:
+          <span className="ml-3">{questions.length} questions</span>
         </span>
-        <ButtonGroup className="flex flex-wrap">
+        <ButtonGroup className="my-4 flex flex-wrap">
           {questions.map((question, index) => {
             const isAnswered = question.studentAnswer.answers.length > 0
             return (
@@ -78,7 +79,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
 
           return (
             <div
-              className="col-span-12 grid grid-cols-12 gap-2 rounded-lg border-2 border-solid border-gray-500 p-4 shadow-md lg:col-span-6"
+              className="col-span-12 mx-10 mb-5 grid grid-cols-12 gap-2 rounded-lg p-4 shadow-xl"
               key={questionId}
             >
               <div className="col-span-12 flex w-full items-center justify-between">
@@ -86,12 +87,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
                   Question {index + 1}
                 </span>
               </div>
-              <TextField
-                className="col-span-12"
-                disabled
-                fullWidth
-                value={title}
-              />
+              <div className=" my-2 ml-3">{title}</div>
               <div className="col-span-12 flex flex-col gap-2">
                 {!isMultipleChoice && (
                   <RadioGroup className="flex flex-col gap-2">

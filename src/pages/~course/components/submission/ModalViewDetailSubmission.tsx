@@ -5,7 +5,7 @@ import { cn, formatDDMMyyyyHHmm } from '@/utils'
 
 import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
 import { DetailQuiz } from '../../~$courseId/submission/quiz/DetailQuiz'
-import { Chip } from '@mui/material'
+import { Chip, Divider } from '@mui/material'
 
 interface Props {
   open: boolean
@@ -44,41 +44,45 @@ export const ModalViewDetailSubmission = ({
       <div className="flex h-full flex-col gap-8">
         <div className="grid grid-cols-12">
           <div className="col-span-12 flex flex-col gap-2">
-            <div className="mb-2 flex items-center gap-4">
+            <div className="mb-4 flex items-center gap-4">
               <Chip
                 className="capitalize"
                 color="primary"
                 label={type}
+                size="small"
                 variant="outlined"
               />
+              <Divider orientation="vertical" />
               <h3 className="text-2xl text-neutral-900">{exerciseName}</h3>
             </div>
 
-            <div className="">
+            <Divider />
+
+            <div className=" mt-4">
               <div className="flex items-end gap-4">
-                <span className="w-[6rem] text-lg font-bold">Start time:</span>
-                <span className="font-medium text-neutral-800">
+                <span className="w-[6rem] text-base font-bold">Start time</span>
+                <span className=" text-sm text-neutral-800">
                   {formatDDMMyyyyHHmm(new Date(startTime))}
                 </span>
               </div>
 
               <div className="flex items-end gap-4">
-                <span className="w-[6rem] text-lg font-bold">End time:</span>
-                <span className="font-medium text-neutral-800">
+                <span className="w-[6rem] text-base font-bold">End time</span>
+                <span className=" text-sm text-neutral-800">
                   {formatDDMMyyyyHHmm(new Date(endTime))}
                 </span>
               </div>
 
               <div className="flex items-end gap-4">
-                <span className="w-[6rem] text-lg font-bold">Duration:</span>
-                <span className="font-medium text-neutral-800">
+                <span className="w-[6rem] text-base font-bold">Duration</span>
+                <span className=" text-sm text-neutral-800">
                   {durationTime} minutes
                 </span>
               </div>
 
               <div className="flex items-end gap-4">
-                <span className="w-[6rem] text-lg font-bold">Score:</span>
-                <span className="font-medium text-neutral-800">
+                <span className="w-[6rem] text-base font-bold">Score</span>
+                <span className=" text-base text-neutral-800">
                   {score === -1 ? (
                     <span className="font-bold text-danger-500">
                       Not graded
@@ -99,6 +103,8 @@ export const ModalViewDetailSubmission = ({
             </div>
           </div>
         </div>
+
+        <Divider />
 
         <div>
           {type === ExerciseType.ESSAY && (
