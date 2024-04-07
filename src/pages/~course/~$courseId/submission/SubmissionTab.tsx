@@ -9,8 +9,10 @@ import { formatDDMMyyyyHHmm } from '@/utils'
 
 import { ModalViewDetailSubmission } from '../../components/submission/ModalViewDetailSubmission'
 import { DetailPanelSubmission } from './DetailPanelSubmission'
-import { Chip } from '@mui/material'
+import { ArrowBackIos } from '@mui/icons-material'
+import { Button, Chip, Slide } from '@mui/material'
 import { useParams } from '@tanstack/react-router'
+import { MRT_Row } from 'material-react-table'
 
 const columns: TColumn<ExerciseSchema>[] = [
   {
@@ -52,6 +54,9 @@ const columns: TColumn<ExerciseSchema>[] = [
 export const SubmissionTab = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
   const { data, isLoading } = useGetExercises({ courseId })
+  const [rowClicked, setRowClicked] = useState<MRT_Row<ExerciseSchema> | null>(
+    null,
+  )
 
   const [modalState, setModalState] = useState<GetDetailSubmissionProps | null>(
     null,
@@ -64,18 +69,39 @@ export const SubmissionTab = () => {
 
   return (
     <>
-      <Table
-        columns={columns}
-        data={exercises ?? []}
-        renderDetailPanel={({ row }) => (
-          <DetailPanelSubmission
-            row={row}
-            setModalState={setModalState}
-            toggleModalDetail={toggleModalDetail}
+      <Slide direction="right" in={!rowClicked} mountOnEnter unmountOnExit>
+        <div>
+          <Table
+            columns={columns}
+            data={exercises ?? []}
+            muiTableBodyRowProps={({ row }) => ({
+              onClick: () => setRowClicked(row),
+              sx: {
+                cursor: 'pointer',
+              },
+            })}
+            renderTopToolbarCustomActions={() => <h3>Exercise List</h3>}
           />
-        )}
-        renderTopToolbarCustomActions={() => <h3>Exercise List</h3>}
-      />
+        </div>
+      </Slide>
+
+      <Slide direction="left" in={!!rowClicked} mountOnEnter unmountOnExit>
+        <div>
+          {rowClicked && (
+            <>
+              <Button onClick={() => setRowClicked(null)}>
+                <ArrowBackIos className="size-4" />
+                Back to Exercise List
+              </Button>
+              <DetailPanelSubmission
+                row={rowClicked}
+                setModalState={setModalState}
+                toggleModalDetail={toggleModalDetail}
+              />
+            </>
+          )}
+        </div>
+      </Slide>
 
       {openModalDetail && modalState && (
         <ModalViewDetailSubmission
