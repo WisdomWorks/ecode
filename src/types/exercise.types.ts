@@ -36,6 +36,7 @@ export type MaterialSchema = Schema['CreateMaterialRequest'] & {
 }
 
 export type ExerciseSchema = Schema['CreateEssayExerciseRequest'] & {
+  createdDate?: string
   durationTime?: number
   exerciseId: string
   groups: Pick<TGroup, 'groupId' | 'groupName'>[]
