@@ -104,7 +104,7 @@ export interface CodeSubmissions {
   pretested: boolean
   result: string
   reviewable: boolean
-  score: number
+  score: number | null
   shortStatus: string
   source: string
   status: string

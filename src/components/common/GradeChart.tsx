@@ -1,4 +1,3 @@
-import React from 'react'
 import { Doughnut } from 'react-chartjs-2'
 
 import 'chart.js/auto'
@@ -10,11 +9,11 @@ interface DoughnutChartProps {
   lessThan5: number
 }
 
-const DoughnutChart: React.FC<DoughnutChartProps> = ({
+export const DoughnutChart = ({
   between5And8,
   greaterThan8,
   lessThan5,
-}) => {
+}: DoughnutChartProps) => {
   const data = {
     labels: ['Less than 5', 'Between 5 and 8', 'Greater than 8'],
     datasets: [
@@ -38,5 +37,3 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({
 
   return <Doughnut data={data} options={options} />
 }
-
-export default DoughnutChart
