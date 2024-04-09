@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
-import { TGetTestCaseRunCode } from '@/apis'
+import { ResultTestCase, TGetTestCaseRunCode } from '@/apis'
+import { useCheckRole } from '@/hooks'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
 import { TestCaseList } from './TestCaseList'
@@ -11,7 +12,9 @@ import { Button, CircularProgress, Divider } from '@mui/material'
 
 interface Props {
   currentTab: number
+  isReview?: boolean
   loading: boolean
+  resultTestCases?: ResultTestCase[]
   setCurrentTab: (index: number) => void
   testCases: CodeExerciseSchema['testCases']
   testResult: TGetTestCaseRunCode | null
@@ -19,12 +22,15 @@ interface Props {
 
 export const TestCases = ({
   currentTab,
+  isReview,
   loading,
+  resultTestCases,
   setCurrentTab,
   testCases,
   testResult,
 }: Props) => {
   const [currentCase, setCurrentCase] = useState(0)
+  const { isStudent } = useCheckRole()
 
   const handleChangeTestCase = (index: number) => {
     setCurrentCase(index)
@@ -39,17 +45,19 @@ export const TestCases = ({
           startIcon={<VerifiedUserOutlinedIcon className="text-green-500" />}
           variant="text"
         >
-          Test Case
+          {isReview ? `Test Case Result (${testCases.length})` : 'Test Case'}
         </Button>
         <Divider className="mx-3 bg-gray-100" orientation="vertical" />
-        <Button
-          color="success"
-          onClick={() => setCurrentTab(1)}
-          startIcon={<DoubleArrowOutlined className="text-green-500" />}
-          variant="text"
-        >
-          Test result
-        </Button>
+        {isReview && isStudent ? null : (
+          <Button
+            color="success"
+            onClick={() => setCurrentTab(1)}
+            startIcon={<DoubleArrowOutlined className="text-green-500" />}
+            variant="text"
+          >
+            Test result
+          </Button>
+        )}
         {loading && (
           <div className="ml-3 flex items-center">
             <CircularProgress color="inherit" size={15} />
@@ -65,6 +73,8 @@ export const TestCases = ({
         currentCase={currentCase}
         currentTab={currentTab}
         handleChangeTestCase={handleChangeTestCase}
+        isReview={isReview}
+        resultTestCases={resultTestCases}
         testCases={testCases}
         testResult={testResult}
       />

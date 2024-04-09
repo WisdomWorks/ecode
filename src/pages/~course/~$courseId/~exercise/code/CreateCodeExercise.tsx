@@ -195,14 +195,19 @@ export const CreateCodeExercise = ({
   const calculatePoint = () => {
     const testCases = watch('testCases')
     const noOfTcNotPreset = testCases.filter(tc => !tc.isPretest).length
+    const lastIndex = testCases.length - 1
+
+    const pointPerTc = Math.round((10 / noOfTcNotPreset) * 100) / 100
+
     testCases.forEach((testCase, index) => {
+      if (index === lastIndex) return
       if (!testCase.isPretest) {
-        setValue(
-          `testCases.${index}.points`,
-          Math.round((10 / noOfTcNotPreset) * 100) / 100,
-        )
+        setValue(`testCases.${index}.points`, pointPerTc)
       }
     })
+
+    const pointLastTc = 10 - pointPerTc * (noOfTcNotPreset - 1)
+    setValue(`testCases.${lastIndex}.points`, pointLastTc)
   }
 
   return (

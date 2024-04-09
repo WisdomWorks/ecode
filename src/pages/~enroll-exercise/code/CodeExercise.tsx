@@ -4,6 +4,7 @@ import { Panel, PanelGroup } from 'react-resizable-panels'
 
 import {
   CodeSubmission,
+  ResultTestCase,
   TGetTestCaseRunCode,
   useRunCode,
   useSubmitCodeExercise,
@@ -25,8 +26,9 @@ import { useNavigate } from '@tanstack/react-router'
 
 interface Props {
   exercise: CodeExerciseSchema
+  isReview?: boolean
   isTimeOut?: boolean
-  isUpdate?: boolean
+  resultTestCases?: ResultTestCase[]
   submissions?: CodeSubmission
 }
 
@@ -37,8 +39,9 @@ export type TFormCodeExercise = Schema['SubmitCodeExerciseRequest'] & {
 
 export const CodeExercise = ({
   exercise,
+  isReview,
   isTimeOut = true,
-  isUpdate,
+  resultTestCases,
   submissions,
 }: Props) => {
   const user = useAppStore(state => state.user)
@@ -61,7 +64,7 @@ export const CodeExercise = ({
 
   const [submissionId, setSubmissionId] = useState('')
 
-  const languages = isUpdate
+  const languages = isReview
     ? []
     : Object.keys(languageTemplate as object).map(id =>
         programmingLanguages.find(pr => pr.key === id),
@@ -71,10 +74,10 @@ export const CodeExercise = ({
     defaultValues: {
       studentId: user?.userId || '',
       exerciseId,
-      source: isUpdate
+      source: isReview
         ? submissions?.source
         : languageTemplate?.[String(languages[0]?.key)] || '',
-      language: isUpdate
+      language: isReview
         ? programmingLanguages.find(pr => pr.key === submissions?.languageId)
         : languages[0],
       languageId: '',
@@ -141,7 +144,9 @@ export const CodeExercise = ({
             <Panel defaultSize={55}>
               <TestCases
                 currentTab={currentTab}
+                isReview={isReview}
                 loading={isRefetchingGetTestCase}
+                resultTestCases={resultTestCases}
                 setCurrentTab={setCurrentTab}
                 testCases={testCases}
                 testResult={testResult}
@@ -163,7 +168,7 @@ export const CodeExercise = ({
                   <CodeConsole
                     exercise={exercise}
                     isRefetchingGetTestCase={isRefetchingGetTestCase}
-                    isUpdate={isUpdate}
+                    isReview={isReview}
                     loading={loading}
                     setCurrentTab={setCurrentTab}
                     setIsRefetchingGetTestCase={setIsRefetchingGetTestCase}

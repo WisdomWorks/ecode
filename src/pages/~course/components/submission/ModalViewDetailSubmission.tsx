@@ -74,19 +74,19 @@ export const ModalViewDetailSubmission = ({
                       Not graded
                     </span>
                   ) : (
-                    <span
-                      className={cn(
-                        'border border-solid py-2 px-6 rounded-full text-4xl',
-                        {
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl font-bold">Score:</span>
+                      <span
+                        className={cn('text-4xl', {
                           'text-success-500 border-success-500': score >= 8,
                           'text-warning-500 border-warning-500':
                             score >= 4 && score < 8,
                           'text-danger-500 border-danger-500': score < 4,
-                        },
-                      )}
-                    >
-                      {score}
-                    </span>
+                        })}
+                      >
+                        {score}
+                      </span>
+                    </div>
                   )}
                 </>
               </div>
@@ -162,6 +162,7 @@ export const ModalViewDetailSubmission = ({
           {type === ExerciseType.CODE && (
             <DetailCode
               exercise={data.data.exercise}
+              resultTestCases={data.data.resultTestcases}
               submissions={data.data.submissions as CodeSubmission}
             />
           )}

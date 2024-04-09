@@ -1,13 +1,15 @@
-import { TGetTestCaseRunCode } from '@/apis'
+import { ResultTestCase, TGetTestCaseRunCode } from '@/apis'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
 import { Check, Clear } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 
 interface Props {
   currentCase: number
   currentTab: number
   handleChangeTestCase: (index: number) => void
+  isReview?: boolean
+  resultTestCases?: ResultTestCase[]
   testCases: CodeExerciseSchema['testCases']
   testResult: TGetTestCaseRunCode | null
 }
@@ -16,38 +18,50 @@ export const TestCaseList = ({
   currentCase,
   currentTab,
   handleChangeTestCase,
+  isReview,
+  resultTestCases,
   testCases,
   testResult,
 }: Props) => {
+  const testCasesFinalResult = isReview
+    ? resultTestCases
+    : testResult?.testCases
+
+  const getButtonProps = (index: number) => {
+    const nonReviewTab = currentCase === 0 && !isReview
+
+    if (nonReviewTab) {
+      return { color: 'success', Icon: undefined }
+    }
+
+    const isAC = testCasesFinalResult?.at(index)?.status === 'AC'
+    return {
+      color: isAC ? 'success' : 'error',
+      Icon: isAC ? Check : Clear,
+    }
+  }
+
   return (
     <>
       <div className="flex">
-        {testCases.map((_, index) => (
-          <div className="m-3" key={index}>
-            <Button
-              className="rounded-lg px-3 py-1"
-              color={
-                currentTab === 0
-                  ? 'success'
-                  : testResult?.testCases.at(index)?.status === 'AC'
-                    ? 'success'
-                    : 'error'
-              }
-              onClick={() => handleChangeTestCase(index)}
-              startIcon={
-                currentTab !== 0 &&
-                (testResult?.testCases.at(index)?.status === 'AC' ? (
-                  <Check />
-                ) : (
-                  <Clear />
-                ))
-              }
-              variant={currentCase === index ? 'outlined' : 'text'}
-            >
-              Case {index + 1}
-            </Button>
-          </div>
-        ))}
+        {testCases.map((tc, index) => {
+          const props = getButtonProps(index)
+          // eslint-disable-next-line react/prop-types
+          const { Icon, color } = props
+          return (
+            <div className="m-3" key={index}>
+              <Button
+                className="whitespace-nowrap rounded-lg px-3 py-1"
+                color={color as ButtonProps['color']}
+                onClick={() => handleChangeTestCase(index)}
+                startIcon={Icon ? <Icon /> : null}
+                variant={currentCase === index ? 'outlined' : 'text'}
+              >
+                Case {index + 1} {isReview ? `(${tc.points} pts)` : ''}
+              </Button>
+            </div>
+          )
+        })}
       </div>
 
       <div className=" m-4 flex-col">

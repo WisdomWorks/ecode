@@ -19,7 +19,7 @@ import { Button, Divider } from '@mui/material'
 interface Props {
   exercise: CodeExerciseSchema
   isRefetchingGetTestCase: boolean
-  isUpdate?: boolean
+  isReview?: boolean
   loading: boolean
   setCurrentTab: (index: number) => void
   setIsRefetchingGetTestCase: Dispatch<SetStateAction<boolean>>
@@ -31,7 +31,7 @@ interface Props {
 export const CodeConsole = ({
   exercise,
   isRefetchingGetTestCase,
-  isUpdate,
+  isReview,
   loading,
   setCurrentTab,
   setIsRefetchingGetTestCase,
@@ -51,7 +51,9 @@ export const CodeConsole = ({
 
   const { languageTemplate, testCases } = exercise
 
-  const testCaseLength = testCases.filter(tc => tc.points === 0).length
+  const testCaseLength = isReview
+    ? testCases.length
+    : testCases.filter(tc => tc.points === 0).length
 
   useEffect(() => {
     if (
@@ -74,7 +76,7 @@ export const CodeConsole = ({
       : null,
   )
 
-  const languages = isUpdate
+  const languages = isReview
     ? []
     : Object.keys(languageTemplate as object).map(id =>
         programmingLanguages.find(pr => pr.key === id),
@@ -96,7 +98,7 @@ export const CodeConsole = ({
             }}
             control={control}
             disableClearable
-            disabled={isUpdate}
+            disabled={isReview}
             extraOnChange={() =>
               setValue(
                 'source',
@@ -123,7 +125,7 @@ export const CodeConsole = ({
         </div>
 
         <div className="flex h-16 justify-end gap-2 p-2">
-          {isUpdate && isStudent ? null : (
+          {isReview && isStudent ? null : (
             <Button
               color="success"
               disabled={loading}
@@ -139,7 +141,7 @@ export const CodeConsole = ({
             </Button>
           )}
           <Divider className="bg-gray-100" orientation="vertical" />
-          {!isUpdate && (
+          {!isReview && (
             <Button
               color="primary"
               disabled={loading}
@@ -156,7 +158,7 @@ export const CodeConsole = ({
       <Divider className="bg-gray-100" />
       <FormCodeIDE
         control={control}
-        editable={isUpdate ? false : true}
+        editable={isReview ? false : true}
         name="source"
       />
     </div>

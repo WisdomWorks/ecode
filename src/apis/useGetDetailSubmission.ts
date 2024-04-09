@@ -9,6 +9,7 @@ export interface GetDetailSubmissionProps {
 
 export interface GetDetailSubmissionResponse {
   exercise: Exercise
+  resultTestcases?: ResultTestCase[]
   submissions: CodeSubmissions | Submissions
 }
 
@@ -113,6 +114,20 @@ export interface CodeSubmissions {
   submissionId: string
   teacherComment: string
   time: number
+}
+
+export interface ResultTestCase {
+  extendedFeedback: string
+  feedback: string
+  id: string
+  memory: number
+  output: string
+  points: number
+  status: string
+  submissionId: string
+  testCaseId: number
+  time: number
+  total: number
 }
 
 export const useGetDetailSubmission = ({
