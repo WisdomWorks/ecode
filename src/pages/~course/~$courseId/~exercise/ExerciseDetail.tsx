@@ -6,7 +6,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { ExerciseType } from '@/constants'
 import { useCheckRole, useToggle } from '@/hooks'
 import { ExerciseSchema } from '@/types/exercise.types'
-import { getTimeExerciseLabel } from '@/utils'
+import { cn, getTimeExerciseLabel } from '@/utils'
 
 import { PermissionModal } from '../../components/PermissionModal'
 import { useCourseContext } from '../../context/course.context'
@@ -102,7 +102,12 @@ export const ExerciseDetail = ({ exercise, index }: Props) => {
       }`}
     >
       <ContainerComponent
-        className="flex w-full cursor-pointer gap-4 rounded-lg px-5 py-3 outline-1 transition-all hover:bg-primary-350 hover:text-white"
+        className={cn(
+          'flex w-full gap-4 rounded-lg px-5 py-3 outline-1 transition-all',
+          {
+            'hover:bg-primary-350 hover:text-white cursor-pointer': !isTeacher,
+          },
+        )}
         exerciseId={exerciseId}
       >
         <Icon className="mt-1 size-6" />

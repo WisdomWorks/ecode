@@ -11,7 +11,7 @@ interface Props {
 export interface TStudentSubmissionResponse {
   exerciseId: string
   groups: Group[] | null
-  report: Report
+  report: ReportSubmissionResponse
   submissions: Submissions[]
 }
 
@@ -42,7 +42,7 @@ export interface CodeSubmission {
   pretested: boolean
   result: string
   reviewable: boolean
-  score: number
+  score: number | null
   shortStatus: string
   source: string
   status: string
@@ -66,7 +66,7 @@ interface TestCase {
   total: number
 }
 
-export interface Report {
+export interface ReportSubmissionResponse {
   ascore: number
   bscore: number
   cscore: number

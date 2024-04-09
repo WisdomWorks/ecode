@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import { TGetTestCaseRunCode, useGetTestCaseRunCode } from '@/apis'
 import { FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
-import { useInterval } from '@/hooks'
+import { useCheckRole, useInterval } from '@/hooks'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
 import { TFormCodeExercise } from '../CodeExercise'
@@ -39,6 +39,7 @@ export const CodeConsole = ({
   toggleOpenModal,
 }: Props) => {
   const { control, setValue, watch } = useFormContext<TFormCodeExercise>()
+  const { isStudent } = useCheckRole()
 
   const { data: testCaseRunCodeData, refetch: getTestCase } =
     useGetTestCaseRunCode({
@@ -119,19 +120,21 @@ export const CodeConsole = ({
         </div>
 
         <div className="flex h-16 justify-end gap-2 p-2">
-          <Button
-            color="success"
-            disabled={loading}
-            onClick={() => {
-              setValue('typeSubmit', 'run')
-              setCurrentTab(1)
-            }}
-            startIcon={<PlayArrow />}
-            type="submit"
-            variant="text"
-          >
-            Run code
-          </Button>
+          {isUpdate && isStudent ? null : (
+            <Button
+              color="success"
+              disabled={loading}
+              onClick={() => {
+                setValue('typeSubmit', 'run')
+                setCurrentTab(1)
+              }}
+              startIcon={<PlayArrow />}
+              type="submit"
+              variant="text"
+            >
+              Run code
+            </Button>
+          )}
           <Divider className="bg-gray-100" orientation="vertical" />
           {!isUpdate && (
             <Button

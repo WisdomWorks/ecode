@@ -11,6 +11,7 @@ import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
 
+import { StatisticSubmission } from '../../components/submission/StatisticSubmission'
 import { GradingOutlined, RemoveRedEyeOutlined } from '@mui/icons-material'
 import { MRT_Row } from 'material-react-table'
 
@@ -25,7 +26,7 @@ export const DetailPanelSubmission = ({
   setModalState,
   toggleModalDetail,
 }: Props) => {
-  const { exerciseId, type } = row.original
+  const { exerciseId, exerciseName, type } = row.original
 
   const { data } = useGetSubmissionByExerciseId({
     exerciseId,
@@ -34,6 +35,7 @@ export const DetailPanelSubmission = ({
   })
 
   const submissions = data?.data.submissions
+  const report = data?.data.report
 
   const column: TColumn<TStudentSubmissionResponse['submissions'][number]>[] = [
     {
@@ -56,15 +58,16 @@ export const DetailPanelSubmission = ({
       header: 'Score',
       enableColumnFilter: false,
       Cell: ({ cell, row }) =>
-        row.original.submission.score === -1
+        row.original.submission.score === -1 ||
+        row.original.submission.score === null
           ? 'Not graded'
           : cell.getValue<number>(),
     },
   ]
 
   return (
-    <div>
-      <h3>All submissions</h3>
+    <>
+      <StatisticSubmission exerciseName={exerciseName} report={report} />
       <Table
         columns={column}
         data={submissions ?? []}
@@ -114,6 +117,6 @@ export const DetailPanelSubmission = ({
           </div>
         )}
       />
-    </div>
+    </>
   )
 }
