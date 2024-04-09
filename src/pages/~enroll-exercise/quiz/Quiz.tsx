@@ -138,7 +138,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
           })}
         </div>
 
-        <div className="flex justify-end border border-solid border-gray-200 py-2 pb-3 pr-5 ">
+        <div className="flex justify-end border border-solid border-gray-200 py-2 pb-3 pr-5">
           <Button className="submitBtn" onClick={toggleOpenModal}>
             SUBMIT
           </Button>

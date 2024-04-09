@@ -36,6 +36,7 @@ export type MaterialSchema = Schema['CreateMaterialRequest'] & {
 }
 
 export type ExerciseSchema = Schema['CreateEssayExerciseRequest'] & {
+  createdDate?: string
   durationTime?: number
   exerciseId: string
   groups: Pick<TGroup, 'groupId' | 'groupName'>[]
@@ -44,6 +45,10 @@ export type ExerciseSchema = Schema['CreateEssayExerciseRequest'] & {
 }
 
 export type EssayExerciseSchema = ExerciseSchema & {
+  question: string
+}
+
+export type FileExerciseSchema = ExerciseSchema & {
   question: string
 }
 
@@ -61,6 +66,7 @@ export type QuizExerciseSchema = Omit<
 export type CodeExerciseSchema = Schema['CreateCodeExerciseRequest'] & {
   durationTime?: number
   exerciseId?: string
+  languageId?: string
   languageTemplate?: {
     [key: string]: string
   }

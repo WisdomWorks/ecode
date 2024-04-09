@@ -74,11 +74,11 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
   return (
     <>
       <Form
-        className="mt-16 flex h-full flex-col gap-6 overflow-auto px-16"
+        className="flex h-full flex-col gap-6 overflow-hidden"
         form={form}
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-col gap-4 overflow-auto">
+        <div className="flex flex-col gap-4 overflow-auto px-16 py-8">
           <FormTipTap
             classNameEditor="max-h-[15rem] overflow-auto"
             disabled
@@ -94,7 +94,7 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
           />
         </div>
 
-        <div className="flex justify-end  py-2 pb-3 pr-5">
+        <div className="flex justify-end border border-solid border-gray-200 py-2 pb-3 pr-5">
           <Button className="submitBtn" onClick={toggleOpenModal}>
             SUBMIT
           </Button>

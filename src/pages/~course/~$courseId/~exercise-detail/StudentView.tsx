@@ -10,6 +10,7 @@ import { useToastMessage } from '@/hooks'
 import { formatDDMMyyyyHHmm } from '@/utils'
 import { checkIsOnGoing } from '@/utils/course.utils'
 
+import { FileExerciseSubmission } from './FileExerciseSubmission'
 import {
   ArrowBackIos,
   CodeRounded,
@@ -104,6 +105,21 @@ export const StudentView = ({ exerciseId }: Props) => {
     }
   }
 
+  const getAlertLabel = () => {
+    if (!available) {
+      return 'You have attempted more than the allowed number of times'
+    }
+
+    if (type === ExerciseType.FILE) {
+      return 'Upload the file to submit the exercise'
+    }
+
+    if (isOnGoing) {
+      return 'Enter the key to start the exercise'
+    }
+    return 'The exercise is not available now'
+  }
+
   return (
     <>
       <div className="flex w-full justify-start">
@@ -126,11 +142,7 @@ export const StudentView = ({ exerciseId }: Props) => {
               className="w-full"
               severity={!available ? 'error' : isOnGoing ? 'info' : 'warning'}
             >
-              {!available
-                ? 'You have attempted more than the allowed number of times'
-                : isOnGoing
-                  ? 'Enter the key to start the exercise'
-                  : 'The exercise is not available now'}
+              {getAlertLabel()}
             </Alert>
           </div>
 
@@ -149,31 +161,39 @@ export const StudentView = ({ exerciseId }: Props) => {
           </div>
         </div>
 
-        <Form
-          className="mt-3 flex w-full flex-col items-center justify-center"
-          form={form}
-          onSubmit={handleSubmit}
-        >
-          <h3 className="mb-2">Attempt the exercise</h3>
-          <span className=" text-sm text-neutral-400">
-            {durationTime} minutes
-          </span>
-
-          <FormInputPassword
-            className="my-5 w-1/2"
-            control={control}
-            disabled={!isOnGoing || isPending || !available}
-            label="Enter the enrollment key"
-            name="key"
+        {type === ExerciseType.FILE ? (
+          <FileExerciseSubmission
+            available={available}
+            exerciseId={exerciseId}
+            question={exercise.question}
           />
-          <Button
-            className="submitBtn w-1/2"
-            disabled={!isOnGoing || isPending || !watch('key') || !available}
-            type="submit"
+        ) : (
+          <Form
+            className="mt-3 flex w-full flex-col items-center justify-center"
+            form={form}
+            onSubmit={handleSubmit}
           >
-            Attempt
-          </Button>
-        </Form>
+            <h3 className="mb-2">Attempt the exercise</h3>
+            <span className=" text-sm text-neutral-400">
+              {durationTime} minutes
+            </span>
+
+            <FormInputPassword
+              className="my-5 w-1/2"
+              control={control}
+              disabled={!isOnGoing || isPending || !available}
+              label="Enter the enrollment key"
+              name="key"
+            />
+            <Button
+              className="submitBtn w-1/2"
+              disabled={!isOnGoing || isPending || !watch('key') || !available}
+              type="submit"
+            >
+              Attempt
+            </Button>
+          </Form>
+        )}
       </div>
     </>
   )

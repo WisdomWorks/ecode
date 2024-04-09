@@ -31,30 +31,33 @@ export const DetailPanelSubmission = ({
   const { data } = useGetSubmissionByExerciseId({
     exerciseId,
     type,
+    groupFilter: [],
   })
 
-  const column: TColumn<TStudentSubmissionResponse>[] = [
+  const submissions = data?.data.submissions
+
+  const column: TColumn<TStudentSubmissionResponse['submissions'][number]>[] = [
     {
-      accessorKey: 'student.name',
+      accessorKey: 'name',
       header: 'Student Name',
     },
     {
-      accessorKey: 'student.username',
+      accessorKey: 'userName',
       header: 'Student ID',
     },
     {
-      accessorFn: row => new Date(row.submissions.dateSubmit),
+      accessorFn: row => new Date(row.submission.dateSubmit),
       header: 'Date Submit',
       Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
       filterVariant: 'date',
       enableColumnFilter: false,
     },
     {
-      accessorKey: 'submissions.score',
+      accessorKey: 'submission.score',
       header: 'Score',
       enableColumnFilter: false,
       Cell: ({ cell, row }) =>
-        row.original.submissions.score === -1
+        row.original.submission.score === -1
           ? 'Not graded'
           : cell.getValue<number>(),
     },
@@ -91,7 +94,7 @@ export const DetailPanelSubmission = ({
       </div>
       <Table
         columns={column}
-        data={data?.data ?? []}
+        data={submissions ?? []}
         enableRowActions
         enableRowNumbers
         enableTopToolbar={false}
@@ -106,7 +109,7 @@ export const DetailPanelSubmission = ({
                   ),
                   onClick: () => {
                     setModalState({
-                      submissionId: original.submissions.submissionId,
+                      submissionId: original.submission.submissionId,
                       type,
                     })
                     toggleModalDetail()
@@ -123,7 +126,7 @@ export const DetailPanelSubmission = ({
                   children: <GradingOutlined className="text-success-500" />,
                   onClick: () => {
                     setModalState({
-                      submissionId: original.submissions.submissionId,
+                      submissionId: original.submission.submissionId,
                       type,
                     })
                     toggleModalDetail()

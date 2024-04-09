@@ -5,6 +5,7 @@ import { uuid } from '@/utils'
 export enum ExerciseType {
   CODE = 'code',
   ESSAY = 'essay',
+  FILE = 'file',
   QUIZ = 'quiz',
 }
 

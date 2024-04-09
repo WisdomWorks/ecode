@@ -2,9 +2,10 @@ import { useState } from 'react'
 
 import { TGetTestCaseRunCode } from '@/apis'
 import { CodeExerciseSchema } from '@/types/exercise.types'
-import { getTestCaseStatus } from '@/utils/course.utils'
 
-import { Check, Clear, DoubleArrowOutlined } from '@mui/icons-material'
+import { TestCaseList } from './TestCaseList'
+import { TestCaseResultTab } from './TestCaseResultTab'
+import { DoubleArrowOutlined } from '@mui/icons-material'
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined'
 import { Button, CircularProgress, Divider } from '@mui/material'
 
@@ -23,14 +24,10 @@ export const TestCases = ({
   testCases,
   testResult,
 }: Props) => {
-  const [currentInput, setCurrentInput] = useState(testCases[0].input)
-  const [currentOutput, setCurrentOutput] = useState(testCases[0].output)
   const [currentCase, setCurrentCase] = useState(0)
 
   const handleChangeTestCase = (index: number) => {
     setCurrentCase(index)
-    setCurrentInput(testCases[index].input)
-    setCurrentOutput(testCases[index].output)
   }
 
   return (
@@ -60,86 +57,17 @@ export const TestCases = ({
         )}
       </div>
 
-      {!testResult && currentTab == 1 ? (
-        <>
-          <div className="flex size-full justify-center pt-5 text-gray-500">
-            <p>You must run code first</p>
-          </div>
-        </>
-      ) : (
-        <>
-          {currentTab !== 0 && (
-            <div className="ml-3 mt-3">
-              <p
-                className={`text-lg font-bold ${
-                  testResult?.testCases[currentCase]?.status === 'AC'
-                    ? 'text-green-500'
-                    : ' text-red-500'
-                }`}
-              >
-                {getTestCaseStatus(testResult, currentCase)}
-              </p>
-              {testResult?.message && (
-                <div className="my-3 mr-3 whitespace-pre-line rounded-sm bg-red-50 p-2 text-sm text-red-500">
-                  {testResult.message}
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="flex">
-            {testCases.map((_, index) => (
-              <div className="m-3" key={index}>
-                <Button
-                  className="rounded-lg px-3 py-1"
-                  color={
-                    currentTab === 0
-                      ? 'success'
-                      : testResult?.testCases.at(index)?.status === 'AC'
-                        ? 'success'
-                        : 'error'
-                  }
-                  onClick={() => handleChangeTestCase(index)}
-                  startIcon={
-                    currentTab !== 0 &&
-                    (testResult?.testCases.at(index)?.status === 'AC' ? (
-                      <Check />
-                    ) : (
-                      <Clear />
-                    ))
-                  }
-                  variant={currentCase === index ? 'outlined' : 'text'}
-                >
-                  Case {index + 1}
-                </Button>
-              </div>
-            ))}
-          </div>
-
-          <div className=" m-4 flex-col">
-            <p className=" font-bold">Input</p>
-            <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
-              {currentInput}
-            </div>
-          </div>
-          <div className=" m-4 flex-col">
-            <p className=" font-bold">Expected Ouput</p>
-            <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
-              {currentOutput}
-            </div>
-          </div>
-          {currentTab != 0 && (
-            <>
-              <div className=" m-4 flex-col">
-                <p className=" font-bold">Stdout</p>
-                <div className=" my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
-                  {testResult?.testCases[currentCase]?.output}
-                </div>
-              </div>
-            </>
-          )}
-        </>
+      {currentTab === 1 && (
+        <TestCaseResultTab currentCase={currentCase} testResult={testResult} />
       )}
+
+      <TestCaseList
+        currentCase={currentCase}
+        currentTab={currentTab}
+        handleChangeTestCase={handleChangeTestCase}
+        testCases={testCases}
+        testResult={testResult}
+      />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { GradeEssayParams, useGradeEssay } from '@/apis'
+import { GradeEssayParams, useGradeFileExercise } from '@/apis'
 import { Form, FormInput } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { useCheckRole, useToastMessage } from '@/hooks'
@@ -10,10 +10,10 @@ import { Button } from '@mui/material'
 
 interface Props {
   comment: string
-  essaySubmissionId: string
   question: string
   score?: number
   submission: string
+  submissionId: string
 }
 
 type TForm = GradeEssayParams & {
@@ -21,27 +21,27 @@ type TForm = GradeEssayParams & {
   submission: string
 }
 
-export const DetailEssay = ({
+export const DetailFile = ({
   comment,
-  essaySubmissionId,
   question,
   score,
   submission,
+  submissionId,
 }: Props) => {
   const { isTeacher } = useCheckRole()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
-  const { isPending, mutate } = useGradeEssay()
+  const { isPending, mutate } = useGradeFileExercise()
 
   const defaultValues = useMemo(
     () => ({
-      submissionId: essaySubmissionId,
+      submissionId,
       score: score === -1 ? undefined : score,
       submission,
       topic: question,
       comment,
     }),
-    [comment, essaySubmissionId, question, score, submission],
+    [comment, submissionId, question, score, submission],
   )
 
   const form = useForm<TForm>({
@@ -97,13 +97,17 @@ export const DetailEssay = ({
               />
             )}
           </div>
-          <FormTipTap
-            classNameEditor="min-h-[22rem]"
-            editable={false}
-            label="Student answer"
-            name="submission"
-            required
-          />
+          <div className="flex flex-col">
+            <span className="text-sm font-bold">Student submission</span>
+            <a
+              className=" truncate text-blue-500"
+              href={submission}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Download file
+            </a>
+          </div>
 
           <FormInput
             className="col-span-12"

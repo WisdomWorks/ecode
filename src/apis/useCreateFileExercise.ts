@@ -1,22 +1,18 @@
+import { Schema } from '@/types'
+
 import { AxiosResponseError, callAPI } from './axios'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
 
-export type GradeEssayParams = {
-  comment?: string
-  score: number
-  submissionId: string
-}
-
-export const useGradeEssay = () => {
+export const useCreateFileExercise = () => {
   return useMutation<
     AxiosResponse,
     AxiosError<AxiosResponseError>,
-    GradeEssayParams
+    Schema['CreateFileExerciseRequest']
   >({
-    mutationKey: ['gradeEssay'],
+    mutationKey: ['createFileExercise'],
     mutationFn: async data => {
-      return await callAPI('/exercises/essay/grade', 'put', {
+      return await callAPI('/exercises/file', 'post', {
         data,
       })
     },

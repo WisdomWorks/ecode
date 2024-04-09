@@ -30,10 +30,23 @@ const columns: TColumn<ExerciseSchema>[] = [
         variant="outlined"
       />
     ),
+    size: 200,
+    muiFilterTextFieldProps: {
+      placeholder: 'Type',
+    },
   },
   {
     accessorKey: 'exerciseName',
     header: 'Exercise Name',
+    minSize: 300,
+  },
+  {
+    header: 'Created Date',
+    accessorFn: row =>
+      row.createdDate ? new Date(row.createdDate) : new Date(),
+    filterVariant: 'date',
+    Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
+    enableColumnFilter: false,
   },
   {
     header: 'Start Time',
@@ -73,7 +86,9 @@ export const SubmissionTab = () => {
         <div>
           <Table
             columns={columns}
+            containerClassName="max-h-[500px]"
             data={exercises ?? []}
+            enableColumnResizing
             muiTableBodyRowProps={({ row }) => ({
               onClick: () => setRowClicked(row),
               sx: {

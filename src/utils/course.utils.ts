@@ -2,29 +2,39 @@ import { TGetTestCaseRunCode } from '@/apis'
 import { ExerciseType, testCaseStatus } from '@/constants'
 
 import { TOptionCreateExercise } from '../types/exercise.types'
-import { CodeRounded, MenuBookRounded, QuizRounded } from '@mui/icons-material'
+import {
+  CodeRounded,
+  InsertDriveFileRounded,
+  MenuBookRounded,
+  QuizRounded,
+} from '@mui/icons-material'
 import { isAfter } from 'date-fns'
 
 export const optionsCreateExercise: TOptionCreateExercise[] = [
   {
     title: 'Create Quiz Exercise',
-    description: 'In-depth written responses, ideal for critical thinking',
+    description:
+      'Comprehension assessment with multiple-choice or short answers ',
     Icon: QuizRounded,
     type: ExerciseType.QUIZ,
   },
   {
     title: 'Create Code Exercise',
-    description:
-      'Comprehension assessment with multiple-choice or short answers',
+    description: 'Automated code assessment with test cases and feedback',
     Icon: CodeRounded,
     type: ExerciseType.CODE,
   },
   {
     title: 'Create Essay Exercise',
-    description:
-      'Comprehension assessment with multiple-choice or short answers',
+    description: 'In-depth written responses, ideal for critical thinking',
     Icon: MenuBookRounded,
     type: ExerciseType.ESSAY,
+  },
+  {
+    title: 'Create File Exercise',
+    description: 'Submission as a file',
+    Icon: InsertDriveFileRounded,
+    type: ExerciseType.FILE,
   },
 ]
 
@@ -56,7 +66,7 @@ export const getTestCaseStatus = (
     return testCaseStatus[testResult.status]
   }
 
-  if (currentCase) {
+  if (typeof currentCase === 'number' && currentCase >= 0) {
     const status = testResult.testCases.at(currentCase)?.status
     if (status) return testCaseStatus[status]
   }

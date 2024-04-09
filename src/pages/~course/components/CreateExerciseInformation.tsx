@@ -2,6 +2,7 @@ import { Control, FieldValues, Path } from 'react-hook-form'
 
 import { FormInput, FormInputPassword } from '@/components/form'
 import { FormTimePicker } from '@/components/form/FormTimePicker'
+import { ExerciseType } from '@/constants'
 
 import { DateTimeExercise } from './DateTimeExercise'
 import { ArrowDownward } from '@mui/icons-material'
@@ -14,10 +15,12 @@ import {
 
 interface Props<T extends FieldValues> {
   control: Control<T>
+  exerciseType?: ExerciseType
 }
 
 export const CreateExerciseInformation = <T extends FieldValues>({
   control,
+  exerciseType,
 }: Props<T>) => {
   return (
     <Accordion className="col-span-12" defaultExpanded>
@@ -38,13 +41,15 @@ export const CreateExerciseInformation = <T extends FieldValues>({
           name={'exerciseName' as Path<T> & (string | undefined)}
           required
         />
-        <FormInputPassword
-          className="col-span-4"
-          control={control}
-          label="Enrollment Key"
-          name={'key' as Path<T> & (string | undefined)}
-          required
-        />
+        {exerciseType !== ExerciseType.FILE && (
+          <FormInputPassword
+            className="col-span-4"
+            control={control}
+            label="Enrollment Key"
+            name={'key' as Path<T> & (string | undefined)}
+            required
+          />
+        )}
         <FormInput
           className="col-span-2"
           control={control}

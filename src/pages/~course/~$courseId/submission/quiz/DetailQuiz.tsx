@@ -47,7 +47,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
 
   return (
     <Form
-      className="flex h-full flex-col gap-4 overflow-hidden pb-3  [&_.Mui-disabled]:disabled-text-neutral-900 [&_.MuiInputBase-root]:text-neutral-900"
+      className="flex h-full flex-col gap-4 overflow-hidden pb-3 [&_.Mui-disabled]:disabled-text-neutral-900 [&_.MuiInputBase-root]:text-neutral-900"
       form={form}
       onSubmit={handleSubmit}
     >
@@ -56,7 +56,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
           Total:
           <span className="ml-3">{questions.length} questions</span>
         </span>
-        <ButtonGroup className="my-4 flex flex-wrap">
+        <ButtonGroup className="flex flex-wrap">
           {questions.map((question, index) => {
             const isAnswered = question.studentAnswer.answers.length > 0
             return (
