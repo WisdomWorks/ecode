@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 
+import { useUnenrollCourse } from '@/apis/useUnenrollCourse'
 import { TabsClient, TTabProps } from '@/components/common'
+import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { Role } from '@/constants'
+import { useAppStore } from '@/context/useAppStore'
 import { withPermissionOnCourse } from '@/HoCs/WithPermissionOnCourse'
-import { useCheckRole, useRoute, useToggle } from '@/hooks'
+import { useCheckRole, useRoute, useToastMessage, useToggle } from '@/hooks'
 import { beforeLoadProtected } from '@/utils'
 
 import { DetailTopicModal } from '../components/DetailTopicModal'
@@ -16,6 +19,7 @@ import { SubmissionTab } from './submission/SubmissionTab'
 import { TopicTabs } from './TopicTabs'
 import {
   AddOutlined,
+  CloseOutlined,
   GradingOutlined,
   MenuBookOutlined,
   QuizOutlined,
@@ -62,19 +66,44 @@ const tabs: TTabProps[] = [
 
 export const Course = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
+  const user = useAppStore(state => state.user)
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const {
     location: { state },
   } = useRoute()
 
+  const { mutate } = useUnenrollCourse()
+
   const [tab, setTab] = useState(0)
 
   const [openTopicModal, toggleTopicModal] = useToggle()
-  const { isTeacher } = useCheckRole()
+  const [openUnenrollModal, toggleUnenrollModal] = useToggle()
+
+  const { isStudent, isTeacher } = useCheckRole()
 
   useEffect(() => {
     if ('tab' in state) return setTab(state.tab as number)
     setTab(0)
   }, [courseId, state])
+
+  const unenrollCourse = () => {
+    mutate(
+      {
+        courseId,
+        userId: user?.userId || '',
+      },
+      {
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Unenroll course failed',
+          ),
+        onSuccess: () => {
+          setSuccessMessage('Unenroll course successfully')
+          window.location.replace('/')
+        },
+      },
+    )
+  }
 
   return (
     <CourseProvider>
@@ -93,6 +122,18 @@ export const Course = () => {
                 Create Topic
               </Button>
             )}
+
+            {isStudent && tab !== 4 && (
+              <Button
+                className="text-danger-500"
+                onClick={toggleUnenrollModal}
+                size="large"
+                variant="text"
+              >
+                <CloseOutlined className="mr-3" />
+                Unenroll course
+              </Button>
+            )}
           </div>
           <TopicTabs tab={tab} tabs={tabs} />
         </div>
@@ -101,6 +142,16 @@ export const Course = () => {
           <DetailTopicModal
             isOpen={openTopicModal}
             toggleModal={toggleTopicModal}
+          />
+        )}
+
+        {openUnenrollModal && (
+          <ConfirmModal
+            isOpen={openUnenrollModal}
+            onClose={toggleUnenrollModal}
+            onConfirm={unenrollCourse}
+            title="Do you want to unenroll this course?"
+            variant="confirm"
           />
         )}
       </div>
