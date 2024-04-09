@@ -66,7 +66,7 @@ export const getTestCaseStatus = (
     return testCaseStatus[testResult.status]
   }
 
-  if (currentCase) {
+  if (typeof currentCase === 'number' && currentCase >= 0) {
     const status = testResult.testCases.at(currentCase)?.status
     if (status) return testCaseStatus[status]
   }

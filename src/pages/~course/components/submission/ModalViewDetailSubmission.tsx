@@ -9,6 +9,7 @@ import { cn, formatDDMMyyyyHHmm } from '@/utils'
 
 import { DetailCode } from '../../~$courseId/submission/code/DetailCode'
 import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
+import { DetailFile } from '../../~$courseId/submission/DetailFile'
 import { DetailQuiz } from '../../~$courseId/submission/quiz/DetailQuiz'
 import { Chip, Divider } from '@mui/material'
 
@@ -34,7 +35,7 @@ export const ModalViewDetailSubmission = ({
     submissionData.exercise
   const {
     exercise: { question },
-    submissions: { score, submission, submissionId },
+    submissions: { fileUrl, score, submission, submissionId },
   } = submissionData
 
   if (isLoading || isRefetching) return <Loading />
@@ -122,10 +123,21 @@ export const ModalViewDetailSubmission = ({
         <>
           {type === ExerciseType.ESSAY && (
             <DetailEssay
+              comment={submissionData.submissions.teacherComment}
               essaySubmissionId={submissionId}
               question={question}
               score={score}
               submission={submission as string}
+            />
+          )}
+
+          {type === ExerciseType.FILE && (
+            <DetailFile
+              comment={submissionData.submissions.teacherComment}
+              question={question}
+              score={score}
+              submission={fileUrl}
+              submissionId={submissionId}
             />
           )}
 

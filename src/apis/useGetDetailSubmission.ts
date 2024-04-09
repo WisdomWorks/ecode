@@ -16,6 +16,7 @@ interface Submissions {
   dateGrade: string
   dateSubmit: string
   exerciseId: string
+  fileUrl: string
   reviewable: boolean
   score: number
   studentId: string
@@ -91,6 +92,7 @@ export interface CodeSubmissions {
   dateSubmit: string
   error: string
   exerciseId: string
+  fileUrl: string
   graded: boolean
   judgeService: string
   judgedOn: string
