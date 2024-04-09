@@ -66,6 +66,7 @@ export type QuizExerciseSchema = Omit<
 export type CodeExerciseSchema = Schema['CreateCodeExerciseRequest'] & {
   durationTime?: number
   exerciseId?: string
+  languageId?: string
   languageTemplate?: {
     [key: string]: string
   }

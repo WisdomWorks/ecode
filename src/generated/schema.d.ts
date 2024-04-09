@@ -26,6 +26,9 @@ export interface paths {
     put: operations["updateFileExercise"];
     post: operations["createFileExercise"];
   };
+  "/exercises/file/grade": {
+    put: operations["gradeFileSubmission"];
+  };
   "/exercises/essay": {
     put: operations["updateEssayExercise"];
     post: operations["createEssayExercise"];
@@ -36,6 +39,9 @@ export interface paths {
   "/exercises/code": {
     put: operations["updateCodeExercise"];
     post: operations["createCodeExercise"];
+  };
+  "/exercises/code/grade": {
+    put: operations["gradeCodeSubmission"];
   };
   "/courses": {
     get: operations["getAll"];
@@ -140,6 +146,9 @@ export interface paths {
   };
   "/topics/user/{userId}": {
     get: operations["getTopicByUserId"];
+  };
+  "/ping": {
+    get: operations["pingAPI"];
   };
   "/materials/{materialId}": {
     get: operations["getById_1"];
@@ -252,7 +261,7 @@ export interface components {
       exerciseId: string;
       topicId: string;
       exerciseName: string;
-      key: string;
+      key?: string;
       /** Format: date-time */
       startTime: string;
       /** Format: date-time */
@@ -263,6 +272,12 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       question: string;
+    };
+    GradeSubmission: {
+      submissionId: string;
+      /** Format: float */
+      score: number;
+      comment?: string;
     };
     UpdateEssayExerciseRequest: {
       exerciseId: string;
@@ -403,7 +418,6 @@ export interface components {
     CreateFileExerciseRequest: {
       topicId: string;
       exerciseName: string;
-      key: string;
       /** Format: date-time */
       startTime: string;
       /** Format: date-time */
@@ -418,7 +432,6 @@ export interface components {
     CreateFileSubmissionRequest: {
       studentId: string;
       exerciseId: string;
-      url?: string;
     };
     CreateEssayExerciseRequest: {
       topicId: string;
@@ -775,6 +788,27 @@ export interface operations {
       };
     };
   };
+  gradeFileSubmission: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GradeSubmission"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   updateEssayExercise: {
     requestBody: {
       content: {
@@ -818,10 +852,9 @@ export interface operations {
     };
   };
   gradeEssaySubmission: {
-    parameters: {
-      query: {
-        essaySubmissionId: string;
-        score: number;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GradeSubmission"];
       };
     };
     responses: {
@@ -864,6 +897,27 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateCodeExerciseRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  gradeCodeSubmission: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["GradeSubmission"];
       };
     };
     responses: {
@@ -1755,6 +1809,22 @@ export interface operations {
         userId: string;
       };
     };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  pingAPI: {
     responses: {
       /** @description OK */
       200: {

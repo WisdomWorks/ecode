@@ -21,7 +21,7 @@ export const Dialog = ({
       <>
         <div
           className={cn(
-            'absolute left-1/2 top-1/2 flex w-1/2 -translate-x-1/2 -translate-y-1/2 flex-col gap-2 rounded-xl bg-white p-6 shadow-xl',
+            'absolute left-1/2 top-1/2 flex w-1/2 -translate-x-1/2 -translate-y-1/2 flex-col rounded-xl bg-white p-6 shadow-xl',
             className,
             { 'w-fit': variant === 'confirm' },
           )}

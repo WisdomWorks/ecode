@@ -9,7 +9,7 @@ export interface GetDetailSubmissionProps {
 
 export interface GetDetailSubmissionResponse {
   exercise: Exercise
-  submissions: Submissions
+  submissions: CodeSubmissions | Submissions
 }
 
 interface Submissions {
@@ -35,19 +35,23 @@ interface Answer {
 }
 
 interface Exercise {
+  allowedLanguageIds: string[]
   createdDate: string
+  description: string
   durationTime: number
   endTime: string
   exerciseDescription: string
   exerciseId: string
   exerciseName: string
   key: string
+  points: number
   publicGroupIds: string[]
   question: string
   questions: Question[]
   reAttempt: number
   showAll: boolean
   startTime: string
+  testCases?: TestCase[]
   topicId: string
   type: string
   updatedDate: string
@@ -70,6 +74,45 @@ interface Answer2 {
   choiceId: string
   content: string
 }
+
+export interface TestCase {
+  exerciseId: string
+  input: string
+  output: string
+  points: number
+  testcaseId: string
+}
+
+export interface CodeSubmissions {
+  casePoints: number
+  caseTotal: number
+  currentTestcase: number
+  dateGrade: string
+  dateSubmit: string
+  error: string
+  exerciseId: string
+  graded: boolean
+  judgeService: string
+  judgedOn: string
+  languageId: string
+  locked: boolean
+  lockedAfter: number[]
+  longStatus: string
+  memory: number
+  pretested: boolean
+  result: string
+  reviewable: boolean
+  score: number
+  shortStatus: string
+  source: string
+  status: string
+  studentId: string
+  submission: null
+  submissionId: string
+  teacherComment: string
+  time: number
+}
+
 export const useGetDetailSubmission = ({
   submissionId,
   type,

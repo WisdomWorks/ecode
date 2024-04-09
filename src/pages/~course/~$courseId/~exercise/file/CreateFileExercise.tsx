@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useCreateFileExercise, useUpdateFileExercise } from '@/apis'
 import { Form } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
+import { ExerciseType } from '@/constants'
 import { CreateExerciseInformation } from '@/pages/~course/components'
 import { CreateEssayExerciseSchema } from '@/pages/~course/shema/createEssayExercise.schema'
 import { Schema } from '@/types'
@@ -18,7 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Typography } from '@mui/material'
 import { getHours, getMinutes } from 'date-fns'
 
-type TCreateEssay = Schema['CreateEssayExerciseRequest'] & {
+type TCreateFile = Schema['CreateFileExerciseRequest'] & {
   durationObj: Date
   endDate: Date
   exerciseId: string
@@ -38,9 +39,9 @@ export const CreateFileExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
-  const { isPending: createPending, mutate: createEssay } =
+  const { isPending: createPending, mutate: createFile } =
     useCreateFileExercise()
-  const { isPending: updatePending, mutate: updateEssay } =
+  const { isPending: updatePending, mutate: updateFile } =
     useUpdateFileExercise()
 
   const defaultValues = useMemo(
@@ -50,7 +51,6 @@ export const CreateFileExercise = ({
       startTime: '',
       endTime: '',
       reAttempt: exercise?.reAttempt || 1,
-      key: exercise?.key || '',
       exerciseName: exercise?.exerciseName || '',
       durationTime: exercise?.durationTime || 0,
       question: exercise?.question || '',
@@ -67,12 +67,12 @@ export const CreateFileExercise = ({
     [exercise, topicId],
   )
 
-  const form = useForm<TCreateEssay>({
+  const form = useForm<TCreateFile>({
     defaultValues,
     resolver: zodResolver(CreateEssayExerciseSchema),
   })
 
-  const onSubmit: SubmitHandler<TCreateEssay> = data => {
+  const onSubmit: SubmitHandler<TCreateFile> = data => {
     const { durationObj, endDate, reAttempt, startDate, ...rest } = data
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
@@ -80,7 +80,7 @@ export const CreateFileExercise = ({
     const endTime = endDate.toISOString()
 
     if (isUpdate) {
-      updateEssay(
+      updateFile(
         {
           ...rest,
           reAttempt: Number(reAttempt),
@@ -97,7 +97,7 @@ export const CreateFileExercise = ({
       return
     }
 
-    createEssay(
+    createFile(
       {
         ...rest,
         reAttempt: Number(reAttempt),
@@ -124,7 +124,10 @@ export const CreateFileExercise = ({
       <h2 className="col-span-12 text-2xl font-bold">
         {isUpdate ? 'Update ' : 'Create '} Essay Exercise
       </h2>
-      <CreateExerciseInformation control={control} />
+      <CreateExerciseInformation
+        control={control}
+        exerciseType={ExerciseType.FILE}
+      />
 
       <Typography className="col-span-12" variant="h5">
         Exercise Question

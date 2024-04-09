@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { Panel, PanelGroup } from 'react-resizable-panels'
 
-import { TGetTestCaseRunCode, useRunCode, useSubmitCodeExercise } from '@/apis'
+import {
+  CodeSubmission,
+  TGetTestCaseRunCode,
+  useRunCode,
+  useSubmitCodeExercise,
+} from '@/apis'
 import { Loading } from '@/components/common'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { Form } from '@/components/form'
@@ -20,7 +25,9 @@ import { useNavigate } from '@tanstack/react-router'
 
 interface Props {
   exercise: CodeExerciseSchema
-  isTimeOut: boolean
+  isTimeOut?: boolean
+  isUpdate?: boolean
+  submissions?: CodeSubmission
 }
 
 export type TFormCodeExercise = Schema['SubmitCodeExerciseRequest'] & {
@@ -28,7 +35,12 @@ export type TFormCodeExercise = Schema['SubmitCodeExerciseRequest'] & {
   typeSubmit: 'run' | 'submit'
 }
 
-export const CodeExercise = ({ exercise, isTimeOut }: Props) => {
+export const CodeExercise = ({
+  exercise,
+  isTimeOut = true,
+  isUpdate,
+  submissions,
+}: Props) => {
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
   const { setErrorMessage } = useToastMessage()
@@ -49,16 +61,22 @@ export const CodeExercise = ({ exercise, isTimeOut }: Props) => {
 
   const [submissionId, setSubmissionId] = useState('')
 
-  const languages = Object.keys(languageTemplate as object).map(id =>
-    programmingLanguages.find(pr => pr.key === id),
-  )
+  const languages = isUpdate
+    ? []
+    : Object.keys(languageTemplate as object).map(id =>
+        programmingLanguages.find(pr => pr.key === id),
+      )
 
   const form = useForm<TFormCodeExercise>({
     defaultValues: {
       studentId: user?.userId || '',
       exerciseId,
-      source: languageTemplate?.[String(languages[0]?.key)] || '',
-      language: languages[0],
+      source: isUpdate
+        ? submissions?.source
+        : languageTemplate?.[String(languages[0]?.key)] || '',
+      language: isUpdate
+        ? programmingLanguages.find(pr => pr.key === submissions?.languageId)
+        : languages[0],
       languageId: '',
     },
   })
@@ -144,6 +162,7 @@ export const CodeExercise = ({ exercise, isTimeOut }: Props) => {
                   <CodeConsole
                     exercise={exercise}
                     isRefetchingGetTestCase={isRefetchingGetTestCase}
+                    isUpdate={isUpdate}
                     loading={loading}
                     setCurrentTab={setCurrentTab}
                     setIsRefetchingGetTestCase={setIsRefetchingGetTestCase}

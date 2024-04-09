@@ -12,7 +12,7 @@ export const useUpdateFileExercise = () => {
       exerciseId: string
     }
   >({
-    mutationKey: ['UpdateFileExerciseRequest'],
+    mutationKey: ['updateFileExercise'],
     mutationFn: async data => {
       return await callAPI('/exercises/file', 'put', {
         data,

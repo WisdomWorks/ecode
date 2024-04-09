@@ -18,6 +18,7 @@ import { Button, Divider } from '@mui/material'
 interface Props {
   exercise: CodeExerciseSchema
   isRefetchingGetTestCase: boolean
+  isUpdate?: boolean
   loading: boolean
   setCurrentTab: (index: number) => void
   setIsRefetchingGetTestCase: Dispatch<SetStateAction<boolean>>
@@ -29,6 +30,7 @@ interface Props {
 export const CodeConsole = ({
   exercise,
   isRefetchingGetTestCase,
+  isUpdate,
   loading,
   setCurrentTab,
   setIsRefetchingGetTestCase,
@@ -45,7 +47,7 @@ export const CodeConsole = ({
 
   const { languageTemplate, testCases } = exercise
 
-  const preTestCaseLength = testCases.length
+  const preTestCaseLength = testCases.filter(tc => tc.points === 0).length
 
   useEffect(() => {
     if (
@@ -68,9 +70,11 @@ export const CodeConsole = ({
       : null,
   )
 
-  const languages = Object.keys(languageTemplate as object).map(id =>
-    programmingLanguages.find(pr => pr.key === id),
-  )
+  const languages = isUpdate
+    ? []
+    : Object.keys(languageTemplate as object).map(id =>
+        programmingLanguages.find(pr => pr.key === id),
+      )
 
   return (
     <div className="flex h-full flex-col rounded-md border border-gray-300 bg-white">
@@ -88,6 +92,7 @@ export const CodeConsole = ({
             }}
             control={control}
             disableClearable
+            disabled={isUpdate}
             extraOnChange={() =>
               setValue(
                 'source',
@@ -128,20 +133,26 @@ export const CodeConsole = ({
             Run code
           </Button>
           <Divider className="bg-gray-100" orientation="vertical" />
-          <Button
-            color="primary"
-            disabled={loading}
-            onClick={toggleOpenModal}
-            startIcon={<BackupOutlined />}
-            variant="text"
-          >
-            Submit
-          </Button>
+          {!isUpdate && (
+            <Button
+              color="primary"
+              disabled={loading}
+              onClick={toggleOpenModal}
+              startIcon={<BackupOutlined />}
+              variant="text"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </div>
 
       <Divider className="bg-gray-100" />
-      <FormCodeIDE control={control} name="source" />
+      <FormCodeIDE
+        control={control}
+        editable={isUpdate ? false : true}
+        name="source"
+      />
     </div>
   )
 }
