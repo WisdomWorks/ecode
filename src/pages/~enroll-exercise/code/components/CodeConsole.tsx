@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form'
 import { TGetTestCaseRunCode, useGetTestCaseRunCode } from '@/apis'
 import { FormCodeIDE, FormSelector } from '@/components/form'
 import { programmingLanguages } from '@/constants'
+import { useAppStore } from '@/context/useAppStore'
 import { useCheckRole, useInterval } from '@/hooks'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
@@ -40,19 +41,21 @@ export const CodeConsole = ({
 }: Props) => {
   const { control, setValue, watch } = useFormContext<TFormCodeExercise>()
   const { isStudent } = useCheckRole()
+  const user = useAppStore(state => state.user)
 
   const { data: testCaseRunCodeData, refetch: getTestCase } =
     useGetTestCaseRunCode({
       submissionId,
+      userId: user?.userId || '',
     })
 
   const { languageTemplate, testCases } = exercise
 
-  const preTestCaseLength = testCases.filter(tc => tc.points === 0).length
+  const testCaseLength = testCases.filter(tc => tc.points === 0).length
 
   useEffect(() => {
     if (
-      testCaseRunCodeData?.data.testCases.length === preTestCaseLength ||
+      testCaseRunCodeData?.data.testCases.length === testCaseLength ||
       ['IE', 'CE'].includes(String(testCaseRunCodeData?.data.status))
     ) {
       setIsRefetchingGetTestCase(false)
@@ -66,7 +69,7 @@ export const CodeConsole = ({
       getTestCase()
     },
     isRefetchingGetTestCase &&
-      preTestCaseLength !== testCaseRunCodeData?.data.testCases.length
+      testCaseLength !== testCaseRunCodeData?.data.testCases.length
       ? 500
       : null,
   )

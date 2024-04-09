@@ -69,7 +69,7 @@ export const ModalViewDetailSubmission = ({
 
               <div className="flex items-end gap-4  pr-12">
                 <>
-                  {score === -1 || score === null ? (
+                  {score === -1 ? (
                     <span className="text-3xl font-bold text-danger-500">
                       Not graded
                     </span>

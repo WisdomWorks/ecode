@@ -6,6 +6,7 @@ import { AxiosError, AxiosResponse } from 'axios'
 
 interface Props {
   submissionId: string
+  userId: string
 }
 
 export type TGetTestCaseRunCode = {
@@ -26,14 +27,22 @@ export type TGetTestCaseRunCode = {
   }[]
 }
 
-export const useGetTestCaseRunCode = ({ submissionId }: Props) => {
+export const useGetTestCaseRunCode = ({ submissionId, userId }: Props) => {
   return useQuery<
     AxiosResponse<TGetTestCaseRunCode>,
     AxiosError<AxiosResponseError>
   >({
-    queryKey: ['run-code', submissionId],
+    queryKey: ['run-code', submissionId, userId],
     queryFn: async () => {
-      return await callAPI(`/exercises/code/run/${submissionId}` as Path, 'get')
+      return await callAPI(
+        `/exercises/code/run/${submissionId}` as Path,
+        'get',
+        {
+          params: {
+            userId,
+          },
+        },
+      )
     },
     enabled: false,
   })

@@ -58,8 +58,7 @@ export const DetailPanelSubmission = ({
       header: 'Score',
       enableColumnFilter: false,
       Cell: ({ cell, row }) =>
-        row.original.submission.score === -1 ||
-        row.original.submission.score === null
+        row.original.submission.score === -1
           ? 'Not graded'
           : cell.getValue<number>(),
     },

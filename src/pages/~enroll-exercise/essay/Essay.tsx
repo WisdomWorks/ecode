@@ -23,7 +23,7 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
   useConfirmTabClose()
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { exerciseId } = useParams({ from: '/enroll-exercise/$exerciseId' })
 
   const [openModal, toggleOpenModal] = useToggle()
@@ -64,7 +64,10 @@ export const Essay = ({ exercise, isTimeOut }: Props) => {
           setErrorMessage(
             error.response?.data.message || 'Submission failed. Try again',
           ),
-        onSuccess: () => navigate({ to: '/', replace: true }),
+        onSuccess: () => {
+          setSuccessMessage('Submit exercise successfully')
+          navigate({ to: '/', replace: true })
+        },
       },
     )
   }

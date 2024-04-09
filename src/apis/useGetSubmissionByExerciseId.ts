@@ -42,7 +42,7 @@ export interface CodeSubmission {
   pretested: boolean
   result: string
   reviewable: boolean
-  score: number | null
+  score: number
   shortStatus: string
   source: string
   status: string

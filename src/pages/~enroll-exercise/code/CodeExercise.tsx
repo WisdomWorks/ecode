@@ -43,7 +43,7 @@ export const CodeExercise = ({
 }: Props) => {
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
   const [openModal, toggleOpenModal] = useToggle()
 
@@ -100,6 +100,7 @@ export const CodeExercise = ({
 
     submitExercise(input, {
       onSuccess: () => {
+        setSuccessMessage('Submit exercise successfully')
         navigate({ to: '/' })
       },
       onError: error => {

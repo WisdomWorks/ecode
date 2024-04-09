@@ -2131,6 +2131,9 @@ export interface operations {
   };
   runCodeExercise_1: {
     parameters: {
+      query: {
+        userId: string;
+      };
       path: {
         submissionId: string;
       };

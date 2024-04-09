@@ -24,7 +24,7 @@ interface Props {
 export const Quiz = ({ exercise, isTimeOut }: Props) => {
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const { exerciseId } = useParams({ from: '/enroll-exercise/$exerciseId' })
 
   const [openModal, toggleOpenModal] = useToggle()
@@ -64,6 +64,7 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
       },
       {
         onSuccess: () => {
+          setSuccessMessage('Submit exercise successfully')
           navigate({ to: '/' })
         },
         onError: error => {
