@@ -1,7 +1,7 @@
 import { isBefore, isPast } from 'date-fns'
 import { z } from 'zod'
 
-export const CreateEssayExerciseSchema = z
+export const CreateFileExerciseSchema = z
   .object({
     exerciseId: z.string(),
     topicId: z.string().min(1, { message: 'Topic is required' }),
@@ -10,7 +10,6 @@ export const CreateEssayExerciseSchema = z
     startDate: z.date(),
     endDate: z.date(),
     durationObj: z.date(),
-    key: z.string().min(1, { message: 'Enrollment key is required' }),
     reAttempt: z.any().refine(value => +value >= 1, {
       message: 'Attempt limit must be greater than 0',
     }),

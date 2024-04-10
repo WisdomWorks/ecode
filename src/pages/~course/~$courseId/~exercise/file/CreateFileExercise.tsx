@@ -6,7 +6,7 @@ import { Form } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { ExerciseType } from '@/constants'
 import { CreateExerciseInformation } from '@/pages/~course/components'
-import { CreateEssayExerciseSchema } from '@/pages/~course/shema/createEssayExercise.schema'
+import { CreateFileExerciseSchema } from '@/pages/~course/shema/createFileExercise.schema'
 import { Schema } from '@/types'
 import { FileExerciseSchema } from '@/types/exercise.types'
 import {
@@ -69,7 +69,7 @@ export const CreateFileExercise = ({
 
   const form = useForm<TCreateFile>({
     defaultValues,
-    resolver: zodResolver(CreateEssayExerciseSchema),
+    resolver: zodResolver(CreateFileExerciseSchema),
   })
 
   const onSubmit: SubmitHandler<TCreateFile> = data => {
@@ -122,7 +122,7 @@ export const CreateFileExercise = ({
       onSubmit={onSubmit}
     >
       <h2 className="col-span-12 text-2xl font-bold">
-        {isUpdate ? 'Update ' : 'Create '} Essay Exercise
+        {isUpdate ? 'Update ' : 'Create '} File Exercise
       </h2>
       <CreateExerciseInformation
         control={control}
