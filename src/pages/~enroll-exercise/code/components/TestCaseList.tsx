@@ -43,23 +43,22 @@ export const TestCaseList = ({
 
   return (
     <>
-      <div className="flex">
+      <div className="flex flex-wrap gap-2 p-3">
         {testCases.map((tc, index) => {
           const props = getButtonProps(index)
           // eslint-disable-next-line react/prop-types
           const { Icon, color } = props
           return (
-            <div className="m-3" key={index}>
-              <Button
-                className="whitespace-nowrap rounded-lg px-3 py-1"
-                color={color as ButtonProps['color']}
-                onClick={() => handleChangeTestCase(index)}
-                startIcon={Icon ? <Icon /> : null}
-                variant={currentCase === index ? 'outlined' : 'text'}
-              >
-                Case {index + 1} {isReview ? `(${tc.points} pts)` : ''}
-              </Button>
-            </div>
+            <Button
+              className="whitespace-nowrap rounded-lg px-3 py-1"
+              color={color as ButtonProps['color']}
+              key={tc.testcaseId}
+              onClick={() => handleChangeTestCase(index)}
+              startIcon={Icon ? <Icon /> : null}
+              variant={currentCase === index ? 'outlined' : 'text'}
+            >
+              Case {index + 1} {isReview ? `(${tc.points} pts)` : ''}
+            </Button>
           )
         })}
       </div>
