@@ -61,7 +61,7 @@ export const MultiChoicesQuestion = ({ field, index }: Props) => {
         const checked = choice ? answers.includes(choice.content) : undefined
 
         return (
-          <div className="flex w-1/2 items-center" key={i}>
+          <div className="flex items-center" key={i}>
             <Checkbox
               checked={checked}
               disabled={!content}

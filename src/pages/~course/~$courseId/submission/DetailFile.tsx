@@ -1,19 +1,29 @@
 import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { GradeEssayParams, useGradeFileExercise } from '@/apis'
+import {
+  GradeEssayParams,
+  TStudentSubmissionResponse,
+  useGradeFileExercise,
+} from '@/apis'
 import { Form, FormInput } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { useCheckRole, useToastMessage } from '@/hooks'
 
 import { Button } from '@mui/material'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { AxiosResponse } from 'axios'
 
 interface Props {
   comment: string
   question: string
+  refetchSubmissions?: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<AxiosResponse<TStudentSubmissionResponse>>>
   score?: number
   submission: string
   submissionId: string
+  toggleModal: () => void
 }
 
 type TForm = GradeEssayParams & {
@@ -24,9 +34,11 @@ type TForm = GradeEssayParams & {
 export const DetailFile = ({
   comment,
   question,
+  refetchSubmissions,
   score,
   submission,
   submissionId,
+  toggleModal,
 }: Props) => {
   const { isTeacher } = useCheckRole()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
@@ -62,6 +74,8 @@ export const DetailFile = ({
       },
       {
         onSuccess: () => {
+          refetchSubmissions?.()
+          toggleModal()
           setSuccessMessage('Graded successfully')
         },
         onError: error =>

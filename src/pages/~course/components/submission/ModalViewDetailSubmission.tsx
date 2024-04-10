@@ -1,6 +1,7 @@
 import {
   CodeSubmission,
   GetDetailSubmissionProps,
+  TStudentSubmissionResponse,
   useGetDetailSubmission,
 } from '@/apis'
 import { Dialog, Loading } from '@/components/common'
@@ -12,15 +13,21 @@ import { DetailEssay } from '../../~$courseId/submission/DetailEssay'
 import { DetailFile } from '../../~$courseId/submission/DetailFile'
 import { DetailQuiz } from '../../~$courseId/submission/quiz/DetailQuiz'
 import { Chip, Divider } from '@mui/material'
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
+import { AxiosResponse } from 'axios'
 
 interface Props {
   open: boolean
+  refetchSubmissions?: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<AxiosResponse<TStudentSubmissionResponse>>>
   state: GetDetailSubmissionProps
   toggleModal: () => void
 }
 
 export const ModalViewDetailSubmission = ({
   open,
+  refetchSubmissions,
   state,
   toggleModal,
 }: Props) => {
@@ -137,8 +144,10 @@ export const ModalViewDetailSubmission = ({
               comment={submissionData.submissions.teacherComment}
               essaySubmissionId={submissionId}
               question={question}
+              refetchSubmissions={refetchSubmissions}
               score={score}
               submission={submission as string}
+              toggleModal={toggleModal}
             />
           )}
 
@@ -146,9 +155,11 @@ export const ModalViewDetailSubmission = ({
             <DetailFile
               comment={submissionData.submissions.teacherComment}
               question={question}
+              refetchSubmissions={refetchSubmissions}
               score={score}
               submission={fileUrl}
               submissionId={submissionId}
+              toggleModal={toggleModal}
             />
           )}
 

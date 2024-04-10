@@ -1,34 +1,40 @@
-import { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
 
 import {
   GetDetailSubmissionProps,
   TStudentSubmissionResponse,
   useGetSubmissionByExerciseId,
 } from '@/apis'
-import { ButtonTooltip, Table } from '@/components/common'
+import { ButtonTooltip, Loading, Table } from '@/components/common'
 import { ExerciseType } from '@/constants'
+import { useToggle } from '@/hooks'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
 
+import { ModalViewDetailSubmission } from '../../components/submission/ModalViewDetailSubmission'
 import { StatisticSubmission } from '../../components/submission/StatisticSubmission'
 import { GradingOutlined, RemoveRedEyeOutlined } from '@mui/icons-material'
 import { MRT_Row } from 'material-react-table'
 
 interface Props {
   row: MRT_Row<ExerciseSchema>
-  setModalState: Dispatch<SetStateAction<GetDetailSubmissionProps | null>>
-  toggleModalDetail: () => void
 }
 
-export const DetailPanelSubmission = ({
-  row,
-  setModalState,
-  toggleModalDetail,
-}: Props) => {
+export const DetailPanelSubmission = ({ row }: Props) => {
   const { exerciseId, exerciseName, type } = row.original
 
-  const { data } = useGetSubmissionByExerciseId({
+  const [modalState, setModalState] = useState<GetDetailSubmissionProps | null>(
+    null,
+  )
+  const [openModalDetail, toggleModalDetail] = useToggle()
+
+  const {
+    data,
+    isLoading,
+    isRefetching,
+    refetch: refetchSubmissions,
+  } = useGetSubmissionByExerciseId({
     exerciseId,
     type,
     groupFilter: [],
@@ -64,6 +70,8 @@ export const DetailPanelSubmission = ({
     },
   ]
 
+  if (isRefetching || isLoading) return <Loading />
+
   return (
     <>
       <StatisticSubmission exerciseName={exerciseName} report={report} />
@@ -76,7 +84,7 @@ export const DetailPanelSubmission = ({
         positionActionsColumn="last"
         renderRowActions={({ row: { original } }) => (
           <div className="flex">
-            {type !== ExerciseType.ESSAY ? (
+            {![ExerciseType.ESSAY, ExerciseType.FILE].includes(type) ? (
               <ButtonTooltip
                 iconButtonProps={{
                   children: (
@@ -116,6 +124,15 @@ export const DetailPanelSubmission = ({
           </div>
         )}
       />
+
+      {openModalDetail && modalState && (
+        <ModalViewDetailSubmission
+          open={openModalDetail}
+          refetchSubmissions={refetchSubmissions}
+          state={modalState}
+          toggleModal={toggleModalDetail}
+        />
+      )}
     </>
   )
 }

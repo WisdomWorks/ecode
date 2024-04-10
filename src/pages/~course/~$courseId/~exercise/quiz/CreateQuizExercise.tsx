@@ -197,11 +197,9 @@ export const CreateQuizExercise = ({
 
         <FormQuestion defaultQuestion={defaultQuestion} />
 
-        <div className="col-span-12 flex justify-end">
+        <div className="col-span-12 flex justify-end gap-2">
           {!isValid && (
-            <Alert severity="error">
-              Something went wrong, please re-check the form
-            </Alert>
+            <Alert severity="info">Complete the form before submitting</Alert>
           )}
 
           <Button

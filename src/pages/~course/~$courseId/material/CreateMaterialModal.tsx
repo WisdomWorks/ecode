@@ -126,11 +126,11 @@ export const CreateMaterialModal = ({
             options={[
               {
                 value: MaterialType.Url,
-                label: 'Upload load URL',
+                label: 'Upload material by URL',
               },
               {
                 value: MaterialType.File,
-                label: 'Upload file',
+                label: 'Upload material by file',
               },
             ]}
           />

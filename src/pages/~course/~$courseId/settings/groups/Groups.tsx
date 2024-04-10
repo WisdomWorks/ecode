@@ -1,7 +1,11 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
-import { useCreateGroupInCourse, useDeleteGroup } from '@/apis'
+import {
+  useCreateGroupInCourse,
+  useDeleteGroup,
+  useUpdateGroupInCourse,
+} from '@/apis'
 import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { Form, FormInput } from '@/components/form'
 import { useToastMessage, useToggle } from '@/hooks'
@@ -45,9 +49,12 @@ export const Groups = ({
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const [deleteGroupId, setDeleteGroupId] = useState('')
   const [editGroupId, setEditGroupId] = useState('')
+  const [groupNameUpdate, setGroupNameUpdate] = useState('')
 
   const { isPending: isCreateNewGroupLoading, mutate: createNewGroup } =
     useCreateGroupInCourse()
+  const { mutate: updateGroup } = useUpdateGroupInCourse()
+
   const { mutate: deleteGroup } = useDeleteGroup()
 
   const [showInput, toggleShowInput] = useToggle()
@@ -102,6 +109,24 @@ export const Groups = ({
     )
   }
 
+  const handleUpdateGroup = () => {
+    updateGroup(
+      { groupId: editGroupId, groupName: groupNameUpdate },
+      {
+        onSuccess: () => {
+          refetchGroups()
+          toggleEditGroup()
+          setGroupNameUpdate('')
+          setSuccessMessage('Group updated successfully')
+        },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Something went wrong',
+          ),
+      },
+    )
+  }
+
   return (
     <>
       <div className="flex items-center gap-2">
@@ -120,29 +145,40 @@ export const Groups = ({
 
         return (
           <div className="flex justify-between" key={groupId}>
-            <div
-              className={cn(
-                'solid flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2 transition-al',
-                {
-                  'hover:bg-success-400': !isEdit,
-                  'bg-success-400': groupDetailId === groupId,
-                },
-              )}
-              onClick={() => setGroupDetailId(groupId)}
-            >
-              <GroupsIcon />
-              {isEdit ? (
-                <TextField size="small" />
-              ) : (
+            {isEdit ? (
+              <TextField
+                onChange={e => setGroupNameUpdate(e.target.value)}
+                size="small"
+                value={groupNameUpdate}
+              />
+            ) : (
+              <div
+                className={cn(
+                  'solid flex w-full cursor-pointer items-center gap-2 rounded-lg border p-2 transition-al',
+                  {
+                    'hover:bg-success-400': !isEdit,
+                    'bg-success-400': groupDetailId === groupId,
+                  },
+                )}
+                onClick={() => setGroupDetailId(groupId)}
+              >
+                <GroupsIcon />
+
                 <Typography>{groupName}</Typography>
-              )}
-            </div>
+              </div>
+            )}
             {isEdit ? (
               <>
-                <IconButton>
+                <IconButton onClick={handleUpdateGroup}>
                   <Done className="text-success-500" />
                 </IconButton>
-                <IconButton onClick={toggleEditGroup}>
+                <IconButton
+                  onClick={() => {
+                    toggleEditGroup()
+                    setEditGroupId('')
+                    setGroupNameUpdate('')
+                  }}
+                >
                   <Cancel className="text-red-500" />
                 </IconButton>
               </>

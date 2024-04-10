@@ -1,13 +1,11 @@
 import { useState } from 'react'
 
-import { GetDetailSubmissionProps, useGetExercises } from '@/apis'
+import { useGetExercises } from '@/apis'
 import { Loading, Table } from '@/components/common'
-import { useToggle } from '@/hooks'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
 
-import { ModalViewDetailSubmission } from '../../components/submission/ModalViewDetailSubmission'
 import { DetailPanelSubmission } from './DetailPanelSubmission'
 import { ArrowBackIos } from '@mui/icons-material'
 import { Button, Chip, Slide } from '@mui/material'
@@ -71,11 +69,6 @@ export const SubmissionTab = () => {
     null,
   )
 
-  const [modalState, setModalState] = useState<GetDetailSubmissionProps | null>(
-    null,
-  )
-  const [openModalDetail, toggleModalDetail] = useToggle()
-
   if (isLoading) return <Loading />
 
   const exercises = data?.data
@@ -108,23 +101,11 @@ export const SubmissionTab = () => {
                 <ArrowBackIos className="size-4" />
                 Back to Exercise List
               </Button>
-              <DetailPanelSubmission
-                row={rowClicked}
-                setModalState={setModalState}
-                toggleModalDetail={toggleModalDetail}
-              />
+              <DetailPanelSubmission row={rowClicked} />
             </>
           )}
         </div>
       </Slide>
-
-      {openModalDetail && modalState && (
-        <ModalViewDetailSubmission
-          open={openModalDetail}
-          state={modalState}
-          toggleModal={toggleModalDetail}
-        />
-      )}
     </>
   )
 }
