@@ -116,7 +116,7 @@ export const Course = () => {
 
         <div className="row-span-7 overflow-auto rounded-xl p-4 shadow-xl">
           <div className="flex w-full justify-end">
-            {isTeacher && tab !== 2 && (
+            {isTeacher && [0, 1].includes(tab) && (
               <Button onClick={toggleTopicModal} size="large" variant="text">
                 <AddOutlined className="mr-3" />
                 Create Topic
