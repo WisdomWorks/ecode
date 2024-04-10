@@ -11,6 +11,8 @@ export const StatisticSubmission = ({ exerciseName, report }: Props) => {
 
   const { ascore, bscore, cscore, numberStudent, numberSubmission } = report
 
+  const isRenderChart = ascore || bscore || cscore
+
   return (
     <div className="flex justify-between">
       <div className=" flex items-center pl-5">
@@ -28,16 +30,18 @@ export const StatisticSubmission = ({ exerciseName, report }: Props) => {
           </div>
         </div>
       </div>
-      <div className="size-1/2 flex-col">
-        <h3 className=" text-center">Grade distribution</h3>
-        <div className="size-3/4 ">
-          <DoughnutChart
-            between5And8={bscore}
-            greaterThan8={ascore}
-            lessThan5={cscore}
-          />
+      {!!isRenderChart && (
+        <div className="size-1/2 flex-col">
+          <h3 className=" text-center">Grade distribution</h3>
+          <div className="size-3/4 ">
+            <DoughnutChart
+              between5And8={bscore}
+              greaterThan8={ascore}
+              lessThan5={cscore}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
