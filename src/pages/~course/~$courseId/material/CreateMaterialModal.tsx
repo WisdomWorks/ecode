@@ -148,12 +148,7 @@ export const CreateMaterialModal = ({
 
           {materialType === MaterialType.File && (
             <div className="col-span-9">
-              <FileUpload
-                files={files}
-                name="file"
-                setFiles={setFiles}
-                typeFiles={['Excel', 'Image', 'Pdf', 'Word']}
-              />
+              <FileUpload files={files} name="file" setFiles={setFiles} />
             </div>
           )}
 
