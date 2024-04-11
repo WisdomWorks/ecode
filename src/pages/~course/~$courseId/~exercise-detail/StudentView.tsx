@@ -182,8 +182,9 @@ export const StudentView = ({ exerciseId }: Props) => {
               className="my-5 w-1/2"
               control={control}
               disabled={!isOnGoing || isPending || !available}
-              label="Enter the enrollment key"
+              label="Enrollment key"
               name="key"
+              placeholder="Enter the enrollment key"
             />
             <Button
               className="submitBtn w-1/2"

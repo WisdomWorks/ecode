@@ -70,7 +70,11 @@ export const EnrollCourse = () => {
       <div className="flex h-2/3 w-full justify-center pt-16">
         <div className="flex w-1/2 flex-col gap-4">
           <Form className="mt-4" form={form} onSubmit={onSubmit}>
-            <FormInputPassword label="Enrollment key" name="enrollmentKey" />
+            <FormInputPassword
+              label="Enrollment key"
+              name="enrollmentKey"
+              placeholder="Enter the enrollment key"
+            />
 
             <div className="mt-4 flex justify-end gap-2">
               <Button>

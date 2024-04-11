@@ -29,7 +29,9 @@ export const TipTap = ({
         class: `border border-gray-300 p-2 rounded-lg ${classNameEditor}`,
       },
     },
-    onUpdate: ({ editor }) => onChange?.(editor.getHTML()),
+    onUpdate: ({ editor }) => {
+      onChange?.(editor.isEmpty ? '' : editor.getHTML())
+    },
   })
 
   return (

@@ -6,7 +6,7 @@ export const CreateEssayExerciseSchema = z
     exerciseId: z.string(),
     topicId: z.string().min(1, { message: 'Topic is required' }),
     exerciseName: z.string().min(1, { message: 'Title is required' }),
-    question: z.string().min(1, { message: 'Topic is required' }),
+    question: z.string().min(1, { message: 'Question is required' }),
     startDate: z.date(),
     endDate: z.date(),
     durationObj: z.date(),

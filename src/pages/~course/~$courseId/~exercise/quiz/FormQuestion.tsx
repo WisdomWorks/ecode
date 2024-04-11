@@ -51,7 +51,7 @@ export const FormQuestion = ({ defaultQuestion }: Props) => {
                 )}
               </div>
               <FormInput
-                className="col-span-9"
+                className="col-span-12"
                 label="Title"
                 multiline
                 name={`questions.${index}.title`}
