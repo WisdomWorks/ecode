@@ -368,13 +368,6 @@ export const CreateCodeExercise = ({
         buttons={[
           {
             type: 'submit',
-            label: 'Cancel',
-            onClick: () => {},
-            className: 'clearBtn',
-            disabled: isPendingCreate || isPendingUpdate,
-          },
-          {
-            type: 'submit',
             label: isUpdate ? 'Update' : 'Create',
             className: 'submitBtn',
             disabled: isPendingCreate || isPendingUpdate,
