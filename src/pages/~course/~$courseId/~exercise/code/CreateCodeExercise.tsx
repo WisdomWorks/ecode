@@ -197,7 +197,7 @@ export const CreateCodeExercise = ({
     const noOfTcNotPreset = testCases.filter(tc => !tc.isPretest).length
     const lastIndex = testCases.length - 1
 
-    const pointPerTc = Math.round((10 / noOfTcNotPreset) * 100) / 100
+    const pointPerTc = Math.round((10 / noOfTcNotPreset) * 10) / 10
 
     testCases.forEach((testCase, index) => {
       if (index === lastIndex) return
@@ -206,7 +206,8 @@ export const CreateCodeExercise = ({
       }
     })
 
-    const pointLastTc = 10 - pointPerTc * (noOfTcNotPreset - 1)
+    const pointLastTc =
+      Math.round((10 - pointPerTc * (noOfTcNotPreset - 1)) * 10) / 10
     setValue(`testCases.${lastIndex}.points`, pointLastTc)
   }
 
