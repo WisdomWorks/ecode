@@ -28,13 +28,14 @@ export const TestCaseList = ({
     : testResult?.testCases
 
   const getButtonProps = (index: number) => {
-    const nonReviewTab = currentCase === 0 && !isReview
+    const nonReviewTab = currentTab === 0 && !isReview
 
     if (nonReviewTab) {
       return { color: 'success', Icon: undefined }
     }
 
     const isAC = testCasesFinalResult?.at(index)?.status === 'AC'
+
     return {
       color: isAC ? 'success' : 'error',
       Icon: isAC ? Check : Clear,
