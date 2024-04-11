@@ -367,13 +367,19 @@ export const CreateCodeExercise = ({
       <FormButtonGroup
         buttons={[
           {
+            label: 'Cancel',
+            onClick: handleBack,
+            className: 'clearBtn',
+            disabled: isPendingCreate || isPendingUpdate,
+          },
+          {
             type: 'submit',
             label: isUpdate ? 'Update' : 'Create',
             className: 'submitBtn',
             disabled: isPendingCreate || isPendingUpdate,
           },
         ]}
-        className="mt-2 justify-end"
+        className="mt-2 justify-end pb-4"
       />
     </Form>
   )
