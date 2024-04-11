@@ -19,8 +19,8 @@ export const DoughnutChart = ({
     datasets: [
       {
         data: [lessThan5, between5And8, greaterThan8],
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-        hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        backgroundColor: ['#FF6384', '#FFCE56', '#22c55e'],
+        hoverBackgroundColor: ['#FF6384', '#FFCE56', '#22c55e'],
       },
     ],
   }
