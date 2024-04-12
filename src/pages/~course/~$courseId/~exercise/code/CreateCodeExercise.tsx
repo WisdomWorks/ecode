@@ -210,7 +210,11 @@ export const CreateCodeExercise = ({
 
     const pointLastTc =
       Math.round((10 - pointPerTc * (noOfTcNotPreset - 1)) * 10) / 10
-    setValue(`testCases.${lastIndex}.points`, pointLastTc)
+
+    setValue(
+      `testCases.${lastIndex}.points`,
+      pointLastTc === Infinity ? 0 : pointLastTc,
+    )
   }
 
   return (
