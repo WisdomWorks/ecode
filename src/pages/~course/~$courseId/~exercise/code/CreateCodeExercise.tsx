@@ -153,12 +153,14 @@ export const CreateCodeExercise = ({
     const startTime = startDate.toISOString()
     const endTime = endDate.toISOString()
 
-    const testCaseListInput = testCases.map(tc => ({
-      testcaseId: tc.testcaseId || undefined,
-      input: tc.input,
-      output: tc.output,
-      points: tc.points,
-    }))
+    const testCaseListInput = testCases
+      .map(tc => ({
+        testcaseId: tc.testcaseId || undefined,
+        input: tc.input,
+        output: tc.output,
+        points: tc.points,
+      }))
+      .sort((a, b) => Number(a.points) - Number(b.points))
 
     const allowedLanguageIdsInput = allowedLanguageIds.map(lang => lang.key)
 
