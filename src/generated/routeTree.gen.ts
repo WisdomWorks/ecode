@@ -10,33 +10,145 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './../pages/__root'
-import { Route as TextEditorIndexImport } from './../pages/text-editor/index'
-import { Route as CodeExerciseCodeIdImport } from './../pages/code-exercise/$codeId'
+import { Route as rootRoute } from './../pages/~__root'
+import { Route as EnrollExerciseRouteImport } from './../pages/~enroll-exercise/~route'
+import { Route as CourseRouteImport } from './../pages/~course/~route'
+import { Route as IndexImport } from './../pages/~index'
+import { Route as EnrollExerciseExerciseIdImport } from './../pages/~enroll-exercise/~$exerciseId'
+import { Route as CourseCourseImport } from './../pages/~course/~_course'
+import { Route as SandpackIndexImport } from './../pages/~sandpack/~index'
+import { Route as ProfileIndexImport } from './../pages/~profile/~index'
+import { Route as LoginIndexImport } from './../pages/~login/~index'
+import { Route as ForgetPasswordIndexImport } from './../pages/~forget-password/~index'
+import { Route as EnrollCourseIndexImport } from './../pages/~enroll-course/~index'
+import { Route as CourseCourseIdExerciseDetailRouteImport } from './../pages/~course/~$courseId/~exercise-detail/~route'
+import { Route as CourseCourseIdIndexImport } from './../pages/~course/~$courseId/~index'
+import { Route as CourseCourseIdExerciseDetailExerciseIdImport } from './../pages/~course/~$courseId/~exercise-detail/~$exerciseId'
 
 // Create/Update Routes
 
-const TextEditorIndexRoute = TextEditorIndexImport.update({
-  path: '/text-editor/',
+const EnrollExerciseRouteRoute = EnrollExerciseRouteImport.update({
+  path: '/enroll-exercise',
   getParentRoute: () => rootRoute,
 } as any)
 
-const CodeExerciseCodeIdRoute = CodeExerciseCodeIdImport.update({
-  path: '/code-exercise/$codeId',
+const CourseRouteRoute = CourseRouteImport.update({
+  path: '/course',
   getParentRoute: () => rootRoute,
 } as any)
+
+const IndexRoute = IndexImport.update({
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EnrollExerciseExerciseIdRoute = EnrollExerciseExerciseIdImport.update({
+  path: '/$exerciseId',
+  getParentRoute: () => EnrollExerciseRouteRoute,
+} as any)
+
+const CourseCourseRoute = CourseCourseImport.update({
+  id: '/_course',
+  getParentRoute: () => CourseRouteRoute,
+} as any)
+
+const SandpackIndexRoute = SandpackIndexImport.update({
+  path: '/sandpack/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProfileIndexRoute = ProfileIndexImport.update({
+  path: '/profile/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginIndexRoute = LoginIndexImport.update({
+  path: '/login/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ForgetPasswordIndexRoute = ForgetPasswordIndexImport.update({
+  path: '/forget-password/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EnrollCourseIndexRoute = EnrollCourseIndexImport.update({
+  path: '/enroll-course/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CourseCourseIdExerciseDetailRouteRoute =
+  CourseCourseIdExerciseDetailRouteImport.update({
+    path: '/$courseId/exercise-detail',
+    getParentRoute: () => CourseRouteRoute,
+  } as any)
+
+const CourseCourseIdIndexRoute = CourseCourseIdIndexImport.update({
+  path: '/$courseId/',
+  getParentRoute: () => CourseRouteRoute,
+} as any)
+
+const CourseCourseIdExerciseDetailExerciseIdRoute =
+  CourseCourseIdExerciseDetailExerciseIdImport.update({
+    path: '/$exerciseId',
+    getParentRoute: () => CourseCourseIdExerciseDetailRouteRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/code-exercise/$codeId': {
-      preLoaderRoute: typeof CodeExerciseCodeIdImport
+    '/': {
+      preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/text-editor/': {
-      preLoaderRoute: typeof TextEditorIndexImport
+    '/course': {
+      preLoaderRoute: typeof CourseRouteImport
       parentRoute: typeof rootRoute
+    }
+    '/enroll-exercise': {
+      preLoaderRoute: typeof EnrollExerciseRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/enroll-course/': {
+      preLoaderRoute: typeof EnrollCourseIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/forget-password/': {
+      preLoaderRoute: typeof ForgetPasswordIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/login/': {
+      preLoaderRoute: typeof LoginIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/': {
+      preLoaderRoute: typeof ProfileIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/sandpack/': {
+      preLoaderRoute: typeof SandpackIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/course/_course': {
+      preLoaderRoute: typeof CourseCourseImport
+      parentRoute: typeof CourseRouteImport
+    }
+    '/enroll-exercise/$exerciseId': {
+      preLoaderRoute: typeof EnrollExerciseExerciseIdImport
+      parentRoute: typeof EnrollExerciseRouteImport
+    }
+    '/course/$courseId/': {
+      preLoaderRoute: typeof CourseCourseIdIndexImport
+      parentRoute: typeof CourseRouteImport
+    }
+    '/course/$courseId/exercise-detail': {
+      preLoaderRoute: typeof CourseCourseIdExerciseDetailRouteImport
+      parentRoute: typeof CourseRouteImport
+    }
+    '/course/$courseId/exercise-detail/$exerciseId': {
+      preLoaderRoute: typeof CourseCourseIdExerciseDetailExerciseIdImport
+      parentRoute: typeof CourseCourseIdExerciseDetailRouteImport
     }
   }
 }
@@ -44,8 +156,20 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
-  CodeExerciseCodeIdRoute,
-  TextEditorIndexRoute,
+  IndexRoute,
+  CourseRouteRoute.addChildren([
+    CourseCourseRoute,
+    CourseCourseIdIndexRoute,
+    CourseCourseIdExerciseDetailRouteRoute.addChildren([
+      CourseCourseIdExerciseDetailExerciseIdRoute,
+    ]),
+  ]),
+  EnrollExerciseRouteRoute.addChildren([EnrollExerciseExerciseIdRoute]),
+  EnrollCourseIndexRoute,
+  ForgetPasswordIndexRoute,
+  LoginIndexRoute,
+  ProfileIndexRoute,
+  SandpackIndexRoute,
 ])
 
 /* prettier-ignore-end */

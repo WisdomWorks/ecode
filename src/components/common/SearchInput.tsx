@@ -21,14 +21,18 @@ export const SearchInput = ({
         {...rest}
         InputProps={{
           endAdornment: (
-            <IconButton className="h-full rounded-l-none rounded-r-lg bg-primary-500 px-3 text-white">
+            <IconButton className="h-full rounded-l-none rounded-r-lg bg-transparent px-3">
               <Search />
             </IconButton>
           ),
         }}
         className={cn('[&_.MuiInputBase-root]:pr-0', className)}
         fullWidth
+        inputProps={{
+          className: 'p-0 px-5 py-3',
+        }}
         onChange={onChange}
+        placeholder="Search"
         type={type}
         value={value}
         variant={variant}

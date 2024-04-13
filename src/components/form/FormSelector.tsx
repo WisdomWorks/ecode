@@ -3,7 +3,9 @@ import { FieldValues, useController, UseControllerProps } from 'react-hook-form'
 import { OptionSelector, OptionSelectProps } from '../selector/OptionSelector'
 
 type Props<TForm extends FieldValues, TData> = OptionSelectProps<TData> &
-  UseControllerProps<TForm>
+  UseControllerProps<TForm> & {
+    extraOnChange?: () => void
+  }
 
 export const FormSelector = <TForm extends FieldValues, TData>({
   className,
@@ -14,8 +16,8 @@ export const FormSelector = <TForm extends FieldValues, TData>({
   multiple,
   name,
   options = [],
-  renderInput,
   required,
+  ...rest
 }: Props<TForm, TData>) => {
   const {
     field: { onBlur, onChange, value },
@@ -27,6 +29,7 @@ export const FormSelector = <TForm extends FieldValues, TData>({
 
   return (
     <OptionSelector<TData>
+      {...rest}
       className={className}
       clearOnBlur={clearOnBlur}
       error={!!error}
@@ -37,7 +40,6 @@ export const FormSelector = <TForm extends FieldValues, TData>({
       onBlur={onBlur}
       onChange={(_, data) => onChange(data)}
       options={options}
-      renderInput={renderInput}
       required={required}
       value={value}
     />

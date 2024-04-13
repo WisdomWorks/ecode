@@ -1,53 +1,38 @@
 import {
   ChangeEventHandler,
   ComponentPropsWithoutRef,
+  Dispatch,
   DragEventHandler,
+  SetStateAction,
   useMemo,
   useRef,
   useState,
 } from 'react'
 
-import { ExcelIcon, PdfIcon, WordIcon } from './icons'
-import {
-  AudiotrackOutlined,
-  CloudUploadOutlined,
-  InsertDriveFileRounded,
-} from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { AcceptTypeFile, getFileIcon } from '@/utils'
 
-enum AcceptTypeFile {
-  Audio = 'audio/*',
-  Excel = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  Image = 'image/*',
-  Pdf = 'application/pdf',
-  Video = 'video/*',
-  Word = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-}
-
-const getFileIcon = (type: AcceptTypeFile) => {
-  switch (type) {
-    case AcceptTypeFile.Audio:
-      return AudiotrackOutlined
-    case AcceptTypeFile.Excel:
-      return ExcelIcon
-    case AcceptTypeFile.Pdf:
-      return PdfIcon
-    case AcceptTypeFile.Word:
-      return WordIcon
-    default:
-      return InsertDriveFileRounded
-  }
-}
+import { CloudUploadOutlined } from '@mui/icons-material'
+import { Button, LinearProgress } from '@mui/material'
 
 type TAcceptTypeFileKeys = keyof typeof AcceptTypeFile
 
 type Props = ComponentPropsWithoutRef<'input'> & {
+  files: FileList | null
+  handleUpload?: () => void
+  loading?: boolean
+  setFiles: Dispatch<SetStateAction<FileList | null>>
   typeFiles?: TAcceptTypeFileKeys[]
 }
 
-export const FileUpload = ({ multiple, typeFiles }: Props) => {
+export const FileUpload = ({
+  files,
+  handleUpload,
+  loading,
+  multiple,
+  setFiles,
+  typeFiles,
+}: Props) => {
   const [isDragActive, setIsDragActive] = useState(false)
-  const [files, setFiles] = useState<FileList | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { acceptTypeKey, acceptTypeValue } = useMemo(() => {
@@ -78,6 +63,7 @@ export const FileUpload = ({ multiple, typeFiles }: Props) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragActive(false)
+
     handleFileUpload(e.dataTransfer.files)
   }
 
@@ -139,6 +125,8 @@ export const FileUpload = ({ multiple, typeFiles }: Props) => {
         </label>
       </form>
 
+      <div className="mt-2">{loading && <LinearProgress />}</div>
+
       {files && (
         <div className="mt-2 flex max-h-36 flex-col overflow-x-hidden">
           <span className="text-base font-medium italic">Preview files:</span>
@@ -161,13 +149,15 @@ export const FileUpload = ({ multiple, typeFiles }: Props) => {
         <Button className="text-neutral-500" onClick={() => setFiles(null)}>
           Cancel
         </Button>
-        <Button
-          className="submitBtn"
-          disabled={!files}
-          onClick={() => setFiles(null)}
-        >
-          Upload
-        </Button>
+        {handleUpload && (
+          <Button
+            className="submitBtn"
+            disabled={!files || loading}
+            onClick={handleUpload}
+          >
+            Upload
+          </Button>
+        )}
       </div>
     </div>
   )

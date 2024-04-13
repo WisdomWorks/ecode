@@ -1,18 +1,26 @@
-import React from 'react'
+import { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
-import { QueryClient, QueryClientProvider } from 'react-query'
 
+import { configAuthorization } from './apis/axios.ts'
+import { useCheckSession } from './apis/useCheckSession.ts'
+import { BackDropLoading } from './components/common/BackDropLoading.tsx'
+import { useAppStore } from './context/useAppStore.tsx'
 import { routeTree } from './generated/routeTree.gen.ts'
-import { Router, RouterProvider } from '@tanstack/react-router'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { SnackbarProvider } from 'notistack'
 
 import './index.css'
 
 const queryClient = new QueryClient()
 
-const router = new Router({
+const router = createRouter({
   routeTree,
   context: {
     queryClient,
+    user: undefined,
   },
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
@@ -23,10 +31,51 @@ declare module '@tanstack/react-router' {
   }
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+export const InnerApp = () => {
+  const setUser = useAppStore(state => state.setUser)
+  const setCourses = useAppStore(state => state.setCourses)
+
+  const { data, isLoading } = useCheckSession()
+
+  useEffect(() => {
+    if (data) {
+      const { courses, token, user } = data.data
+      configAuthorization(token)
+      setUser(user)
+      setCourses(courses)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data])
+
+  if (isLoading) {
+    return <BackDropLoading />
+  }
+
+  return (
+    <SnackbarProvider autoHideDuration={2000} maxSnack={1}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <RouterProvider
+          context={{
+            user: data?.data.user,
+          }}
+          router={router}
+        />
+      </LocalizationProvider>
+    </SnackbarProvider>
+  )
+}
+
+function App() {
+  return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <InnerApp />
     </QueryClientProvider>
-  </React.StrictMode>,
-)
+  )
+}
+
+const rootElement = document.getElementById('root')!
+
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
+  root.render(<App />)
+}

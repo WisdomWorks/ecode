@@ -5,27 +5,24 @@ import CodeMirror, {
   BasicSetupOptions,
   EditorView,
   Extension,
+  ReactCodeMirrorProps,
 } from '@uiw/react-codemirror'
 
-interface Props {
-  className?: string
-  onChange?: (value: string) => void
-  value: string
-}
+interface Props extends ReactCodeMirrorProps {}
 
 const basicSetup: BasicSetupOptions = {}
 const extensions: Extension[] = [java(), EditorView.lineWrapping]
 
-export const CodeIDE = ({ className, onChange, value }: Props) => {
+export const CodeIDE = ({ className, onChange, value, ...rest }: Props) => {
   return (
     <>
       <CodeMirror
+        {...rest}
         basicSetup={basicSetup}
-        className={cn('h-full overflow-auto', className)}
-        editable
+        className={cn('h-full overflow-auto text-sm', className)}
         extensions={extensions}
         onChange={onChange}
-        theme="dark"
+        theme="light"
         value={value}
       />
     </>

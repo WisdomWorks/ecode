@@ -10,5 +10,5 @@ export const Container = ({
   children,
   className,
 }: PropsWithChildren<Props>) => {
-  return <div className={cn('h-full p-8', className)}>{children}</div>
+  return <div className={cn('h-full', className)}>{children}</div>
 }

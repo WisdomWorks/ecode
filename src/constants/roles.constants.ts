@@ -1,7 +1,7 @@
 export enum Role {
-  ADMIN = 'Admin',
-  STUDENT = 'Student',
-  TEACHER = 'Teacher',
+  ADMIN = 'admin',
+  STUDENT = 'student',
+  TEACHER = 'teacher',
 }
 
 export const RoleOptions = [Role.ADMIN, Role.TEACHER, Role.STUDENT]
