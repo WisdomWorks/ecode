@@ -202,12 +202,16 @@ export const CreateCodeExercise = ({
 
     const pointPerTc = Math.round((10 / noOfTcNotPreset) * 10) / 10
 
-    testCases.forEach((testCase, index) => {
-      if (index === lastIndex) return
+    testCases.forEach((testCase, i) => {
+      if (i === lastIndex) return
       if (!testCase.isPretest) {
-        setValue(`testCases.${index}.points`, pointPerTc)
+        setValue(`testCases.${i}.points`, pointPerTc)
       }
     })
+
+    const totalPoint = testCases.reduce((acc, tc) => acc + (tc.points || 0), 0)
+
+    if (totalPoint === 10) return
 
     const pointLastTc =
       Math.round((10 - pointPerTc * (noOfTcNotPreset - 1)) * 10) / 10
