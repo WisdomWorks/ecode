@@ -173,8 +173,10 @@ export const ModalViewDetailSubmission = ({
           {type === ExerciseType.CODE && (
             <DetailCode
               exercise={data.data.exercise}
+              refetchSubmissions={refetchSubmissions}
               resultTestCases={data.data.resultTestcases}
               submissions={data.data.submissions as CodeSubmission}
+              toggleModal={toggleModal}
             />
           )}
         </>

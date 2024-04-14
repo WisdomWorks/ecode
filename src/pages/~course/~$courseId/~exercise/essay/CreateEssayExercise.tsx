@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 import { useCreateEssayExercise, useUpdateEssayExercise } from '@/apis'
-import { Form } from '@/components/form'
+import { Form, FormCheckbox } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { CreateExerciseInformation } from '@/pages/~course/components'
 import { CreateEssayExerciseSchema } from '@/pages/~course/shema/createEssayExercise.schema'
@@ -63,6 +63,7 @@ export const CreateEssayExercise = ({
       endDate: exercise?.endTime
         ? new Date(exercise.endTime)
         : defaultTimeWithoutSecond,
+      usingAiGrading: exercise?.usingAiGrading || false,
     }),
     [exercise, topicId],
   )
@@ -129,6 +130,14 @@ export const CreateEssayExercise = ({
       <Typography className="col-span-12" variant="h5">
         Exercise Question
       </Typography>
+
+      <div className="col-span-12">
+        <FormCheckbox
+          control={control}
+          label="Auto grade and feedback using AI"
+          name="usingAiGrading"
+        />
+      </div>
       <FormTipTap
         className="col-span-12"
         classNameEditor="min-h-[12rem] max-h-[15rem] overflow-auto"

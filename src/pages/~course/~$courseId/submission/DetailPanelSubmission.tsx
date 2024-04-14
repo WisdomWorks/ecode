@@ -84,7 +84,11 @@ export const DetailPanelSubmission = ({ row }: Props) => {
         positionActionsColumn="last"
         renderRowActions={({ row: { original } }) => (
           <div className="flex">
-            {![ExerciseType.ESSAY, ExerciseType.FILE].includes(type) ? (
+            {![
+              ExerciseType.ESSAY,
+              ExerciseType.FILE,
+              ExerciseType.CODE,
+            ].includes(type) ? (
               <ButtonTooltip
                 iconButtonProps={{
                   children: (

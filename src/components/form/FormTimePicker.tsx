@@ -40,6 +40,7 @@ export const FormTimePicker = <TForm extends FieldValues>({
         )}
         format={HHmmss}
         label=""
+        maxTime={new Date(0, 0, 0, 3, 59, 0) as unknown as TForm}
         name={name}
         onChange={onChange}
         slotProps={{

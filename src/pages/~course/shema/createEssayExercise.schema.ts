@@ -14,6 +14,7 @@ export const CreateEssayExerciseSchema = z
     reAttempt: z.any().refine(value => +value >= 1, {
       message: 'Attempt limit must be greater than 0',
     }),
+    usingAiGrading: z.boolean(),
   })
   .superRefine(({ endDate, startDate }, ctx) => {
     if (isPast(endDate)) {

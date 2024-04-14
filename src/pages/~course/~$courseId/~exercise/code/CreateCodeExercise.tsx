@@ -87,6 +87,7 @@ export const CreateCodeExercise = ({
           programmingLanguages.find(pr => pr.key === item),
         ) || [],
       description: exercise?.description || '',
+      usingAiGrading: exercise?.usingAiGrading || false,
       testCases: exercise?.testCases.map(tc => ({
         ...tc,
         isPretest: tc.points === 0,
@@ -261,6 +262,14 @@ export const CreateCodeExercise = ({
           />
         </div>
 
+        <div className="col-span-12">
+          <FormCheckbox
+            control={control}
+            label="Auto grade and feedback using AI"
+            name="usingAiGrading"
+          />
+        </div>
+
         <section className="col-span-2 mt-2 flex flex-col gap-3">
           <h2 className="text-lg text-neutral-900">{`Test case (${
             watch('testCases').length
@@ -281,7 +290,6 @@ export const CreateCodeExercise = ({
                       multiline
                       name={`testCases.${index}.input`}
                       placeholder='e.g. "1 2 3 4 5"'
-                      required
                     />
                     <FormInput
                       className="col-span-4"
@@ -291,7 +299,6 @@ export const CreateCodeExercise = ({
                       multiline
                       name={`testCases.${index}.output`}
                       placeholder="Enter output"
-                      required
                     />
                     <FormInput
                       className="col-span-1"

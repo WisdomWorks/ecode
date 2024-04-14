@@ -90,6 +90,9 @@ export interface paths {
   "/exercises/quiz/submit": {
     post: operations["submitQuizExercise"];
   };
+  "/exercises/quiz/excel": {
+    post: operations["createQuizFromExcel"];
+  };
   "/exercises/file/submit": {
     post: operations["submitFileExercise"];
   };
@@ -207,7 +210,7 @@ export interface paths {
   "/groups/{groupId}/student": {
     delete: operations["deleteStudentInGroup"];
   };
-  "/courses/unEnrollment": {
+  "/courses/unenrollment": {
     delete: operations["unEnrollUserInCourse"];
   };
 }
@@ -225,7 +228,6 @@ export interface components {
       topicId: string;
       topicName: string;
       description?: string;
-      showAll?: boolean;
     };
     UpdateGroupRequest: {
       groupName?: string;
@@ -300,7 +302,7 @@ export interface components {
       exerciseId?: string;
       input?: string;
       output?: string;
-      /** Format: int32 */
+      /** Format: double */
       points?: number;
     };
     UpdateCodeExerciseRequest: {
@@ -415,6 +417,20 @@ export interface components {
       questionId: string;
       answers: components["schemas"]["QuizChoice"][];
     };
+    CreateQuizExerciseByExcelRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      exerciseDescription?: string;
+    };
     CreateFileExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -447,6 +463,7 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       question: string;
+      usingAiGrading?: boolean;
     };
     CreateEssaySubmissionRequest: {
       studentId: string;
@@ -476,6 +493,7 @@ export interface components {
       points: number;
       testCases: components["schemas"]["TestCase"][];
       template?: string;
+      usingAiGrading?: boolean;
     };
     SubmitCodeExerciseRequest: {
       studentId: string;
@@ -1358,6 +1376,31 @@ export interface operations {
     requestBody: {
       content: {
         "application/json": components["schemas"]["CreateQuizSubmissionRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  createQuizFromExcel: {
+    requestBody?: {
+      content: {
+        "application/json": {
+          request?: components["schemas"]["CreateQuizExerciseByExcelRequest"];
+          /** Format: binary */
+          file: string;
+        };
       };
     };
     responses: {

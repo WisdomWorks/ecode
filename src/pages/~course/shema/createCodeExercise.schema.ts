@@ -15,6 +15,7 @@ export const CreateCodeExerciseSchema = z
     reAttempt: z.any().refine(value => +value >= 1, {
       message: 'Attempt limit must be greater than 0',
     }),
+    usingAiGrading: z.boolean(),
     allowedLanguageIds: z
       .array(z.object({ key: z.string() }))
       .nonempty({ message: 'Language is required' }),
@@ -22,8 +23,8 @@ export const CreateCodeExerciseSchema = z
       .array(
         z.object({
           testcaseId: z.string().optional(),
-          input: z.string().min(1, { message: 'Input is required' }),
-          output: z.string().min(1, { message: 'Output is required' }),
+          input: z.string(),
+          output: z.string(),
           points: z
             .number()
             .optional()
