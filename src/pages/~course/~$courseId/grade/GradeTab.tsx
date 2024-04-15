@@ -21,7 +21,7 @@ const columns: TColumn<GradeStudent>[] = [
     accessorKey: 'type',
     header: 'Exercise Type',
     filterVariant: 'select',
-    filterSelectOptions: ['Quiz', 'Essay'],
+    filterSelectOptions: ['Quiz', 'Essay', 'Code', 'File'],
     // eslint-disable-next-line react/prop-types
     Cell: ({ cell }) => (
       <Chip
