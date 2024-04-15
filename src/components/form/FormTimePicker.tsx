@@ -45,7 +45,7 @@ export const FormTimePicker = <TForm extends FieldValues>({
         onChange={onChange}
         slotProps={{
           textField: {
-            helperText: errorZod?.message || 'Invalid time',
+            helperText: errorZod?.message,
           },
         }}
         value={value}
