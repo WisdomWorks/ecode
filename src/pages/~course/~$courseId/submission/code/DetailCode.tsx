@@ -82,36 +82,38 @@ export const DetailCode = ({
   }
 
   return (
-    <Form className="h-full" form={form} onSubmit={handleSubmit}>
-      <div className="col-span-12 mb-2">
-        <div className="flex gap-2">
-          <FormInput
-            className="col-span-12"
-            disabled={!isTeacher}
-            label="Teacher comment"
-            multiline
-            name="comment"
-            placeholder="Comment of teacher"
-            rows={3}
-          />
-          {isTeacher && (
+    <div className="h-full">
+      <Form form={form} onSubmit={handleSubmit}>
+        <div className="col-span-12 mb-2">
+          <div className="flex gap-2">
             <FormInput
-              className="w-fit"
-              label="Score"
-              name="score"
-              placeholder="Grade"
-              type="number"
+              className="disabled-text-neutral-900 col-span-12"
+              disabled={!isTeacher}
+              label="Teacher comment"
+              multiline
+              name="comment"
+              placeholder="Comment of teacher"
+              rows={3}
             />
+            {isTeacher && (
+              <FormInput
+                className="w-fit"
+                label="Score"
+                name="score"
+                placeholder="Grade"
+                type="number"
+              />
+            )}
+          </div>
+          {isTeacher && (
+            <div className="flex justify-end">
+              <Button className="submitBtn" disabled={isPending} type="submit">
+                Grade
+              </Button>
+            </div>
           )}
         </div>
-        {isTeacher && (
-          <div className="flex justify-end">
-            <Button className="submitBtn" disabled={isPending} type="submit">
-              Grade
-            </Button>
-          </div>
-        )}
-      </div>
+      </Form>
       <CodeExercise
         exercise={exercise as CodeExerciseSchema}
         isReview
@@ -119,6 +121,6 @@ export const DetailCode = ({
         resultTestCases={resultTestCases}
         submissions={submissions}
       />
-    </Form>
+    </div>
   )
 }

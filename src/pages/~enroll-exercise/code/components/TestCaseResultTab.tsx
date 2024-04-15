@@ -5,15 +5,22 @@ import { getTestCaseStatus } from '@/utils/course.utils'
 interface Props {
   currentCase: number
   testResult: TGetTestCaseRunCode | null
+  usingAiGrading?: boolean
 }
 
-export const TestCaseResultTab = ({ currentCase, testResult }: Props) => {
+export const TestCaseResultTab = ({
+  currentCase,
+  testResult,
+  usingAiGrading,
+}: Props) => {
   if (!testResult)
     return (
       <div className="flex size-full justify-center pt-5 text-gray-500">
         <p>You must run code first</p>
       </div>
     )
+
+  if (usingAiGrading) return null
 
   return (
     <div className="ml-3 mt-3">

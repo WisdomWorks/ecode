@@ -50,13 +50,17 @@ export const CodeExercise = ({
 
   const [openModal, toggleOpenModal] = useToggle()
 
-  const { description, testCases } = exercise
+  const {
+    description,
+    exerciseId,
+    languageTemplate,
+    testCases,
+    usingAiGrading,
+  } = exercise
 
   const [testResult, setTestResult] = useState<TGetTestCaseRunCode | null>(null)
-  const [currentTab, setCurrentTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState(usingAiGrading ? 1 : 0)
   const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
-
-  const { exerciseId, languageTemplate } = exercise
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
   const { isPending: isPendingSubmit, mutate: submitExercise } =
@@ -150,6 +154,7 @@ export const CodeExercise = ({
                 setCurrentTab={setCurrentTab}
                 testCases={testCases}
                 testResult={testResult}
+                usingAiGrading={usingAiGrading}
               />
             </Panel>
           </PanelGroup>

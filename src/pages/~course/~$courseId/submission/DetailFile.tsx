@@ -124,7 +124,7 @@ export const DetailFile = ({
           </div>
 
           <FormInput
-            className="col-span-12"
+            className="disabled-text-neutral-900 col-span-12"
             disabled={!isTeacher}
             label="Teacher comment"
             multiline

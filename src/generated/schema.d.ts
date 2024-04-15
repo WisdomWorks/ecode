@@ -188,6 +188,9 @@ export interface paths {
   "/exercises/preview/{exerciseId}": {
     get: operations["getPreviewExercise"];
   };
+  "/exercises/export-scores": {
+    get: operations["exportScores"];
+  };
   "/exercises/code/run/{submissionId}": {
     get: operations["runCodeExercise_1"];
   };
@@ -296,6 +299,7 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       question: string;
+      usingAiGrading?: boolean;
     };
     TestCase: {
       testcaseId?: string;
@@ -330,6 +334,7 @@ export interface components {
       points?: number;
       template?: string;
       testCases?: components["schemas"]["TestCase"][];
+      usingAiGrading?: boolean;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -2163,6 +2168,25 @@ export interface operations {
         content: {
           "*/*": Record<string, never>;
         };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  exportScores: {
+    parameters: {
+      query: {
+        courseId: string;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: never;
       };
       /** @description Bad Request */
       400: {

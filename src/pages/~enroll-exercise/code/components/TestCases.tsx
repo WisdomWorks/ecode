@@ -18,6 +18,7 @@ interface Props {
   setCurrentTab: (index: number) => void
   testCases: CodeExerciseSchema['testCases']
   testResult: TGetTestCaseRunCode | null
+  usingAiGrading?: boolean
 }
 
 export const TestCases = ({
@@ -28,6 +29,7 @@ export const TestCases = ({
   setCurrentTab,
   testCases,
   testResult,
+  usingAiGrading,
 }: Props) => {
   const [currentCase, setCurrentCase] = useState(0)
   const { isStudent } = useCheckRole()
@@ -39,15 +41,21 @@ export const TestCases = ({
   return (
     <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
       <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1">
-        <Button
-          color="success"
-          onClick={() => setCurrentTab(0)}
-          startIcon={<VerifiedUserOutlinedIcon className="text-green-500" />}
-          variant="text"
-        >
-          {isReview ? `Test Case Result (${testCases.length})` : 'Test Case'}
-        </Button>
-        <Divider className="mx-3 bg-gray-100" orientation="vertical" />
+        {!usingAiGrading && (
+          <>
+            <Button
+              color="success"
+              onClick={() => setCurrentTab(0)}
+              startIcon={
+                <VerifiedUserOutlinedIcon className="text-green-500" />
+              }
+              variant="text"
+            >
+              Test Case {isReview ? 'Result' : ''} ({testCases.length})
+            </Button>
+            <Divider className="mx-3 bg-gray-100" orientation="vertical" />
+          </>
+        )}
         {isReview && isStudent ? null : (
           <Button
             color="success"
@@ -66,7 +74,11 @@ export const TestCases = ({
       </div>
 
       {currentTab === 1 && (
-        <TestCaseResultTab currentCase={currentCase} testResult={testResult} />
+        <TestCaseResultTab
+          currentCase={currentCase}
+          testResult={testResult}
+          usingAiGrading={usingAiGrading}
+        />
       )}
 
       <TestCaseList
@@ -77,6 +89,7 @@ export const TestCases = ({
         resultTestCases={resultTestCases}
         testCases={testCases}
         testResult={testResult}
+        usingAiGrading={usingAiGrading}
       />
     </div>
   )
