@@ -96,6 +96,9 @@ export interface paths {
   "/exercises/file/submit": {
     post: operations["submitFileExercise"];
   };
+  "/exercises/export-scores": {
+    post: operations["exportScores"];
+  };
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
   };
@@ -187,9 +190,6 @@ export interface paths {
   };
   "/exercises/preview/{exerciseId}": {
     get: operations["getPreviewExercise"];
-  };
-  "/exercises/export-scores": {
-    get: operations["exportScores"];
   };
   "/exercises/code/run/{submissionId}": {
     get: operations["runCodeExercise_1"];
@@ -453,6 +453,9 @@ export interface components {
     CreateFileSubmissionRequest: {
       studentId: string;
       exerciseId: string;
+    };
+    ExportScoresRequest: {
+      courseId?: string;
     };
     CreateEssayExerciseRequest: {
       topicId: string;
@@ -1448,6 +1451,25 @@ export interface operations {
       };
     };
   };
+  exportScores: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExportScoresRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: never;
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   submitEssayExercise: {
     requestBody: {
       content: {
@@ -2168,25 +2190,6 @@ export interface operations {
         content: {
           "*/*": Record<string, never>;
         };
-      };
-      /** @description Bad Request */
-      400: {
-        content: {
-          "*/*": Record<string, never>;
-        };
-      };
-    };
-  };
-  exportScores: {
-    parameters: {
-      query: {
-        courseId: string;
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        content: never;
       };
       /** @description Bad Request */
       400: {

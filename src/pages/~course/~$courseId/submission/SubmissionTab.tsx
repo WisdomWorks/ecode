@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { useGetExercises } from '@/apis'
+import { useExportCourseScore, useGetExercises } from '@/apis'
 import { Loading, Table } from '@/components/common'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
@@ -64,7 +64,10 @@ const columns: TColumn<ExerciseSchema>[] = [
 
 export const SubmissionTab = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
+
   const { data, isLoading } = useGetExercises({ courseId })
+  const { mutate: exportExcel } = useExportCourseScore()
+
   const [rowClicked, setRowClicked] = useState<MRT_Row<ExerciseSchema> | null>(
     null,
   )
@@ -72,6 +75,25 @@ export const SubmissionTab = () => {
   if (isLoading) return <Loading />
 
   const exercises = data?.data
+
+  const handleExportExcel = () => {
+    exportExcel(
+      { courseId },
+      {
+        onSuccess: data => {
+          console.log(data)
+          const fileBlob = new Blob([data.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          })
+          const fileUrl = window.URL.createObjectURL(fileBlob)
+          const a = document.createElement('a')
+          a.href = fileUrl
+          a.download = 'export-scores.xlsx'
+          a.click()
+        },
+      },
+    )
+  }
 
   return (
     <>
@@ -88,7 +110,9 @@ export const SubmissionTab = () => {
                 cursor: 'pointer',
               },
             })}
-            renderTopToolbarCustomActions={() => <h3>Exercise List</h3>}
+            renderTopToolbarCustomActions={() => (
+              <Button onClick={handleExportExcel}>Export</Button>
+            )}
           />
         </div>
       </Slide>
