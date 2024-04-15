@@ -14,27 +14,18 @@ export const CreateQuizExerciseSchema = z
     reAttempt: z.any().refine(value => +value >= 1, {
       message: 'Attempt limit must be greater than 0',
     }),
+    createOption: z.string().optional(),
     questions: z.array(
       z.object({
         questionId: z.string().optional(),
         title: z.string().optional(),
         isMultipleChoice: z.boolean(),
-        choices: z
-          .array(
-            z.object({
-              choiceId: z.string().optional(),
-              content: z.string().optional(),
-            }),
-          )
-          .refine(
-            value => {
-              const choices = value.filter(item => item.content)
-              const uniqChoices = uniqBy(choices, 'content')
-
-              return choices.length === uniqChoices.length
-            },
-            { message: 'Choices must be unique answer' },
-          ),
+        choices: z.array(
+          z.object({
+            choiceId: z.string().optional(),
+            content: z.string().optional(),
+          }),
+        ),
         answers: z.array(
           z.object({
             choiceId: z.string().optional(),
@@ -45,11 +36,11 @@ export const CreateQuizExerciseSchema = z
       }),
     ),
   })
-  .superRefine(({ endDate, startDate }, ctx) => {
+  .superRefine(({ createOption, endDate, questions, startDate }, ctx) => {
     if (isPast(endDate)) {
       const error = 'endDate'
 
-      return ctx.addIssue({
+      ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Past date is not allowed',
         path: [error],
@@ -57,10 +48,25 @@ export const CreateQuizExerciseSchema = z
     }
 
     if (isBefore(endDate, startDate)) {
-      return ctx.addIssue({
+      ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'End date must be after start date',
         path: ['endDate'],
+      })
+    }
+
+    if (createOption === 'manual') {
+      questions.forEach((value, index) => {
+        const choices = value.choices.filter(item => item.content)
+        const uniqChoices = uniqBy(choices, 'content')
+
+        if (choices.length !== uniqChoices.length) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Choices must be unique answer',
+            path: ['questions', index, 'choices'],
+          })
+        }
       })
     }
   })

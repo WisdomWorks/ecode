@@ -62,23 +62,22 @@ export const CreateCodeExerciseSchema = z
     }
 
     if (!usingAiGrading) {
-      const emptyInputIndex = testCases.findIndex(testCase => !testCase.input)
-      const emptyOutputIndex = testCases.findIndex(testCase => !testCase.output)
+      testCases.forEach((testCase, index) => {
+        if (!testCase.input) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Input is required',
+            path: ['testCases', index, 'input'],
+          })
+        }
 
-      if (emptyInputIndex !== -1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Input is required',
-          path: ['testCases', emptyInputIndex, 'input'],
-        })
-      }
-
-      if (emptyOutputIndex !== -1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Output is required',
-          path: ['testCases', emptyOutputIndex, 'output'],
-        })
-      }
+        if (!testCase.output) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Output is required',
+            path: ['testCases', index, 'output'],
+          })
+        }
+      })
     }
   })
