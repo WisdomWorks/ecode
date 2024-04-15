@@ -136,18 +136,20 @@ export const CreateCodeExercise = ({
       ...rest
     } = data
 
-    const atLeastOnePretest = testCases.some(tc => tc.points === 0)
+    if (!rest.usingAiGrading) {
+      const atLeastOnePretest = testCases.some(tc => tc.points === 0)
 
-    if (!atLeastOnePretest) {
-      setErrorMessage('At least one pretest must be set')
-      return
-    }
+      if (!atLeastOnePretest) {
+        setErrorMessage('At least one pretest must be set')
+        return
+      }
 
-    const isAllPretest = testCases.every(tc => tc.points === 0)
+      const isAllPretest = testCases.every(tc => tc.points === 0)
 
-    if (isAllPretest) {
-      setErrorMessage('At least one test case to grade')
-      return
+      if (isAllPretest) {
+        setErrorMessage('At least one test case to grade')
+        return
+      }
     }
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
@@ -169,7 +171,15 @@ export const CreateCodeExercise = ({
       ...rest,
       reAttempt: Number(reAttempt),
       allowedLanguageIds: allowedLanguageIdsInput,
-      testCases: testCaseListInput,
+      testCases: rest.usingAiGrading
+        ? [
+            {
+              ...testCaseListInput[0],
+              input: '',
+              output: '',
+            },
+          ]
+        : testCaseListInput,
       durationTime,
       endTime,
       startTime,
@@ -273,7 +283,8 @@ export const CreateCodeExercise = ({
             name="usingAiGrading"
           />
         </div>
-
+      </div>
+      {!watch('usingAiGrading') && (
         <section className="col-span-2 mt-2 flex flex-col gap-3">
           <h2 className="text-lg text-neutral-900">{`Test case (${
             watch('testCases').length
@@ -294,6 +305,7 @@ export const CreateCodeExercise = ({
                       multiline
                       name={`testCases.${index}.input`}
                       placeholder='e.g. "1 2 3 4 5"'
+                      required
                     />
                     <FormInput
                       className="col-span-4"
@@ -303,6 +315,7 @@ export const CreateCodeExercise = ({
                       multiline
                       name={`testCases.${index}.output`}
                       placeholder="Enter output"
+                      required
                     />
                     <FormInput
                       className="col-span-1"
@@ -361,27 +374,27 @@ export const CreateCodeExercise = ({
               )
             })}
           </div>
+          <div className="mt-3">
+            <Button
+              disabled={isPendingCreate || isPendingUpdate}
+              onClick={() => {
+                append({
+                  input: '',
+                  output: '',
+                  points: 0,
+                  isPretest: false,
+                  defaultTestCase: false,
+                })
+                calculatePoint()
+              }}
+              variant="contained"
+            >
+              <AddCircleOutline className="mr-2 text-white" />
+              Add test case
+            </Button>
+          </div>
         </section>
-      </div>
-      <div className="mt-3">
-        <Button
-          disabled={isPendingCreate || isPendingUpdate}
-          onClick={() => {
-            append({
-              input: '',
-              output: '',
-              points: 0,
-              isPretest: false,
-              defaultTestCase: false,
-            })
-            calculatePoint()
-          }}
-          variant="contained"
-        >
-          <AddCircleOutline className="mr-2 text-white" />
-          Add test case
-        </Button>
-      </div>
+      )}
       <FormButtonGroup
         buttons={[
           {
