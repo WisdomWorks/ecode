@@ -74,7 +74,11 @@ export const FormExcelQuestion = ({
           <h5>Click the button below to get the template</h5>
         </div>
         <div>
-          <a href="" rel="noreferrer" target="_self">
+          <a
+            href="https://storage.googleapis.com/codee-data/templates/Create_Quiz_Exercise_Template.xlsx"
+            rel="noreferrer"
+            target="_self"
+          >
             <Button
               className="submitBtn"
               startIcon={<Download fontSize="large" />}
