@@ -22,8 +22,6 @@ export const TestCaseResultTab = ({
       </div>
     )
 
-  if (usingAiGrading) return null
-
   return (
     <div className="ml-3 mt-3">
       <p
@@ -31,7 +29,7 @@ export const TestCaseResultTab = ({
           'text-green-500': testResult?.testCases[currentCase]?.status === 'AC',
         })}
       >
-        {getTestCaseStatus(testResult, currentCase)}
+        {getTestCaseStatus(testResult, currentCase, usingAiGrading)}
       </p>
       {testResult?.message && (
         <div className="my-3 mr-3 whitespace-pre-line rounded-sm bg-red-50 p-2 text-sm text-red-500">

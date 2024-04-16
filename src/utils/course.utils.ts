@@ -59,12 +59,15 @@ export const checkIsOnGoing = (startTime: string, endTime: string) => {
 export const getTestCaseStatus = (
   testResult?: TGetTestCaseRunCode | null,
   currentCase?: number,
+  usingAiGrading?: boolean,
 ) => {
   if (!testResult) return ''
 
   if (['CE', 'IE'].includes(testResult.status)) {
     return testCaseStatus[testResult.status]
   }
+
+  if (usingAiGrading) return ''
 
   if (typeof currentCase === 'number' && currentCase >= 0) {
     const status = testResult.testCases.at(currentCase)?.status
