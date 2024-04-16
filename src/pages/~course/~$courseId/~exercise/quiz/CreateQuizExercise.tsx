@@ -216,19 +216,14 @@ export const CreateQuizExercise = ({
       return setErrorMessage('Please upload a file')
     }
 
+    formData.append('topicId', rest.topicId)
+    formData.append('exerciseName', rest.exerciseName)
+    formData.append('key', rest.key)
+    formData.append('startTime', startTime)
+    formData.append('endTime', endTime)
+    formData.append('durationTime', String(durationTime))
+    formData.append('reAttempt', String(reAttempt))
     formData.append('file', files[0])
-    formData.append(
-      'request',
-      JSON.stringify({
-        topicId: rest.topicId,
-        exerciseName: rest.exerciseName,
-        key: rest.key,
-        startTime,
-        endTime,
-        durationTime,
-        reAttempt: Number(reAttempt),
-      }),
-    )
 
     createExerciseByExcel(formData, {
       onSuccess: () => {
