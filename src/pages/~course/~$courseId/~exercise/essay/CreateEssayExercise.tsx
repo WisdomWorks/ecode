@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useCreateEssayExercise, useUpdateEssayExercise } from '@/apis'
 import { Form, FormCheckbox } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
+import { useToastMessage } from '@/hooks'
 import { CreateExerciseInformation } from '@/pages/~course/components'
 import { CreateEssayExerciseSchema } from '@/pages/~course/shema/createEssayExercise.schema'
 import { Schema } from '@/types'
@@ -38,6 +39,8 @@ export const CreateEssayExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
+
   const { isPending: createPending, mutate: createEssay } =
     useCreateEssayExercise()
   const { isPending: updatePending, mutate: updateEssay } =
@@ -91,8 +94,13 @@ export const CreateEssayExercise = ({
         },
         {
           onSuccess: () => {
+            setSuccessMessage('Update exercise successfully')
             handleBack()
           },
+          onError: error =>
+            setErrorMessage(
+              error.response?.data.message || 'Create exercise failed',
+            ),
         },
       )
       return
@@ -108,8 +116,13 @@ export const CreateEssayExercise = ({
       },
       {
         onSuccess: () => {
+          setSuccessMessage('Create exercise successfully')
           handleBack()
         },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Create exercise failed',
+          ),
       },
     )
   }

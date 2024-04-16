@@ -56,7 +56,7 @@ export const CreateCodeExercise = ({
   isUpdate,
   topicId,
 }: Props) => {
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
   const { isPending: isPendingCreate, mutate: createExercise } =
     useCreateCodeExercise()
@@ -187,7 +187,10 @@ export const CreateCodeExercise = ({
 
     if (isUpdate) {
       updateExercise(input, {
-        onSuccess: () => handleBack(),
+        onSuccess: () => {
+          setSuccessMessage('Update exercise successfully')
+          handleBack()
+        },
         onError: error =>
           setErrorMessage(
             error.response?.data.message || 'Create exercise failed',
@@ -197,7 +200,10 @@ export const CreateCodeExercise = ({
     }
 
     createExercise(input, {
-      onSuccess: () => handleBack(),
+      onSuccess: () => {
+        setSuccessMessage('Create exercise successfully')
+        handleBack()
+      },
       onError: error =>
         setErrorMessage(
           error.response?.data.message || 'Create exercise failed',

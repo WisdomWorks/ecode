@@ -5,6 +5,7 @@ import { useCreateFileExercise, useUpdateFileExercise } from '@/apis'
 import { Form } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { ExerciseType } from '@/constants'
+import { useToastMessage } from '@/hooks'
 import { CreateExerciseInformation } from '@/pages/~course/components'
 import { CreateFileExerciseSchema } from '@/pages/~course/shema/createFileExercise.schema'
 import { Schema } from '@/types'
@@ -39,6 +40,8 @@ export const CreateFileExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
+
   const { isPending: createPending, mutate: createFile } =
     useCreateFileExercise()
   const { isPending: updatePending, mutate: updateFile } =
@@ -90,8 +93,13 @@ export const CreateFileExercise = ({
         },
         {
           onSuccess: () => {
+            setSuccessMessage('Update exercise successfully')
             handleBack()
           },
+          onError: error =>
+            setErrorMessage(
+              error.response?.data.message || 'Create exercise failed',
+            ),
         },
       )
       return
@@ -107,8 +115,13 @@ export const CreateFileExercise = ({
       },
       {
         onSuccess: () => {
+          setSuccessMessage('Create exercise successfully')
           handleBack()
         },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || 'Create exercise failed',
+          ),
       },
     )
   }

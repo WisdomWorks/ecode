@@ -67,7 +67,7 @@ export const CreateQuizExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
   const [files, setFiles] = useState<FileList | null>(null)
 
   const { isPending: isPendingCreate, mutate: createExercise } =
@@ -178,6 +178,7 @@ export const CreateQuizExercise = ({
         },
         {
           onSuccess: () => {
+            setSuccessMessage('Update exercise successfully')
             handleBack()
           },
           onError: error =>
@@ -200,6 +201,7 @@ export const CreateQuizExercise = ({
     if (createOption === CreateOption.Manual) {
       createExercise(createRequest, {
         onSuccess: () => {
+          setSuccessMessage('Create exercise successfully')
           handleBack()
         },
         onError: error =>
@@ -227,6 +229,7 @@ export const CreateQuizExercise = ({
 
     createExerciseByExcel(formData, {
       onSuccess: () => {
+        setSuccessMessage('Create exercise successfully')
         handleBack()
       },
       onError: error =>
