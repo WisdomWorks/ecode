@@ -52,7 +52,7 @@ export const InnerApp = () => {
   }
 
   return (
-    <SnackbarProvider autoHideDuration={2000} maxSnack={1}>
+    <SnackbarProvider autoHideDuration={3000} maxSnack={1}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <RouterProvider
           context={{
