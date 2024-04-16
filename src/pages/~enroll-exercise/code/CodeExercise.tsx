@@ -15,7 +15,7 @@ import { Form } from '@/components/form'
 import { ResizeHandle } from '@/components/layout'
 import { programmingLanguages } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
-import { useCheckRole, useToastMessage, useToggle } from '@/hooks'
+import { useToastMessage, useToggle } from '@/hooks'
 import { Schema } from '@/types'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
@@ -45,7 +45,6 @@ export const CodeExercise = ({
   submissions,
 }: Props) => {
   const user = useAppStore(state => state.user)
-  const { isStudent } = useCheckRole()
   const navigate = useNavigate()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
 
@@ -146,20 +145,18 @@ export const CodeExercise = ({
 
             <ResizeHandle direction="vertical" />
 
-            {isReview && isStudent ? null : (
-              <Panel defaultSize={55}>
-                <TestCases
-                  currentTab={currentTab}
-                  isReview={isReview}
-                  loading={isRefetchingGetTestCase}
-                  resultTestCases={resultTestCases}
-                  setCurrentTab={setCurrentTab}
-                  testCases={testCases}
-                  testResult={testResult}
-                  usingAiGrading={usingAiGrading}
-                />
-              </Panel>
-            )}
+            <Panel defaultSize={55}>
+              <TestCases
+                currentTab={currentTab}
+                isReview={isReview}
+                loading={isRefetchingGetTestCase}
+                resultTestCases={resultTestCases}
+                setCurrentTab={setCurrentTab}
+                testCases={testCases}
+                testResult={testResult}
+                usingAiGrading={usingAiGrading}
+              />
+            </Panel>
           </PanelGroup>
         </Panel>
         <ResizeHandle />

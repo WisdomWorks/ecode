@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { ResultTestCase, TGetTestCaseRunCode } from '@/apis'
-import { useCheckRole } from '@/hooks'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
 import { TestCaseList } from './TestCaseList'
@@ -32,7 +31,6 @@ export const TestCases = ({
   usingAiGrading,
 }: Props) => {
   const [currentCase, setCurrentCase] = useState(0)
-  const { isStudent } = useCheckRole()
 
   const handleChangeTestCase = (index: number) => {
     setCurrentCase(index)
@@ -56,16 +54,15 @@ export const TestCases = ({
             <Divider className="mx-3 bg-gray-100" orientation="vertical" />
           </>
         )}
-        {isReview && isStudent ? null : (
-          <Button
-            color="success"
-            onClick={() => setCurrentTab(1)}
-            startIcon={<DoubleArrowOutlined className="text-green-500" />}
-            variant="text"
-          >
-            Test result
-          </Button>
-        )}
+
+        <Button
+          color="success"
+          onClick={() => setCurrentTab(1)}
+          startIcon={<DoubleArrowOutlined className="text-green-500" />}
+          variant="text"
+        >
+          Test result
+        </Button>
         {loading && (
           <div className="ml-3 flex items-center">
             <CircularProgress color="inherit" size={15} />
@@ -76,6 +73,7 @@ export const TestCases = ({
       {currentTab === 1 && (
         <TestCaseResultTab
           currentCase={currentCase}
+          isReview={isReview}
           testResult={testResult}
           usingAiGrading={usingAiGrading}
         />
