@@ -136,20 +136,18 @@ export const CreateCodeExercise = ({
       ...rest
     } = data
 
-    if (!rest.usingAiGrading) {
-      const atLeastOnePretest = testCases.some(tc => tc.points === 0)
+    const atLeastOnePretest = testCases.some(tc => tc.points === 0)
 
-      if (!atLeastOnePretest) {
-        setErrorMessage('At least one pretest must be set')
-        return
-      }
+    if (!atLeastOnePretest) {
+      setErrorMessage('At least one pretest must be set')
+      return
+    }
 
-      const isAllPretest = testCases.every(tc => tc.points === 0)
+    const isAllPretest = testCases.every(tc => tc.points === 0)
 
-      if (isAllPretest) {
-        setErrorMessage('At least one test case to grade')
-        return
-      }
+    if (isAllPretest) {
+      setErrorMessage('At least one test case to grade')
+      return
     }
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
@@ -290,117 +288,114 @@ export const CreateCodeExercise = ({
           />
         </div>
       </div>
-      {!watch('usingAiGrading') && (
-        <section className="col-span-2 mt-2 flex flex-col gap-3">
-          <h2 className="text-lg text-neutral-900">{`Test case (${
-            watch('testCases').length
-          })`}</h2>
-          <div className="flex flex-col gap-2">
-            {fields.map((field, index) => {
-              return (
-                <div className="mt-2 flex w-full flex-col gap-1" key={field.id}>
-                  <h4 className="col-span-1 text-nowrap underline">
-                    {`Test case ${index + 1}`}:
-                  </h4>
-                  <div className="grid grid-cols-12 gap-2">
-                    <FormInput
-                      className="col-span-4"
-                      label={`Input`}
-                      maxRows={4}
-                      minRows={4}
-                      multiline
-                      name={`testCases.${index}.input`}
-                      placeholder='e.g. "1 2 3 4 5"'
-                      required
-                    />
-                    <FormInput
-                      className="col-span-4"
-                      label={`Output`}
-                      maxRows={4}
-                      minRows={4}
-                      multiline
-                      name={`testCases.${index}.output`}
-                      placeholder="Enter output"
-                      required
-                    />
-                    <FormInput
-                      className="col-span-1"
-                      disabled
-                      inputMode="numeric"
-                      inputProps={{
-                        min: 0,
-                        max: 10,
-                      }}
-                      label={`Points`}
-                      name={`testCases.${index}.points`}
-                      required
-                      type="number"
-                    />
-                    <div className="col-span-2 mt-3">
-                      <FormCheckbox
-                        disabled={watch(`testCases`).at(index)?.defaultTestCase}
-                        extraOnChange={() => {
-                          setValue(`testCases.${index}.points`, 0)
-                          calculatePoint()
-                        }}
-                        label={
-                          <Tooltip
-                            arrow
-                            placement="top-start"
-                            title="Tick the checkbox to allow show this test case to student"
-                          >
-                            <div className="flex gap-2">
-                              <span className="whitespace-nowrap">
-                                Shown test case
-                              </span>
-                              <HelpOutline />
-                            </div>
-                          </Tooltip>
-                        }
-                        name={`testCases.${index}.isPretest`}
-                      />
-                    </div>
-                    <IconButton
-                      className={cn('col-span-1', {
-                        'opacity-0 pointer-events-none':
-                          index === 0 ||
-                          watch(`testCases`).at(index)?.defaultTestCase,
-                      })}
-                      disabled={isPendingCreate || isPendingUpdate}
-                      onClick={() => {
-                        remove(index)
+
+      <section className="col-span-2 mt-2 flex flex-col gap-3">
+        <h2 className="text-lg text-neutral-900">{`Test case (${
+          watch('testCases').length
+        })`}</h2>
+        <div className="flex flex-col gap-2">
+          {fields.map((field, index) => {
+            return (
+              <div className="mt-2 flex w-full flex-col gap-1" key={field.id}>
+                <h4 className="col-span-1 text-nowrap underline">
+                  {`Test case ${index + 1}`}:
+                </h4>
+                <div className="grid grid-cols-12 gap-2">
+                  <FormInput
+                    className="col-span-4"
+                    label={`Input`}
+                    maxRows={4}
+                    minRows={4}
+                    multiline
+                    name={`testCases.${index}.input`}
+                    placeholder='e.g. "1 2 3 4 5"'
+                  />
+                  <FormInput
+                    className="col-span-4"
+                    label={`Output`}
+                    maxRows={4}
+                    minRows={4}
+                    multiline
+                    name={`testCases.${index}.output`}
+                    placeholder="Enter output"
+                  />
+                  <FormInput
+                    className="col-span-1"
+                    disabled
+                    inputMode="numeric"
+                    inputProps={{
+                      min: 0,
+                      max: 10,
+                    }}
+                    label={`Points`}
+                    name={`testCases.${index}.points`}
+                    required
+                    type="number"
+                  />
+                  <div className="col-span-2 mt-3">
+                    <FormCheckbox
+                      disabled={watch(`testCases`).at(index)?.defaultTestCase}
+                      extraOnChange={() => {
+                        setValue(`testCases.${index}.points`, 0)
                         calculatePoint()
                       }}
-                      type="button"
-                    >
-                      <Delete className="text-red-500" />
-                    </IconButton>
+                      label={
+                        <Tooltip
+                          arrow
+                          placement="top-start"
+                          title="Tick the checkbox to allow show this test case to student"
+                        >
+                          <div className="flex gap-2">
+                            <span className="whitespace-nowrap">
+                              Shown test case
+                            </span>
+                            <HelpOutline />
+                          </div>
+                        </Tooltip>
+                      }
+                      name={`testCases.${index}.isPretest`}
+                    />
                   </div>
+                  <IconButton
+                    className={cn('col-span-1', {
+                      'opacity-0 pointer-events-none':
+                        index === 0 ||
+                        watch(`testCases`).at(index)?.defaultTestCase,
+                    })}
+                    disabled={isPendingCreate || isPendingUpdate}
+                    onClick={() => {
+                      remove(index)
+                      calculatePoint()
+                    }}
+                    type="button"
+                  >
+                    <Delete className="text-red-500" />
+                  </IconButton>
                 </div>
-              )
-            })}
-          </div>
-          <div className="mt-3">
-            <Button
-              disabled={isPendingCreate || isPendingUpdate}
-              onClick={() => {
-                append({
-                  input: '',
-                  output: '',
-                  points: 0,
-                  isPretest: false,
-                  defaultTestCase: false,
-                })
-                calculatePoint()
-              }}
-              variant="contained"
-            >
-              <AddCircleOutline className="mr-2 text-white" />
-              Add test case
-            </Button>
-          </div>
-        </section>
-      )}
+              </div>
+            )
+          })}
+        </div>
+        <div className="mt-3">
+          <Button
+            disabled={isPendingCreate || isPendingUpdate}
+            onClick={() => {
+              append({
+                input: '',
+                output: '',
+                points: 0,
+                isPretest: false,
+                defaultTestCase: false,
+              })
+              calculatePoint()
+            }}
+            variant="contained"
+          >
+            <AddCircleOutline className="mr-2 text-white" />
+            Add test case
+          </Button>
+        </div>
+      </section>
       <FormButtonGroup
         buttons={[
           {

@@ -42,7 +42,7 @@ export const CreateCodeExerciseSchema = z
       )
       .nonempty({ message: 'Test case is required' }),
   })
-  .superRefine(({ endDate, startDate, testCases, usingAiGrading }, ctx) => {
+  .superRefine(({ endDate, startDate }, ctx) => {
     if (isPast(endDate)) {
       const error = 'endDate'
 
@@ -58,26 +58,6 @@ export const CreateCodeExerciseSchema = z
         code: z.ZodIssueCode.custom,
         message: 'End date must be after start date',
         path: ['endDate'],
-      })
-    }
-
-    if (!usingAiGrading) {
-      testCases.forEach((testCase, index) => {
-        if (!testCase.input) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Input is required',
-            path: ['testCases', index, 'input'],
-          })
-        }
-
-        if (!testCase.output) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: 'Output is required',
-            path: ['testCases', index, 'output'],
-          })
-        }
       })
     }
   })
