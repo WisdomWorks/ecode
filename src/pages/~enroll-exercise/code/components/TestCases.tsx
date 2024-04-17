@@ -37,8 +37,8 @@ export const TestCases = ({
   }
 
   return (
-    <div className="mx-1 h-full max-h-full overflow-y-auto rounded-md border border-gray-300">
-      <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1">
+    <div className="h-full max-h-full overflow-y-auto rounded-md border border-gray-300 dark:rounded-none dark:border-none">
+      <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1 dark:rounded-none dark:bg-darkMode-800">
         {!usingAiGrading && (
           <>
             <Button

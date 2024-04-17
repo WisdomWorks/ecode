@@ -30,6 +30,7 @@ interface Props {
   isTimeOut?: boolean
   resultTestCases?: ResultTestCase[]
   submissions?: CodeSubmission
+  themeCodeEditor?: string
 }
 
 export type TFormCodeExercise = Schema['SubmitCodeExerciseRequest'] & {
@@ -43,6 +44,7 @@ export const CodeExercise = ({
   isTimeOut = true,
   resultTestCases,
   submissions,
+  themeCodeEditor,
 }: Props) => {
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
@@ -143,7 +145,10 @@ export const CodeExercise = ({
               <Topic topic={description} />
             </Panel>
 
-            <ResizeHandle direction="vertical" />
+            <ResizeHandle
+              className="dark:bg-darkMode-800"
+              direction="vertical"
+            />
 
             <Panel defaultSize={55}>
               <TestCases
@@ -159,7 +164,7 @@ export const CodeExercise = ({
             </Panel>
           </PanelGroup>
         </Panel>
-        <ResizeHandle />
+        <ResizeHandle className="dark:bg-darkMode-800" />
 
         <Panel defaultSize={60} minSize={40}>
           <PanelGroup direction="vertical">
@@ -179,6 +184,7 @@ export const CodeExercise = ({
                     setIsRefetchingGetTestCase={setIsRefetchingGetTestCase}
                     setTestResult={setTestResult}
                     submissionId={submissionId}
+                    themeCodeEditor={themeCodeEditor}
                     toggleOpenModal={toggleOpenModal}
                   />
                 </Form>

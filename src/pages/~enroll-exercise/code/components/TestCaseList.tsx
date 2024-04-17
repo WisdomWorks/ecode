@@ -69,14 +69,14 @@ export const TestCaseList = ({
 
       {!usingAiGrading && (
         <>
-          <div className=" m-4 flex-col">
-            <p className=" font-bold">Input</p>
+          <div className="m-4 flex-col">
+            <p className="font-bold dark:text-white">Input</p>
             <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
               {testCases.at(currentCase)?.input}
             </div>
           </div>
           <div className=" m-4 flex-col">
-            <p className=" font-bold">Expected Ouput</p>
+            <p className="font-bold dark:text-white">Expected Ouput</p>
             <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
               {testCases.at(currentCase)?.output}
             </div>
@@ -86,7 +86,7 @@ export const TestCaseList = ({
 
       {currentTab !== 0 && (
         <div className=" m-4 flex-col">
-          <p className=" font-bold">Stdout</p>
+          <p className=" font-bold dark:text-white">Stdout</p>
           <div className="my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
             {isReview
               ? resultTestCases?.at(0)?.output
