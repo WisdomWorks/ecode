@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  SERVICE_NAME: ecode-user
+
 jobs:
   build:
     runs-on: ubuntu-latest
