@@ -29,7 +29,7 @@ export type Pagination = {
 export type AxiosResponseError = { message: string }
 
 export const instance = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://api.codee.buzz',
   timeout: 20000,
   withCredentials: true,
 })

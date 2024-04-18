@@ -89,7 +89,7 @@ export const Login = () => {
               Empowering Minds, Igniting Code
             </span>
             <br />
-            Welcome to Your Learning Hub! test ne
+            Welcome to Your Learning Hub! test
           </p>
         </div>
 
