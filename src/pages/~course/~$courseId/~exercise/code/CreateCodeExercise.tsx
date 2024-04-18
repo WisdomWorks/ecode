@@ -169,15 +169,7 @@ export const CreateCodeExercise = ({
       ...rest,
       reAttempt: Number(reAttempt),
       allowedLanguageIds: allowedLanguageIdsInput,
-      testCases: rest.usingAiGrading
-        ? [
-            {
-              ...testCaseListInput[0],
-              input: '',
-              output: '',
-            },
-          ]
-        : testCaseListInput,
+      testCases: testCaseListInput,
       durationTime,
       endTime,
       startTime,

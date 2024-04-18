@@ -68,8 +68,7 @@ export const FormExcelQuestion = ({
             </li>
           </ul>
           <h5>
-            The system will not import goods that do not comply with the above
-            format
+            The system will not import if the file is not in the correct format
           </h5>
           <h5>Click the button below to get the template</h5>
         </div>
