@@ -29,10 +29,7 @@ export type Pagination = {
 export type AxiosResponseError = { message: string }
 
 export const instance = axios.create({
-  baseURL:
-    import.meta.env.MODE === 'development'
-      ? import.meta.env.VITE_API_URL
-      : import.meta.env.VITE_API_URL_PROD,
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 20000,
   withCredentials: true,
 })
