@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  SERVICE_NAME: ecode-user
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -51,10 +54,10 @@ jobs:
         run: |
           gcloud auth configure-docker
 
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+      # - name: Build and Push Docker Image
+      #   run: |
+      #     docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }} .
+      #     docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.DOCKER_IMAGE_NAME }}:${{ github.sha }}
 
       - name: Deploy to Cloud Run
         run: |
