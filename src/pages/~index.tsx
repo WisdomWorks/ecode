@@ -19,15 +19,17 @@ export const Home = () => {
     setCourse(data ?? [])
   }, [data])
 
-  const filterCourse = useCallback((value: string) => {
-    if (!data) return
-    setCourse(
-      data.filter(course =>
-        getCourseLabel(course).toLowerCase().includes(value.toLowerCase()),
-      ),
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const filterCourse = useCallback(
+    (value: string) => {
+      if (!data) return
+      setCourse(
+        data.filter(course =>
+          getCourseLabel(course).toLowerCase().includes(value.toLowerCase()),
+        ),
+      )
+    },
+    [data],
+  )
 
   const filterCourseDebounce = useMemo(
     () => debounce(filterCourse, 300),

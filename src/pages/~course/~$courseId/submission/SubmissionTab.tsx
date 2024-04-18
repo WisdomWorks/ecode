@@ -1,14 +1,16 @@
 import { useState } from 'react'
 
-import { useGetExercises } from '@/apis'
+import { useExportCourseScore, useGetExercises } from '@/apis'
 import { Loading, Table } from '@/components/common'
+import { ExcelIcon } from '@/components/common/icons'
+import { useToastMessage } from '@/hooks'
 import { TColumn } from '@/types'
 import { ExerciseSchema } from '@/types/exercise.types'
 import { formatDDMMyyyyHHmm } from '@/utils'
 
 import { DetailPanelSubmission } from './DetailPanelSubmission'
 import { ArrowBackIos } from '@mui/icons-material'
-import { Button, Chip, Slide } from '@mui/material'
+import { Button, Chip, CircularProgress, Slide } from '@mui/material'
 import { useParams } from '@tanstack/react-router'
 import { MRT_Row } from 'material-react-table'
 
@@ -17,7 +19,7 @@ const columns: TColumn<ExerciseSchema>[] = [
     accessorKey: 'type',
     header: 'Exercise Type',
     filterVariant: 'select',
-    filterSelectOptions: ['Quiz', 'Essay'],
+    filterSelectOptions: ['Quiz', 'Essay', 'Code', 'File'],
     // eslint-disable-next-line react/prop-types
     Cell: ({ cell }) => (
       <Chip
@@ -64,7 +66,12 @@ const columns: TColumn<ExerciseSchema>[] = [
 
 export const SubmissionTab = () => {
   const { courseId } = useParams({ from: '/course/$courseId/' })
+  const { setErrorMessage } = useToastMessage()
+
   const { data, isLoading } = useGetExercises({ courseId })
+  const { isPending: exportPending, mutate: exportExcel } =
+    useExportCourseScore()
+
   const [rowClicked, setRowClicked] = useState<MRT_Row<ExerciseSchema> | null>(
     null,
   )
@@ -72,6 +79,30 @@ export const SubmissionTab = () => {
   if (isLoading) return <Loading />
 
   const exercises = data?.data
+
+  const handleExportExcel = () => {
+    exportExcel(
+      { courseId },
+      {
+        onSuccess: data => {
+          console.log(data)
+          const fileBlob = new Blob([data.data], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          })
+          const fileUrl = window.URL.createObjectURL(fileBlob)
+          const a = document.createElement('a')
+          a.href = fileUrl
+          a.download = 'export-scores.xlsx'
+          a.click()
+          window.URL.revokeObjectURL(fileUrl)
+        },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || "Can't export excel. Try again!",
+          ),
+      },
+    )
+  }
 
   return (
     <>
@@ -88,7 +119,21 @@ export const SubmissionTab = () => {
                 cursor: 'pointer',
               },
             })}
-            renderTopToolbarCustomActions={() => <h3>Exercise List</h3>}
+            renderTopToolbarCustomActions={() => (
+              <Button
+                className="py-3"
+                color="success"
+                disabled={exportPending}
+                onClick={handleExportExcel}
+                startIcon={<ExcelIcon className="size-7" />}
+                variant="outlined"
+              >
+                Export Excel
+                {exportPending && (
+                  <CircularProgress className="ml-2 size-4 text-success-300" />
+                )}
+              </Button>
+            )}
           />
         </div>
       </Slide>

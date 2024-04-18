@@ -117,9 +117,12 @@ export const generateCustomComponentPlugin = (
       },
     },
     {
-      '.disabled-text-neutral-900': {
+      '.disabled-text-neutral-900 .Mui-disabled': {
         color: `${theme('colors.neutral.900')}`,
         WebkitTextFillColor: `${theme('colors.neutral.900')}`,
+        '&:disabled': {
+          background: '#fff',
+        },
       },
     },
   ]

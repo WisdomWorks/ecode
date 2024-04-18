@@ -90,8 +90,14 @@ export interface paths {
   "/exercises/quiz/submit": {
     post: operations["submitQuizExercise"];
   };
+  "/exercises/quiz/excel": {
+    post: operations["createQuizFromExcel"];
+  };
   "/exercises/file/submit": {
     post: operations["submitFileExercise"];
+  };
+  "/exercises/export-scores": {
+    post: operations["exportScores"];
   };
   "/exercises/essay/submit": {
     post: operations["submitEssayExercise"];
@@ -207,7 +213,7 @@ export interface paths {
   "/groups/{groupId}/student": {
     delete: operations["deleteStudentInGroup"];
   };
-  "/courses/unEnrollment": {
+  "/courses/unenrollment": {
     delete: operations["unEnrollUserInCourse"];
   };
 }
@@ -225,7 +231,6 @@ export interface components {
       topicId: string;
       topicName: string;
       description?: string;
-      showAll?: boolean;
     };
     UpdateGroupRequest: {
       groupName?: string;
@@ -294,13 +299,14 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       question: string;
+      usingAiGrading?: boolean;
     };
     TestCase: {
       testcaseId?: string;
       exerciseId?: string;
       input?: string;
       output?: string;
-      /** Format: int32 */
+      /** Format: double */
       points?: number;
     };
     UpdateCodeExerciseRequest: {
@@ -328,6 +334,7 @@ export interface components {
       points?: number;
       template?: string;
       testCases?: components["schemas"]["TestCase"][];
+      usingAiGrading?: boolean;
     };
     UpdateCourseRequest: {
       courseId: string;
@@ -415,6 +422,20 @@ export interface components {
       questionId: string;
       answers: components["schemas"]["QuizChoice"][];
     };
+    CreateQuizExerciseByExcelRequest: {
+      topicId: string;
+      exerciseName: string;
+      key: string;
+      /** Format: date-time */
+      startTime: string;
+      /** Format: date-time */
+      endTime: string;
+      /** Format: int32 */
+      durationTime: number;
+      /** Format: int32 */
+      reAttempt?: number;
+      exerciseDescription?: string;
+    };
     CreateFileExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -433,6 +454,9 @@ export interface components {
       studentId: string;
       exerciseId: string;
     };
+    ExportScoresRequest: {
+      courseId?: string;
+    };
     CreateEssayExerciseRequest: {
       topicId: string;
       exerciseName: string;
@@ -447,6 +471,7 @@ export interface components {
       reAttempt?: number;
       exerciseDescription?: string;
       question: string;
+      usingAiGrading?: boolean;
     };
     CreateEssaySubmissionRequest: {
       studentId: string;
@@ -476,6 +501,7 @@ export interface components {
       points: number;
       testCases: components["schemas"]["TestCase"][];
       template?: string;
+      usingAiGrading?: boolean;
     };
     SubmitCodeExerciseRequest: {
       studentId: string;
@@ -1375,6 +1401,31 @@ export interface operations {
       };
     };
   };
+  createQuizFromExcel: {
+    requestBody?: {
+      content: {
+        "application/json": {
+          request?: components["schemas"]["CreateQuizExerciseByExcelRequest"];
+          /** Format: binary */
+          file: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
   submitFileExercise: {
     requestBody?: {
       content: {
@@ -1391,6 +1442,25 @@ export interface operations {
         content: {
           "*/*": Record<string, never>;
         };
+      };
+      /** @description Bad Request */
+      400: {
+        content: {
+          "*/*": Record<string, never>;
+        };
+      };
+    };
+  };
+  exportScores: {
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ExportScoresRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: never;
       };
       /** @description Bad Request */
       400: {

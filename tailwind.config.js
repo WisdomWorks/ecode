@@ -4,11 +4,17 @@ import { generateCustomComponentPlugin } from './src/utils/tailwindcss.utils'
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         editor: {
           dark: '#282c34',
+        },
+        darkMode: {
+          700: '#181A1B',
+          800: '#202325',
+          900: '#111313',
         },
         primary: {
           100: '#f1f6fd',

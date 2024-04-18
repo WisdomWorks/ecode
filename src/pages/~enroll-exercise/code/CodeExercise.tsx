@@ -30,6 +30,7 @@ interface Props {
   isTimeOut?: boolean
   resultTestCases?: ResultTestCase[]
   submissions?: CodeSubmission
+  themeCodeEditor?: string
 }
 
 export type TFormCodeExercise = Schema['SubmitCodeExerciseRequest'] & {
@@ -43,6 +44,7 @@ export const CodeExercise = ({
   isTimeOut = true,
   resultTestCases,
   submissions,
+  themeCodeEditor,
 }: Props) => {
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
@@ -50,13 +52,17 @@ export const CodeExercise = ({
 
   const [openModal, toggleOpenModal] = useToggle()
 
-  const { description, testCases } = exercise
+  const {
+    description,
+    exerciseId,
+    languageTemplate,
+    testCases,
+    usingAiGrading,
+  } = exercise
 
   const [testResult, setTestResult] = useState<TGetTestCaseRunCode | null>(null)
-  const [currentTab, setCurrentTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState(usingAiGrading ? 1 : 0)
   const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
-
-  const { exerciseId, languageTemplate } = exercise
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()
   const { isPending: isPendingSubmit, mutate: submitExercise } =
@@ -139,7 +145,10 @@ export const CodeExercise = ({
               <Topic topic={description} />
             </Panel>
 
-            <ResizeHandle direction="vertical" />
+            <ResizeHandle
+              className="dark:bg-darkMode-800"
+              direction="vertical"
+            />
 
             <Panel defaultSize={55}>
               <TestCases
@@ -150,11 +159,12 @@ export const CodeExercise = ({
                 setCurrentTab={setCurrentTab}
                 testCases={testCases}
                 testResult={testResult}
+                usingAiGrading={usingAiGrading}
               />
             </Panel>
           </PanelGroup>
         </Panel>
-        <ResizeHandle />
+        <ResizeHandle className="dark:bg-darkMode-800" />
 
         <Panel defaultSize={60} minSize={40}>
           <PanelGroup direction="vertical">
@@ -174,6 +184,7 @@ export const CodeExercise = ({
                     setIsRefetchingGetTestCase={setIsRefetchingGetTestCase}
                     setTestResult={setTestResult}
                     submissionId={submissionId}
+                    themeCodeEditor={themeCodeEditor}
                     toggleOpenModal={toggleOpenModal}
                   />
                 </Form>

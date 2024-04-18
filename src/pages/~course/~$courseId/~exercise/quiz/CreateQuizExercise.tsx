@@ -1,8 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 
-import { useCreateQuizExercise, useUpdateQuizExercise } from '@/apis'
-import { Form } from '@/components/form'
+import {
+  useCreateQuizExercise,
+  useCreateQuizExerciseByExcel,
+  useUpdateQuizExercise,
+} from '@/apis'
+import { Form, FormRadioGroup } from '@/components/form'
 import { useToastMessage } from '@/hooks'
 import { CreateExerciseInformation } from '@/pages/~course/components'
 import { CreateQuizExerciseSchema } from '@/pages/~course/shema/createQuizExercise.schema'
@@ -14,6 +18,7 @@ import {
   getDateByMinutes,
 } from '@/utils'
 
+import { FormExcelQuestion } from './FormExcelQuestion'
 import { FormQuestion } from './FormQuestion'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Alert, Button, Typography } from '@mui/material'
@@ -23,10 +28,16 @@ export type TQuestion = Schema['QuizQuestion'] & {
   isMultipleChoice?: boolean
 }
 
+enum CreateOption {
+  Excel = 'excel',
+  Manual = 'manual',
+}
+
 export type TCreateQuiz = Omit<
   Schema['CreateQuizExerciseRequest'],
   'questions'
 > & {
+  createOption: CreateOption
   durationObj: Date
   endDate: Date
   exerciseId: string
@@ -56,7 +67,8 @@ export const CreateQuizExercise = ({
   isUpdate = false,
   topicId,
 }: Props) => {
-  const { setErrorMessage } = useToastMessage()
+  const { setErrorMessage, setSuccessMessage } = useToastMessage()
+  const [files, setFiles] = useState<FileList | null>(null)
 
   const { isPending: isPendingCreate, mutate: createExercise } =
     useCreateQuizExercise()
@@ -64,6 +76,9 @@ export const CreateQuizExercise = ({
     useUpdateQuizExercise({
       exerciseId: exercise?.exerciseId || '',
     })
+
+  const { isPending: isPendingCreateByExcel, mutate: createExerciseByExcel } =
+    useCreateQuizExerciseByExcel()
 
   const defaultValues = useMemo(
     () => ({
@@ -89,6 +104,7 @@ export const CreateQuizExercise = ({
       endDate: exercise?.endTime
         ? new Date(exercise.endTime)
         : defaultTimeWithoutSecond,
+      createOption: CreateOption.Manual,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [exercise, topicId],
@@ -101,38 +117,49 @@ export const CreateQuizExercise = ({
   })
 
   const onSubmit: SubmitHandler<TCreateQuiz> = data => {
-    const { durationObj, endDate, questions, reAttempt, startDate, ...rest } =
-      data
+    const {
+      createOption,
+      durationObj,
+      endDate,
+      questions,
+      reAttempt,
+      startDate,
+      ...rest
+    } = data
 
-    const questionDoNotHaveTitle = questions.findIndex(
-      question => !question.title,
-    )
-    if (questionDoNotHaveTitle > -1) {
-      return setErrorMessage(
-        `Please fill the title in question ${questionDoNotHaveTitle + 1}`,
+    if (createOption === CreateOption.Manual) {
+      const questionDoNotHaveTitle = questions.findIndex(
+        question => !question.title,
       )
-    }
+      if (questionDoNotHaveTitle > -1) {
+        return setErrorMessage(
+          `Please fill the title in question ${questionDoNotHaveTitle + 1}`,
+        )
+      }
 
-    const questionDoNotHaveChoices = questions.findIndex(
-      question =>
-        question.choices.some(choice => !choice.content) ||
-        !question.choices.length,
-    )
-    if (questionDoNotHaveChoices > -1) {
-      return setErrorMessage(
-        `Please fill all choices in question ${questionDoNotHaveChoices + 1}`,
+      const questionDoNotHaveChoices = questions.findIndex(
+        question =>
+          question.choices.some(choice => !choice.content) ||
+          !question.choices.length,
       )
-    }
+      if (questionDoNotHaveChoices > -1) {
+        return setErrorMessage(
+          `Please fill all choices in question ${questionDoNotHaveChoices + 1}`,
+        )
+      }
 
-    const questionDoNotHaveAnswers = questions.findIndex(
-      question =>
-        question.answers.some(answer => !answer.content) ||
-        !question.answers.length,
-    )
-    if (questionDoNotHaveAnswers > -1) {
-      return setErrorMessage(
-        `Please choose the answer in question ${questionDoNotHaveAnswers + 1}`,
+      const questionDoNotHaveAnswers = questions.findIndex(
+        question =>
+          question.answers.some(answer => !answer.content) ||
+          !question.answers.length,
       )
+      if (questionDoNotHaveAnswers > -1) {
+        return setErrorMessage(
+          `Please choose the answer in question ${
+            questionDoNotHaveAnswers + 1
+          }`,
+        )
+      }
     }
 
     const durationTime = getHours(durationObj) * 60 + getMinutes(durationObj)
@@ -151,32 +178,71 @@ export const CreateQuizExercise = ({
         },
         {
           onSuccess: () => {
+            setSuccessMessage('Update exercise successfully')
             handleBack()
           },
+          onError: error =>
+            setErrorMessage(
+              error.response?.data.message || "Can't submit. Try again!",
+            ),
         },
       )
       return
     }
 
-    createExercise(
-      {
-        ...rest,
-        durationTime,
-        startTime,
-        endTime,
-        questions,
-      },
-      {
+    const createRequest = {
+      ...rest,
+      durationTime,
+      startTime,
+      endTime,
+      questions,
+    }
+
+    if (createOption === CreateOption.Manual) {
+      createExercise(createRequest, {
         onSuccess: () => {
+          setSuccessMessage('Create exercise successfully')
           handleBack()
         },
+        onError: error =>
+          setErrorMessage(
+            error.response?.data.message || "Can't submit. Try again!",
+          ),
+      })
+      return
+    }
+
+    const formData = new FormData()
+
+    if (!files) {
+      return setErrorMessage('Please upload a file')
+    }
+
+    formData.append('topicId', rest.topicId)
+    formData.append('exerciseName', rest.exerciseName)
+    formData.append('key', rest.key)
+    formData.append('startTime', startTime)
+    formData.append('endTime', endTime)
+    formData.append('durationTime', String(durationTime))
+    formData.append('reAttempt', String(reAttempt))
+    formData.append('file', files[0])
+
+    createExerciseByExcel(formData, {
+      onSuccess: () => {
+        setSuccessMessage('Create exercise successfully')
+        handleBack()
       },
-    )
+      onError: error =>
+        setErrorMessage(
+          error.response?.data.message || "Can't submit. Try again!",
+        ),
+    })
   }
 
   const {
     control,
     formState: { isValid },
+    watch,
   } = form
 
   return (
@@ -195,7 +261,33 @@ export const CreateQuizExercise = ({
           Exercise Question
         </Typography>
 
-        <FormQuestion defaultQuestion={defaultQuestion} />
+        {isUpdate ? null : (
+          <FormRadioGroup
+            className="flex flex-col"
+            containerClassName="col-span-12"
+            name="createOption"
+            options={[
+              {
+                value: CreateOption.Manual,
+                label: 'Create question manually',
+              },
+              {
+                value: CreateOption.Excel,
+                label: 'Create by excel file',
+              },
+            ]}
+          />
+        )}
+
+        {watch('createOption') === CreateOption.Excel ? (
+          <FormExcelQuestion
+            files={files}
+            isPendingCreateByExcel={isPendingCreateByExcel}
+            setFiles={setFiles}
+          />
+        ) : (
+          <FormQuestion defaultQuestion={defaultQuestion} />
+        )}
 
         <div className="col-span-12 flex justify-end gap-2">
           {!isValid && (
@@ -204,7 +296,9 @@ export const CreateQuizExercise = ({
 
           <Button
             className="submitBtn"
-            disabled={isPendingCreate || isPendingUpdate}
+            disabled={
+              isPendingCreate || isPendingUpdate || isPendingCreateByExcel
+            }
             type="submit"
           >
             {isUpdate ? 'Update' : 'Create'}

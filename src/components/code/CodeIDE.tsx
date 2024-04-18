@@ -8,12 +8,20 @@ import CodeMirror, {
   ReactCodeMirrorProps,
 } from '@uiw/react-codemirror'
 
-interface Props extends ReactCodeMirrorProps {}
+interface Props extends ReactCodeMirrorProps {
+  themeCodeEditor?: string
+}
 
 const basicSetup: BasicSetupOptions = {}
 const extensions: Extension[] = [java(), EditorView.lineWrapping]
 
-export const CodeIDE = ({ className, onChange, value, ...rest }: Props) => {
+export const CodeIDE = ({
+  className,
+  onChange,
+  themeCodeEditor,
+  value,
+  ...rest
+}: Props) => {
   return (
     <>
       <CodeMirror
@@ -22,7 +30,7 @@ export const CodeIDE = ({ className, onChange, value, ...rest }: Props) => {
         className={cn('h-full overflow-auto text-sm', className)}
         extensions={extensions}
         onChange={onChange}
-        theme="light"
+        theme={themeCodeEditor as ReactCodeMirrorProps['theme']}
         value={value}
       />
     </>

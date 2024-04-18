@@ -31,8 +31,8 @@ export type AxiosResponseError = { message: string }
 export const instance = axios.create({
   baseURL:
     import.meta.env.MODE === 'development'
-      ? 'http://localhost:8080'
-      : 'https://api.example.com',
+      ? import.meta.env.VITE_API_URL
+      : import.meta.env.VITE_API_URL_PROD,
   timeout: 20000,
   withCredentials: true,
 })

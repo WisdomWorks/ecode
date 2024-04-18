@@ -11,7 +11,7 @@ export const useUnenrollCourse = () => {
   return useMutation<AxiosResponse, AxiosError<AxiosResponseError>, Params>({
     mutationKey: ['unenrollCourse'],
     mutationFn: async params => {
-      return await callAPI('/courses/unEnrollment', 'delete', {
+      return await callAPI('/courses/unenrollment', 'delete', {
         params,
       })
     },

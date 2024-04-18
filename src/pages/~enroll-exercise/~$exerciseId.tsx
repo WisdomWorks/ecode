@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react'
 import { useEnrollExercise } from '@/apis'
 import Logo from '@/assets/logo.png'
 import { CountDownTimer, Loading } from '@/components/common'
+import { DarkModeSwitcher } from '@/components/common/DarkModeSwticher'
 import { ExerciseType } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
-import { useRoute } from '@/hooks'
+import { useDarkModeCodeEditor, useRoute } from '@/hooks'
 import {
   CodeExerciseSchema,
   EssayExerciseSchema,
@@ -21,6 +22,9 @@ import { Divider } from '@mui/material'
 import { createFileRoute, useParams } from '@tanstack/react-router'
 
 export const EnrollExercise = () => {
+  const { setTheme, theme } = useDarkModeCodeEditor()
+  console.log('theme', theme)
+
   const { location, navigate } = useRoute()
   const { exerciseId } = useParams({ from: '/enroll-exercise/$exerciseId' })
   const [isTimeOut, setIsTimeOut] = useState(false)
@@ -62,12 +66,15 @@ export const EnrollExercise = () => {
 
   return (
     <div
-      className={cn('grid h-screen w-screen grid-rows-12 overflow-hidden', {
-        'gap-4': type !== ExerciseType.CODE,
-      })}
+      className={cn(
+        'grid h-screen w-screen grid-rows-12 overflow-hidden dark:bg-darkMode-900',
+        {
+          'gap-4': type !== ExerciseType.CODE,
+        },
+      )}
     >
       <div className="row-span-2 grid grid-cols-12">
-        <div className="col-span-12 h-12 border border-gray-300 bg-[#F0F0F0] px-5 py-2">
+        <div className="col-span-12 flex h-12 items-center justify-between border border-gray-300 bg-[#F0F0F0] px-5 py-2 dark:border-none dark:bg-darkMode-800">
           <div className="mb-2 flex items-center gap-4">
             <img
               alt="Logo"
@@ -76,27 +83,40 @@ export const EnrollExercise = () => {
             />
             <Divider className=" bg-white" orientation="vertical" />
             <CodeOutlined className=" text-gray-400" />
-            <p className="text-lg text-gray-900">{exerciseName}</p>
+            <p className="text-lg text-gray-900 dark:text-white">
+              {exerciseName}
+            </p>
+          </div>
+
+          <div>
+            <DarkModeSwitcher setTheme={setTheme} theme={theme} />
           </div>
         </div>
+
         <div className=" col-span-12 flex min-h-24 items-center justify-between overflow-auto rounded-lg px-7 shadow-lg">
           <div className="flex flex-col gap-2">
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold">Start time</span>
+              <span className="w-[5rem] text-base font-bold dark:text-white">
+                Start time
+              </span>
               <span className=" text-sm text-neutral-500">
                 {formatDDMMyyyyHHmm(new Date(startTime))}
               </span>
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold">End time</span>
+              <span className="w-[5rem] text-base font-bold dark:text-white">
+                End time
+              </span>
               <span className=" text-sm text-neutral-500">
                 {formatDDMMyyyyHHmm(new Date(endTime))}
               </span>
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold">Duration</span>
+              <span className="w-[5rem] text-base font-bold dark:text-white">
+                Duration
+              </span>
               <span className=" text-sm text-neutral-500">
                 {durationTime} minutes
               </span>
@@ -133,6 +153,7 @@ export const EnrollExercise = () => {
           <CodeExercise
             exercise={exercise as CodeExerciseSchema}
             isTimeOut={isTimeOut}
+            themeCodeEditor={theme}
           />
         )}
       </div>
