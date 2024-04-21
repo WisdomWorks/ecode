@@ -61,7 +61,7 @@ export const CodeExercise = ({
   } = exercise
 
   const [testResult, setTestResult] = useState<TGetTestCaseRunCode | null>(null)
-  const [currentTab, setCurrentTab] = useState(usingAiGrading ? 1 : 0)
+  const [currentTab, setCurrentTab] = useState(0)
   const [isRefetchingGetTestCase, setIsRefetchingGetTestCase] = useState(false)
 
   const { isPending: isPendingRunCode, mutate: runCode } = useRunCode()

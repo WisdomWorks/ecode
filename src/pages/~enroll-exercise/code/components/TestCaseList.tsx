@@ -23,7 +23,6 @@ export const TestCaseList = ({
   resultTestCases,
   testCases,
   testResult,
-  usingAiGrading,
 }: Props) => {
   const testCasesFinalResult = isReview
     ? resultTestCases
@@ -47,49 +46,46 @@ export const TestCaseList = ({
   return (
     <>
       <div className="flex flex-wrap gap-2 p-3">
-        {!usingAiGrading &&
-          testCases.map((tc, index) => {
-            const props = getButtonProps(index)
-            // eslint-disable-next-line react/prop-types
-            const { Icon, color } = props
-            return (
-              <Button
-                className="whitespace-nowrap rounded-lg px-3 py-1"
-                color={color as ButtonProps['color']}
-                key={tc.testcaseId}
-                onClick={() => handleChangeTestCase(index)}
-                startIcon={Icon ? <Icon /> : null}
-                variant={currentCase === index ? 'outlined' : 'text'}
-              >
-                Case {index + 1} {isReview ? `(${tc.points} pts)` : ''}
-              </Button>
-            )
-          })}
+        {testCases.map((tc, index) => {
+          const props = getButtonProps(index)
+          // eslint-disable-next-line react/prop-types
+          const { Icon, color } = props
+          return (
+            <Button
+              className="whitespace-nowrap rounded-lg px-3 py-1"
+              color={color as ButtonProps['color']}
+              key={tc.testcaseId}
+              onClick={() => handleChangeTestCase(index)}
+              startIcon={Icon ? <Icon /> : null}
+              variant={currentCase === index ? 'outlined' : 'text'}
+            >
+              Case {index + 1} {isReview ? `(${tc.points} pts)` : ''}
+            </Button>
+          )
+        })}
       </div>
 
-      {!usingAiGrading && (
-        <>
-          <div className="m-4 flex-col">
-            <p className="font-bold dark:text-white">Input</p>
-            <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
-              {testCases.at(currentCase)?.input}
-            </div>
-          </div>
-          <div className=" m-4 flex-col">
-            <p className="font-bold dark:text-white">Expected Ouput</p>
-            <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
-              {testCases.at(currentCase)?.output}
-            </div>
-          </div>
-        </>
-      )}
+      <div className="m-4 flex-col">
+        <p className="font-bold dark:text-white">Input</p>
+        <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
+          {testCases.at(currentCase)?.input}
+        </div>
+      </div>
+      <div className=" m-4 flex-col">
+        <p className="font-bold dark:text-white">Expected Ouput</p>
+        <div className=" my-2 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
+          {testCases.at(currentCase)?.output}
+        </div>
+      </div>
 
-      {currentTab !== 0 && (
-        <div className=" m-4 flex-col">
-          <p className=" font-bold dark:text-white">Stdout</p>
+      {((currentTab === 0 && isReview) || (currentTab !== 0 && !isReview)) && (
+        <div className="m-4 flex-col">
+          <p className="font-bold dark:text-white">
+            {isReview ? "Student's Output" : 'Stdout'}
+          </p>
           <div className="my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
             {isReview
-              ? resultTestCases?.at(0)?.output
+              ? resultTestCases?.at(currentCase)?.output
               : testResult?.testCases[currentCase]?.output}
           </div>
         </div>

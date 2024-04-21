@@ -2,6 +2,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useGetCourses } from '@/apis'
 import { Loading, SearchInput } from '@/components/common'
+import { useCheckRole } from '@/hooks'
 import { TCourse } from '@/types'
 import { beforeLoadProtected } from '@/utils'
 import { getCourseLabel } from '@/utils/label.utils'
@@ -11,6 +12,8 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { debounce } from 'lodash'
 
 export const Home = () => {
+  const { isTeacher } = useCheckRole()
+
   const { data, isLoading } = useGetCourses()
   const [course, setCourse] = useState<TCourse[] | []>([])
   const [search, setSearch] = useState('')
@@ -58,6 +61,7 @@ export const Home = () => {
               className={`group cursor-pointer rounded-lg p-2 transition-all hover:bg-primary-350 lg:w-full ${
                 index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
               } p-3`}
+              disabled={isTeacher}
               key={index}
               params={{
                 courseId: String(course.courseId),
