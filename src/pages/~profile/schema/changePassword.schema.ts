@@ -6,7 +6,7 @@ export const ChangePasswordSchema = z
 
     newPassword: z
       .string()
-      .min(1, { message: 'New password is required' })
+      .min(8, { message: 'New password is required' })
       .regex(
         /[!@#$%^&*(),.?":{}|<>]/,
         'Password must contain at least one special character',
