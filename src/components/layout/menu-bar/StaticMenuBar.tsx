@@ -1,5 +1,6 @@
 import { activeClassName, TMenu } from './MenuBar'
-import { AccountBoxOutlined, HomeOutlined } from '@mui/icons-material'
+import { AccountBoxOutlined, HomeOutlined, Html } from '@mui/icons-material'
+import { Chip } from '@mui/material'
 import { Link } from '@tanstack/react-router'
 
 const staticMenus: TMenu[] = [
@@ -13,6 +14,11 @@ const staticMenus: TMenu[] = [
     to: '/profile/',
     Icon: AccountBoxOutlined,
   },
+  {
+    label: 'Web Application',
+    to: '/web-app/',
+    Icon: Html,
+  },
 ]
 
 export const StaticMenuBar = () => {
@@ -25,6 +31,31 @@ export const StaticMenuBar = () => {
       <div className="flex max-h-[30rem] flex-col gap-3 overflow-auto">
         {staticMenus.map((item, index) => {
           const { Icon, to } = item
+
+          if (to === '/web-app/') {
+            return (
+              <a
+                className="group flex items-center justify-between rounded-md p-2 transition-colors duration-300 ease-in-out hover:bg-primary-600"
+                href="/web-app/"
+                key={index}
+              >
+                <div className="flex gap-2">
+                  {Icon && <Icon className="size-6 group-hover:text-white" />}
+                  <span className="text-base text-neutral-600 group-hover:text-white">
+                    {item.label}
+                  </span>
+                </div>
+                <Chip
+                  className="group-hover:text-white"
+                  color="primary"
+                  label="Beta"
+                  size="small"
+                  variant="outlined"
+                />
+              </a>
+            )
+          }
+
           return (
             <Link
               activeProps={{

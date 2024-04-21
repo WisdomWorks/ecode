@@ -1,9 +1,11 @@
 import { TGetTestCaseRunCode } from '@/apis'
+import { ReactIcon } from '@/components/common/icons'
 import { ExerciseType, testCaseStatus } from '@/constants'
 
-import { TOptionCreateExercise } from '../types/exercise.types'
+import { TOptionCreateExercise, TOptionTemplate } from '../types/exercise.types'
 import {
   CodeRounded,
+  Html,
   InsertDriveFileRounded,
   MenuBookRounded,
   QuizRounded,
@@ -35,6 +37,22 @@ export const optionsCreateExercise: TOptionCreateExercise[] = [
     description: 'Submission as a file',
     Icon: InsertDriveFileRounded,
     type: ExerciseType.FILE,
+  },
+]
+
+export const templateOptions: TOptionTemplate[] = [
+  {
+    title: 'Vanilla Template',
+    description:
+      'Web application with HTML, CSS, and JavaScript. No frameworks or libraries',
+    Icon: Html,
+    type: 'static',
+  },
+  {
+    title: 'ReactJS Template',
+    description: 'Web application with ReactJS',
+    Icon: ReactIcon,
+    type: 'react',
   },
 ]
 
