@@ -69,7 +69,7 @@ export const StudentsSetting = ({ courseDetail, refetchCourse }: Props) => {
         onSuccess: () => {
           refetchCourse()
           setIsOpenDeleteModal()
-          setSuccessMessage('Student removed successfully')
+          setSuccessMessage('Student is removed successfully')
         },
         onError: error =>
           setErrorMessage(

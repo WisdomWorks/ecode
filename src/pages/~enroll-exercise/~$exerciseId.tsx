@@ -23,7 +23,6 @@ import { createFileRoute, useParams } from '@tanstack/react-router'
 
 export const EnrollExercise = () => {
   const { setTheme, theme } = useDarkModeCodeEditor()
-  console.log('theme', theme)
 
   const { location, navigate } = useRoute()
   const { exerciseId } = useParams({ from: '/enroll-exercise/$exerciseId' })
@@ -66,15 +65,21 @@ export const EnrollExercise = () => {
 
   return (
     <div
-      className={cn(
-        'grid h-screen w-screen grid-rows-12 overflow-hidden dark:bg-darkMode-900',
-        {
-          'gap-4': type !== ExerciseType.CODE,
-        },
-      )}
+      className={cn('grid h-screen w-screen grid-rows-12 overflow-hidden', {
+        'gap-4': type !== ExerciseType.CODE,
+        'dark:bg-darkMode-900': type === ExerciseType.CODE,
+      })}
     >
       <div className="row-span-2 grid grid-cols-12">
-        <div className="col-span-12 flex h-12 items-center justify-between border border-gray-300 bg-[#F0F0F0] px-5 py-2 dark:border-none dark:bg-darkMode-800">
+        <div
+          className={cn(
+            'col-span-12 flex h-12 items-center justify-between border border-gray-300 bg-[#F0F0F0] px-5 py-2 ',
+            {
+              'dark:border-none dark:bg-darkMode-800':
+                type === ExerciseType.CODE,
+            },
+          )}
+        >
           <div className="mb-2 flex items-center gap-4">
             <img
               alt="Logo"
@@ -83,20 +88,30 @@ export const EnrollExercise = () => {
             />
             <Divider className=" bg-white" orientation="vertical" />
             <CodeOutlined className=" text-gray-400" />
-            <p className="text-lg text-gray-900 dark:text-white">
+            <p
+              className={cn('text-lg text-gray-900 ', {
+                'dark:text-white': type === ExerciseType.CODE,
+              })}
+            >
               {exerciseName}
             </p>
           </div>
 
-          <div>
-            <DarkModeSwitcher setTheme={setTheme} theme={theme} />
-          </div>
+          {type === ExerciseType.CODE && (
+            <div>
+              <DarkModeSwitcher setTheme={setTheme} theme={theme} />
+            </div>
+          )}
         </div>
 
         <div className=" col-span-12 flex min-h-24 items-center justify-between overflow-auto rounded-lg px-7 shadow-lg">
           <div className="flex flex-col gap-2">
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold dark:text-white">
+              <span
+                className={cn('w-[5rem] text-base font-bold', {
+                  'dark:text-white': type === ExerciseType.CODE,
+                })}
+              >
                 Start time
               </span>
               <span className=" text-sm text-neutral-500">
@@ -105,7 +120,11 @@ export const EnrollExercise = () => {
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold dark:text-white">
+              <span
+                className={cn('w-[5rem] text-base font-bold', {
+                  'dark:text-white': type === ExerciseType.CODE,
+                })}
+              >
                 End time
               </span>
               <span className=" text-sm text-neutral-500">
@@ -114,7 +133,11 @@ export const EnrollExercise = () => {
             </div>
 
             <div className="flex items-end gap-4">
-              <span className="w-[5rem] text-base font-bold dark:text-white">
+              <span
+                className={cn('w-[5rem] text-base font-bold', {
+                  'dark:text-white': type === ExerciseType.CODE,
+                })}
+              >
                 Duration
               </span>
               <span className=" text-sm text-neutral-500">

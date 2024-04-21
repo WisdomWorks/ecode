@@ -39,21 +39,15 @@ export const TestCases = ({
   return (
     <div className="h-full max-h-full overflow-y-auto rounded-md border border-gray-300 dark:rounded-none dark:border-none">
       <div className="flex h-8  rounded-md bg-gray-100 px-3 py-1 dark:rounded-none dark:bg-darkMode-800">
-        {!usingAiGrading && (
-          <>
-            <Button
-              color="success"
-              onClick={() => setCurrentTab(0)}
-              startIcon={
-                <VerifiedUserOutlinedIcon className="text-green-500" />
-              }
-              variant="text"
-            >
-              Test Case {isReview ? 'Result' : ''} ({testCases.length})
-            </Button>
-            <Divider className="mx-3 bg-gray-100" orientation="vertical" />
-          </>
-        )}
+        <Button
+          color="success"
+          onClick={() => setCurrentTab(0)}
+          startIcon={<VerifiedUserOutlinedIcon className="text-green-500" />}
+          variant="text"
+        >
+          {isReview ? 'Student Results' : 'Test case'} ({testCases.length})
+        </Button>
+        <Divider className="mx-3 bg-gray-100" orientation="vertical" />
 
         <Button
           color="success"
