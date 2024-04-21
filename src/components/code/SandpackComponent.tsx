@@ -1,4 +1,3 @@
-import { SandpackView } from './SandpackView'
 import { autocompletion } from '@codemirror/autocomplete'
 import {
   SandpackCodeEditor,
@@ -8,17 +7,22 @@ import {
   SandpackStack,
   SandpackThemeProvider,
 } from '@codesandbox/sandpack-react'
+import { SandpackPredefinedTemplate } from '@codesandbox/sandpack-react'
 import { nightOwl } from '@codesandbox/sandpack-themes'
 import { SandpackFileExplorer } from 'sandpack-file-explorer'
 
-export const SandpackComponent = () => {
+interface Props {
+  template?: SandpackPredefinedTemplate
+}
+
+export const SandpackComponent = ({ template = 'vanilla' }: Props) => {
   return (
     <SandpackProvider
       options={{
         recompileMode: 'delayed',
         initMode: 'user-visible',
       }}
-      template="vite-react"
+      template={template}
     >
       <SandpackThemeProvider theme={nightOwl}>
         <SandpackStack>
@@ -39,7 +43,6 @@ export const SandpackComponent = () => {
               showOpenInCodeSandbox={false}
               showRestartButton={false}
             />
-            <SandpackView />
           </SandpackLayout>
         </SandpackStack>
       </SandpackThemeProvider>

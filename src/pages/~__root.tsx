@@ -18,7 +18,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 const fullScreenPath = [
   '/login',
   '/forget-password',
-  '/sandpack',
+  '/web-app',
   '/enroll-exercise',
   '/code-exercise',
 ]

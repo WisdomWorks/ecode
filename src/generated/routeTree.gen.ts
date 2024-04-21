@@ -16,7 +16,7 @@ import { Route as CourseRouteImport } from './../pages/~course/~route'
 import { Route as IndexImport } from './../pages/~index'
 import { Route as EnrollExerciseExerciseIdImport } from './../pages/~enroll-exercise/~$exerciseId'
 import { Route as CourseCourseImport } from './../pages/~course/~_course'
-import { Route as SandpackIndexImport } from './../pages/~sandpack/~index'
+import { Route as WebAppIndexImport } from './../pages/~web-app/~index'
 import { Route as ProfileIndexImport } from './../pages/~profile/~index'
 import { Route as LoginIndexImport } from './../pages/~login/~index'
 import { Route as ForgetPasswordIndexImport } from './../pages/~forget-password/~index'
@@ -52,8 +52,8 @@ const CourseCourseRoute = CourseCourseImport.update({
   getParentRoute: () => CourseRouteRoute,
 } as any)
 
-const SandpackIndexRoute = SandpackIndexImport.update({
-  path: '/sandpack/',
+const WebAppIndexRoute = WebAppIndexImport.update({
+  path: '/web-app/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -126,8 +126,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexImport
       parentRoute: typeof rootRoute
     }
-    '/sandpack/': {
-      preLoaderRoute: typeof SandpackIndexImport
+    '/web-app/': {
+      preLoaderRoute: typeof WebAppIndexImport
       parentRoute: typeof rootRoute
     }
     '/course/_course': {
@@ -169,7 +169,7 @@ export const routeTree = rootRoute.addChildren([
   ForgetPasswordIndexRoute,
   LoginIndexRoute,
   ProfileIndexRoute,
-  SandpackIndexRoute,
+  WebAppIndexRoute,
 ])
 
 /* prettier-ignore-end */

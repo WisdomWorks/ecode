@@ -1,6 +1,9 @@
+import { FunctionComponent } from 'react'
+
 import { ExerciseType } from '@/constants'
 
 import { Schema, TGroup } from './api.types'
+import { SandpackPredefinedTemplate } from '@codesandbox/sandpack-react'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 
@@ -9,6 +12,17 @@ export interface TOptionCreateExercise {
   description: string
   title: string
   type: ExerciseType
+}
+
+export interface TOptionTemplate {
+  Icon:
+    | OverridableComponent<SvgIconTypeMap<object, 'svg'>>
+    | (FunctionComponent<React.SVGProps<SVGSVGElement>> & {
+        title?: string | undefined
+      })
+  description: string
+  title: string
+  type: SandpackPredefinedTemplate
 }
 
 export interface TInput {
