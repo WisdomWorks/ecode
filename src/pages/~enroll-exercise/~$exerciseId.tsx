@@ -152,6 +152,7 @@ export const EnrollExercise = () => {
               onEnd={() => {
                 setIsTimeOut(true)
               }}
+              typeExercise={type as ExerciseType}
             />
           </div>
         </div>
