@@ -55,7 +55,7 @@ export const Home = () => {
       otp: '',
       newPassword: '',
       confirmPassword: '',
-      activeStep: 2,
+      activeStep: 0,
     },
     resolver: zodResolver(ForgetPasswordSchema),
   })
