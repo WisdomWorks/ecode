@@ -59,7 +59,11 @@ export const TestCases = ({
         </Button>
         {loading && (
           <div className="ml-3 flex items-center">
-            <CircularProgress color="inherit" size={15} />
+            <CircularProgress
+              className="dark:text-white"
+              color="inherit"
+              size={15}
+            />
           </div>
         )}
       </div>

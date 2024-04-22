@@ -10,6 +10,7 @@ import { Form, FormInput } from '@/components/form'
 import { FormTipTap } from '@/components/form/FormTipTap'
 import { useCheckRole, useToastMessage } from '@/hooks'
 
+import { CloudDownload } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query'
 import { AxiosResponse } from 'axios'
@@ -111,15 +112,16 @@ export const DetailFile = ({
               />
             )}
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold">Student submission</span>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-bold">Student submission:</span>
             <a
-              className=" truncate text-blue-500"
+              className="flex items-center gap-2 truncate rounded-md border border-solid border-primary-500 p-2 text-primary-500 transition-all hover:bg-primary-500 hover:text-white"
               href={submission}
               rel="noreferrer"
               target="_blank"
             >
-              Download file
+              <CloudDownload />
+              <span>Download submission</span>
             </a>
           </div>
 
