@@ -85,7 +85,6 @@ export const SubmissionTab = () => {
       { courseId },
       {
         onSuccess: data => {
-          console.log(data)
           const fileBlob = new Blob([data.data], {
             type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           })

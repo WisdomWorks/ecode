@@ -16,6 +16,7 @@ export interface TStudentSubmissionResponse {
 }
 
 export interface Submissions {
+  groups: Group[]
   name: string
   submission: CodeSubmission
   testCases: TestCase[]
