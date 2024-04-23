@@ -124,7 +124,9 @@ export const Quiz = ({ exercise, isTimeOut }: Props) => {
                     Question {index + 1}
                   </span>
                 </div>
-                <div className=" my-2 ml-3">{title}</div>
+                <div className="col-span-12 my-2 ml-3">
+                  <p className="break-words">{title}</p>
+                </div>
 
                 <div className="col-span-12 flex flex-col gap-2">
                   {!isMultipleChoice && (
