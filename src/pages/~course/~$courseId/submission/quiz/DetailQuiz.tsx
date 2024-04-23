@@ -47,7 +47,7 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
 
   return (
     <Form
-      className="flex h-full flex-col gap-4 overflow-hidden pb-3 [&_.Mui-disabled]:disabled-text-neutral-900 [&_.MuiInputBase-root]:text-neutral-900"
+      className="flex h-full flex-col gap-4 overflow-hidden pb-3"
       form={form}
       onSubmit={handleSubmit}
     >
@@ -87,7 +87,9 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
                   Question {index + 1}
                 </span>
               </div>
-              <div className=" my-2 ml-3">{title}</div>
+              <div className="col-span-12 my-2 ml-3">
+                <p className="break-words">{title}</p>
+              </div>
               <div className="col-span-12 flex flex-col gap-2">
                 {!isMultipleChoice && (
                   <RadioGroup className="flex flex-col gap-2">
@@ -114,6 +116,12 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
                             defaultValue={choice.content}
                             disabled
                             fullWidth
+                            inputProps={{
+                              className: 'text-neutral-900',
+                              style: {
+                                WebkitTextFillColor: 'black',
+                              },
+                            }}
                           />
                         </div>
                       )
@@ -145,6 +153,12 @@ export const DetailQuiz = ({ exercise, submissions }: Props) => {
                             defaultValue={choice.content}
                             disabled
                             fullWidth
+                            inputProps={{
+                              className: 'text-neutral-900',
+                              style: {
+                                WebkitTextFillColor: 'black',
+                              },
+                            }}
                           />
                         </div>
                       )
