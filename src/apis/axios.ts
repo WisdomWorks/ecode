@@ -26,7 +26,7 @@ export type Pagination = {
   totalRecord: number
 }
 
-export type AxiosResponseError = { message: string }
+export type AxiosResponseError = { failedRows?: string[]; message: string }
 
 export const instance = axios.create({
   baseURL: import.meta.env.PROD
