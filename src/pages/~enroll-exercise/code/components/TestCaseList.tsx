@@ -81,7 +81,7 @@ export const TestCaseList = ({
       {((currentTab === 0 && isReview) || (currentTab !== 0 && !isReview)) && (
         <div className="m-4 flex-col">
           <p className="font-bold dark:text-white">
-            {isReview ? "Student's Output" : 'Stdout'}
+            {isReview ? "Student's Output" : 'Code Output'}
           </p>
           <div className="my-2 min-h-9 whitespace-pre-line rounded-lg bg-gray-100 px-3 py-2">
             {isReview
