@@ -92,25 +92,48 @@ export const DetailEssay = ({
         onSubmit={handleSubmit}
       >
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4">
-            <FormTipTap
-              classNameEditor="min-h-[8rem] max-h-[8rem] overflow-y-auto"
-              disabled
-              editable={false}
-              label="Topic"
-              name="topic"
-            />
-
-            {isTeacher && (
+          <div className="col-span-12">
+            <div className="flex gap-2">
               <FormInput
-                className="w-fit"
-                label="Score"
-                name="score"
-                placeholder="Grade"
-                type="number"
+                className="disabled-text-neutral-900 col-span-12"
+                disabled={!isTeacher}
+                label="Teacher comment"
+                multiline
+                name="comment"
+                placeholder="Comment of teacher"
+                rows={3}
               />
+              {isTeacher && (
+                <FormInput
+                  className="w-fit"
+                  label="Score"
+                  name="score"
+                  placeholder="Grade"
+                  type="number"
+                />
+              )}
+            </div>
+            {isTeacher && (
+              <div className="flex justify-end">
+                <Button
+                  className="submitBtn"
+                  disabled={isPending}
+                  type="submit"
+                >
+                  Grade
+                </Button>
+              </div>
             )}
           </div>
+
+          <FormTipTap
+            classNameEditor="min-h-[8rem] max-h-[8rem] overflow-y-auto"
+            disabled
+            editable={false}
+            label="Topic"
+            name="topic"
+          />
+
           <FormTipTap
             classNameEditor="min-h-[22rem]"
             editable={false}
@@ -118,25 +141,7 @@ export const DetailEssay = ({
             name="submission"
             required
           />
-
-          <FormInput
-            className="disabled-text-neutral-900 col-span-12"
-            disabled={!isTeacher}
-            label="Teacher comment"
-            multiline
-            name="comment"
-            placeholder="Comment of teacher"
-            rows={3}
-          />
         </div>
-
-        {isTeacher && (
-          <div className="flex justify-end">
-            <Button className="submitBtn" disabled={isPending} type="submit">
-              Grade
-            </Button>
-          </div>
-        )}
       </Form>
     </>
   )
