@@ -234,11 +234,10 @@ export const CreateQuizExercise = ({
         setSuccessMessage('Create exercise successfully')
         handleBack()
       },
-      onError: error => {
-        const message = `Failed to save because the file contains invalid data. Please check the rows: ${error.response?.data.failedRows?.join(
-          ', ',
-        )}`
-        setErrorMessage(message || "Can't submit. Try again!")
+      onError: () => {
+        setErrorMessage(
+          "Create exercise failed. Please check your file's format",
+        )
       },
     })
   }
