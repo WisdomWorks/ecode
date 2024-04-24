@@ -7,6 +7,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal'
 import { Form } from '@/components/form'
 import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage, useToggle } from '@/hooks'
+import { useConfirmTabClose } from '@/hooks/useConfirmTabClose'
 import { TQuestion } from '@/pages/~course/~$courseId/~exercise/quiz/CreateQuizExercise'
 import { QuizExerciseSchema } from '@/types/exercise.types'
 import { cn } from '@/utils'
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const Quiz = ({ exercise, isTimeOut }: Props) => {
+  useConfirmTabClose()
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
