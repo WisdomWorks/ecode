@@ -109,7 +109,7 @@ export const FileUpload = ({
             )}
             <span className="text-sm font-bold text-neutral-500">OR</span>
             <Button className="capitalize" onClick={handleClick}>
-              Browser file
+              Browse file
             </Button>
           </div>
           {isDragActive && (
