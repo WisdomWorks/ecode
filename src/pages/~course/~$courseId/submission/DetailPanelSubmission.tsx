@@ -53,21 +53,6 @@ export const DetailPanelSubmission = ({ row }: Props) => {
       header: 'Student ID',
     },
     {
-      header: 'Group',
-      filterVariant: 'select',
-      filterFn: (row, _, filterValue) => {
-        return !!row.original.groups.find(
-          group => group.groupName === filterValue,
-        )
-      },
-      filterSelectOptions:
-        data?.data.groups?.map(group => group.groupName) ?? [],
-      accessorFn: row =>
-        row.groups.map(group => (
-          <div key={group.groupId}>{group.groupName}</div>
-        )),
-    },
-    {
       accessorFn: row => new Date(row.submission.dateSubmit),
       header: 'Date Submit',
       Cell: ({ cell }) => formatDDMMyyyyHHmm(new Date(cell.getValue<Date>())),
