@@ -16,6 +16,7 @@ import { ResizeHandle } from '@/components/layout'
 import { programmingLanguages } from '@/constants'
 import { useAppStore } from '@/context/useAppStore'
 import { useToastMessage, useToggle } from '@/hooks'
+import { useConfirmTabClose } from '@/hooks/useConfirmTabClose'
 import { Schema } from '@/types'
 import { CodeExerciseSchema } from '@/types/exercise.types'
 
@@ -46,6 +47,7 @@ export const CodeExercise = ({
   submissions,
   themeCodeEditor,
 }: Props) => {
+  useConfirmTabClose()
   const user = useAppStore(state => state.user)
   const navigate = useNavigate()
   const { setErrorMessage, setSuccessMessage } = useToastMessage()
